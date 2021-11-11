@@ -14,4 +14,6 @@ class CHESS_API AChessGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 	
+public:
+	AChessGameModeBase();
 };
