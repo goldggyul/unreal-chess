@@ -7,7 +7,19 @@
 UENUM(BlueprintType)
 enum class EPieceColor : uint8
 {
-	Empty,
+	None,
 	White,
 	Black
+};
+
+UENUM(BlueprintType)
+enum class EPieceType : uint8
+{
+	None,
+	King,
+	Queen,
+	Rook,
+	Bishop,
+	Knight,
+	Pawn
 };

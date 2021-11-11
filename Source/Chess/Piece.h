@@ -5,19 +5,18 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "PieceState.h"
-#include "Board.generated.h"
+#include "Piece.generated.h"
 
 UCLASS()
-class CHESS_API ABoard : public AActor
+class CHESS_API APiece : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ABoard();
+	APiece();
 
 protected:
-	virtual void PostInitializeComponents() override;
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -25,26 +24,33 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	FVector TransformIndexToLocation(uint8 Index) const;
+	void SetColor(EPieceColor PieceColor);
 
-	uint8 GetSquareSize() const { return SquareSize; }
-	EPieceColor GetPieceColor(uint8 Index) const { return PieceColor[Index]; }
-	EPieceType GetPieceType(uint8 Index) const { return PieceType[Index]; }
+	//void SetType(EPieceType PieceType);
+	//virtual void SetMesh();
+
+	virtual void UpdateLegalMoves();
+
+protected:
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* PieceMesh;
 
 private:
-	void InitBoardState();
-
-private:
 	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* BoardMesh;
-	 
-	UPROPERTY(VisibleAnywhere)
-	TArray<EPieceColor> PieceColor;
+	uint8 Index; // Board에서의 인덱스
 
 	UPROPERTY(VisibleAnywhere)
-	TArray<EPieceType> PieceType;
+	EPieceColor Color;
 
 	UPROPERTY(VisibleAnywhere)
-	uint8 SquareSize; // 한 칸의 가로(세로) 길이
+	UMaterial* LightMaterial;
 
+	UPROPERTY(VisibleAnywhere)
+	UMaterial* DarkMaterial;
+
+	UPROPERTY(VisibleAnywhere)
+	EPieceType Type;
+
+	UPROPERTY(VisibleAnywhere)
+	TSet<uint8> LegalMoves;
 };
