@@ -5,8 +5,10 @@
 
 APawnPiece::APawnPiece()
 {
-	PieceMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PIECE MESH"));
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> SM(TEXT("StaticMesh'/Game/Meshes/ChessPieces1/Pawn.Pawn'"));
+	Type = EPieceType::Pawn;
+
+	PieceMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PAWN MESH"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> SM(TEXT("StaticMesh'/Game/Meshes/Pieces/SM_Pawn.SM_Pawn'"));
 	if (SM.Succeeded())
 	{
 		PieceMesh->SetStaticMesh(SM.Object);
@@ -16,5 +18,5 @@ APawnPiece::APawnPiece()
 		UE_LOG(LogTemp, Warning, TEXT("Can't load pawn mesh"));
 	}
 	PieceMesh->SetupAttachment(RootComponent);
-
+	PieceMesh->SetRelativeScale3D(FVector(2.f, 2.f, 2.f));
 }

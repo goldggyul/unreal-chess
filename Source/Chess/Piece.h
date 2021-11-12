@@ -35,11 +35,14 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* PieceMesh;
 
+	UPROPERTY(VisibleAnywhere, Category = PieceState)
+	EPieceType Type;
+
 private:
 	UPROPERTY(VisibleAnywhere)
 	uint8 Index; // Board에서의 인덱스
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(EditAnywhere, Category=PieceState)
 	EPieceColor Color;
 
 	UPROPERTY(VisibleAnywhere)
@@ -47,9 +50,6 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	UMaterial* DarkMaterial;
-
-	UPROPERTY(VisibleAnywhere)
-	EPieceType Type;
 
 	UPROPERTY(VisibleAnywhere)
 	TSet<uint8> LegalMoves;
