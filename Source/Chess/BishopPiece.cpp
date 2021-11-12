@@ -5,7 +5,7 @@
 
 ABishopPiece::ABishopPiece()
 {
-	Type = EPieceType::Bishop;
+	SetType(EPieceType::Bishop);
 
 	PieceMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BISHOP MESH"));
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> SM(TEXT("StaticMesh'/Game/Meshes/Pieces/SM_Bishop.SM_Bishop'"));

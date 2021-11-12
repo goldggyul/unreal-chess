@@ -5,7 +5,7 @@
 
 AKingPiece::AKingPiece()
 {
-	Type = EPieceType::King;
+	SetType(EPieceType::King);
 
 	PieceMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("KING MESH"));
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> SM(TEXT("StaticMesh'/Game/Meshes/Pieces/SM_King.SM_King'"));

@@ -5,7 +5,7 @@
 
 APawnPiece::APawnPiece()
 {
-	Type = EPieceType::Pawn;
+	SetType(EPieceType::Pawn);
 
 	PieceMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PAWN MESH"));
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> SM(TEXT("StaticMesh'/Game/Meshes/Pieces/SM_Pawn.SM_Pawn'"));
@@ -19,4 +19,9 @@ APawnPiece::APawnPiece()
 	}
 	PieceMesh->SetupAttachment(RootComponent);
 	PieceMesh->SetRelativeScale3D(FVector(2.f, 2.f, 2.f));
+}
+
+void APawnPiece::UpdateLegalMoves()
+{
+
 }

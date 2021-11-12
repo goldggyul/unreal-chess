@@ -5,7 +5,7 @@
 
 ARookPiece::ARookPiece()
 {
-	Type = EPieceType::Rook;
+	SetType(EPieceType::Rook);
 
 	PieceMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ROOK MESH"));
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> SM(TEXT("StaticMesh'/Game/Meshes/Pieces/SM_Rook.SM_Rook'"));

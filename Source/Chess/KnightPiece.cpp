@@ -5,7 +5,7 @@
 
 AKnightPiece::AKnightPiece()
 {
-	Type = EPieceType::Knight;
+	SetType(EPieceType::Knight);
 
 	PieceMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("KNIGHT MESH"));
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> SM(TEXT("StaticMesh'/Game/Meshes/Pieces/SM_Knight.SM_Knight'"));

@@ -5,7 +5,7 @@
 
 AQueenPiece::AQueenPiece()
 {
-	Type = EPieceType::Queen;
+	SetType(EPieceType::Queen);
 
 	PieceMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("QUEEN MESH"));
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> SM(TEXT("StaticMesh'/Game/Meshes/Pieces/SM_Queen.SM_Queen'"));
