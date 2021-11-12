@@ -9,12 +9,7 @@ void AChessGameStateBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SpawnChessSet();
-}
-
-void AChessGameStateBase::SpawnChessSet()
-{
-	SpawnBoard();
+	//SpawnBoard();
 	SpawnPieces();
 }
 

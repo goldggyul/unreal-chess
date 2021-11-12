@@ -18,7 +18,6 @@ public:
 	virtual void BeginPlay() override;
 
 private:
-	void SpawnChessSet();
 	void SpawnBoard();
 	void SpawnPieces();
 	

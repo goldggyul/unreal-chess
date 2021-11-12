@@ -12,14 +12,15 @@ ABoard::ABoard()
 	/* mesh 설정 */
 	// TODO: mesh 경로 변경
 	BoardMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BOARD MESH"));
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> SM(TEXT("StaticMesh'/Game/Meshes/ChessPieces1/Floor.Floor'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> SM(TEXT("StaticMesh'/Game/Meshes/Pieces/SM_Board.SM_Board'"));
 	if (SM.Succeeded())
 	{
 		BoardMesh->SetStaticMesh(SM.Object);
 	}
 	BoardMesh->SetupAttachment(RootComponent);
-	// TODO: Scale Setting
-	//BoardMesh->SetRelativeScale3D(FVector(2.f, 2.f, 2.f));
+	BoardMesh->SetRelativeScale3D(FVector(2.f, 2.f, 2.f));
+	BoardMesh->SetRelativeLocation(FVector(1460.f, 1460.f, 0));
+	
 
 	InitBoardState();
 }

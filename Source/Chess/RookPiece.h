@@ -4,18 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "Piece.h"
-#include "PawnPiece.generated.h"
+#include "RookPiece.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class CHESS_API APawnPiece : public APiece
+class CHESS_API ARookPiece : public APiece
 {
 	GENERATED_BODY()
 	
 public:
-	APawnPiece();
-
-	virtual void UpdateLegalMoves() override;
+	ARookPiece();
 };

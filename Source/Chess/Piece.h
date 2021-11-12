@@ -24,33 +24,25 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void SetColor(EPieceColor PieceColor);
-
-	//void SetType(EPieceType PieceType);
-	//virtual void SetMesh();
+	const EPieceColor GetColor() const { return Color; }
+	const EPieceType GetType() const { return Type; }
 
 	virtual void UpdateLegalMoves();
+
+protected:
+	void SetType(EPieceType PieceType) { Type = PieceType; }
 
 protected:
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* PieceMesh;
 
-private:
-	UPROPERTY(VisibleAnywhere)
-	uint8 Index; // Board에서의 인덱스
-
-	UPROPERTY(VisibleAnywhere)
-	EPieceColor Color;
-
-	UPROPERTY(VisibleAnywhere)
-	UMaterial* LightMaterial;
-
-	UPROPERTY(VisibleAnywhere)
-	UMaterial* DarkMaterial;
-
-	UPROPERTY(VisibleAnywhere)
-	EPieceType Type;
-
 	UPROPERTY(VisibleAnywhere)
 	TSet<uint8> LegalMoves;
+
+private:
+	UPROPERTY(EditAnywhere, Category = PieceState)
+	EPieceColor Color;
+
+	UPROPERTY(VisibleAnywhere, Category = PieceState)
+	EPieceType Type;
 };
