@@ -13,5 +13,9 @@ void AChessPlayerController::BeginPlay()
 {
 	CurPlayer = GetWorld()->SpawnActor<AChessPlayer>(FVector(1200.f, 2100.f, 2200.f), FRotator(-70.f, -90.f, 0.f));
 	PrevPlayer = GetWorld()->SpawnActor<AChessPlayer>(FVector(1200.f, 300.f, 2200.f), FRotator(-70.f, 90.f, 0.f));
+
+	CurPlayer->SetActorLabel(FString(TEXT("WhitePlayer")));
+	PrevPlayer->SetActorLabel(FString(TEXT("BlackPlayer")));
+
 	Possess(CurPlayer);
 }
