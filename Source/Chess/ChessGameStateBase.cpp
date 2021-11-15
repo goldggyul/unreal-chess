@@ -10,18 +10,18 @@ void AChessGameStateBase::BeginPlay()
 	Super::BeginPlay();
 
 	//SpawnBoard();
-	SpawnPieces();
+	//SpawnPieces();
 }
 
 void AChessGameStateBase::SpawnBoard()
 {
-	Board = GetWorld()->SpawnActor<ABoard>(ABoard::StaticClass());
+	//Board = GetWorld()->SpawnActor<ABoard>(ABoard::StaticClass());
 }
 
 void AChessGameStateBase::SpawnPieces()
 {
-	FVector BoardLocation = Board->GetActorLocation();
-	const uint8 SquareSize = Board->GetSquareSize();
+	//FVector BoardLocation = Board->GetActorLocation();
+	//const uint8 SquareSize = Board->GetSquareSize();
 	// TODO: 기준점 옮기기
 	// BoardLocation = FVector(BoardLocation.X - ??, BoardLocation.Y - ??);
 	//for (int i = 0; i < 64; i++)

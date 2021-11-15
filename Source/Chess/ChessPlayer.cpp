@@ -2,6 +2,7 @@
 
 
 #include "ChessPlayer.h"
+#include "Camera/CameraComponent.h"
 
 // Sets default values
 AChessPlayer::AChessPlayer()
@@ -9,6 +10,10 @@ AChessPlayer::AChessPlayer()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("CAMERA"));
+	Camera->SetupAttachment(RootComponent);
+
+	//AutoPossessPlayer = EAutoReceiveInput::Player0;
 }
 
 // Called when the game starts or when spawned

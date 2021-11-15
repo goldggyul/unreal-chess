@@ -45,6 +45,6 @@ private:
 	TArray<EPieceType> PieceType;
 
 	UPROPERTY(VisibleAnywhere)
-	uint8 SquareSize; // 한 칸의 가로(세로) 길이
+	float SquareSize; // 한 칸의 가로(세로) 길이
 
 };
