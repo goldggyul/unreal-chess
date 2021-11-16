@@ -64,7 +64,7 @@ FVector ABoard::TransformIndexToLocation(uint8 Index) const
 
 void ABoard::InitBoardState()
 {
-	/* Init Color */
+	/* Init PieceColor */
 	PieceColor.Init(EPieceColor::None, 8 * 8);
 	// 인덱스는 왼쪽 위부터 0번
 	for (int i = 0; i < 2 * 8; i++)

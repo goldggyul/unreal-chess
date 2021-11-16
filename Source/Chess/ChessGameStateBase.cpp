@@ -32,5 +32,5 @@ void AChessGameStateBase::SpawnPieces()
 
 	//// TEST
 	//APawnPiece* PawnPiece = GetWorld()->SpawnActor<APawnPiece>(APawnPiece::StaticClass());
-	//PawnPiece->SetColor(EPieceColor::Black);
+	//PawnPiece->SetPieceColor(EPieceColor::Black);
 }

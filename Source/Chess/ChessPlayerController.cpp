@@ -19,6 +19,9 @@ void AChessPlayerController::BeginPlay()
 	CurPlayer->SetActorLabel(FString(TEXT("WhitePlayer")));
 	PrevPlayer->SetActorLabel(FString(TEXT("BlackPlayer")));
 
+	CurPlayer->SetPieceColor(EPieceColor::White);
+	PrevPlayer->SetPieceColor(EPieceColor::Black);
+
 	CurPlayer->SetFolderPath("/Player");
 	PrevPlayer->SetFolderPath("/Player");
 	SetFolderPath("/Player");
@@ -34,7 +37,15 @@ void AChessPlayerController::BeginPlay()
 void AChessPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
-
+	
+	if (InputComponent)
+	{
+		InputComponent->BindAction(TEXT("Up"), EInputEvent::IE_Pressed, this, &AChessPlayerController::Up);
+		InputComponent->BindAction(TEXT("Down"), EInputEvent::IE_Pressed, this, &AChessPlayerController::Down);
+		InputComponent->BindAction(TEXT("Right"), EInputEvent::IE_Pressed, this, &AChessPlayerController::Right);
+		InputComponent->BindAction(TEXT("Left"), EInputEvent::IE_Pressed, this, &AChessPlayerController::Left);
+		InputComponent->BindAction(TEXT("Enter"), EInputEvent::IE_Pressed, this, &AChessPlayerController::Enter);
+	}
 }
 
 void AChessPlayerController::OnPossess(APawn* InPawn)
@@ -50,4 +61,54 @@ void AChessPlayerController::OnPossess(APawn* InPawn)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Cur Player is not valid!"));
 	}
+}
+
+void AChessPlayerController::MoveBoxToDirection(FVector Dir)
+{
+	FVector Dest = CurPlayer->GetCurBoxLocation();
+	if (CurPlayer->GetPieceColor() == EPieceColor::White)
+	{
+		Dest += Dir * 300.f;
+	}
+	else
+	{
+		Dest += Dir * -300.f;
+	}
+	CurPlayer->MoveBoxToDest(Dest);
+}
+
+void AChessPlayerController::Up()
+{
+	MoveBoxToDirection(FVector(0.f, -1.f, 0.f));
+}
+
+void AChessPlayerController::Down()
+{
+	MoveBoxToDirection(FVector(0.f, 1.f, 0.f));
+}
+
+void AChessPlayerController::Right()
+{
+	MoveBoxToDirection(FVector(1.f, 0.f, 0.f));
+}
+
+void AChessPlayerController::Left()
+{
+	MoveBoxToDirection(FVector(-1.f, 0.f, 0.f));
+}
+
+void AChessPlayerController::Enter()
+{
+	ChangePlayer();
+}
+
+void AChessPlayerController::ChangePlayer()
+{
+	UE_LOG(LogTemp, Warning, TEXT("턴 넘기기"));
+
+	CurPlayer->DestroyCurBox();
+
+	UnPossess();
+	Swap(CurPlayer, PrevPlayer);
+	OnPossess(CurPlayer);
 }

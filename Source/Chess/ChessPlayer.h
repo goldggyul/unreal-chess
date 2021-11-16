@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "PieceState.h"
 #include "ChessPlayer.generated.h"
 
 UCLASS()
@@ -26,11 +27,26 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	void SetBoxStart(FVector Start);
+	void SetPieceColor(EPieceColor Color);
+	EPieceColor GetPieceColor() const;
+
+	void SetBoxStart(FVector BoxStart);
+	FVector GetCurBoxLocation() const;
+
+	void SetState(EPlayerState CurState);
+	EPlayerState GetState() const;
 
 	void SpawnCurBox();
+	void DestroyCurBox();
+	void MoveBoxToDest(FVector Dest);
 
 private:
+	UPROPERTY(VisibleAnywhere)
+	EPieceColor PieceColor;
+	
+	UPROPERTY(VisibleAnywhere)
+	EPlayerState MyState;
+
 	UPROPERTY(VisibleAnywhere)
 	class UCameraComponent* Camera;
 
@@ -42,4 +58,6 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	class APaperSpriteActor* CurBox;
+
+
 };

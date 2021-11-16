@@ -6,9 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "ChessPlayerController.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class CHESS_API AChessPlayerController : public APlayerController
 {
@@ -21,6 +19,17 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
 	virtual void OnPossess(APawn* InPawn) override;
+
+private:
+	void MoveBoxToDirection(FVector Dir);
+
+	void Up();
+	void Down();
+	void Right();
+	void Left();
+	void Enter();
+
+	void ChangePlayer();
 
 private:
 	UPROPERTY(VisibleAnywhere)
