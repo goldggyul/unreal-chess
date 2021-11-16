@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "PieceState.h"
+#include "ChessInfo.h"
 #include "Piece.generated.h"
 
 UCLASS()
