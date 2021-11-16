@@ -143,45 +143,8 @@ void AChessPlayer::PickCurPiece()
 		if (IsValid(HitPiece))
 		{
 			// For debugging
-			FString PieceTypeName;
-			FString PieceColorName;
-
-			switch (HitPiece->GetType())
-			{
-			case EPieceType::Bishop:
-				PieceTypeName = TEXT("Bishop");
-				break;
-			case EPieceType::King:
-				PieceTypeName = TEXT("King");
-				break;
-			case EPieceType::Knight:
-				PieceTypeName = TEXT("Knight");
-				break;
-			case EPieceType::Pawn:
-				PieceTypeName = TEXT("Pawn");
-				break;
-			case EPieceType::Queen:
-				PieceTypeName = TEXT("Queen");
-				break;
-			case EPieceType::Rook:
-				PieceTypeName = TEXT("Rook");
-				break;
-			default:
-				break;
-			}
-
-			switch (HitPiece->GetColor())
-			{
-			case EPieceColor::Black:
-				PieceColorName = TEXT("Black");
-				break;
-			case EPieceColor::White:
-				PieceColorName = TEXT("White");
-				break;
-			default:
-				break;
-			}
-
+			FString PieceTypeName = ChessUtil::GetPieceTypeString(HitPiece->GetType());
+			FString PieceColorName = ChessUtil::GetColorString(HitPiece->GetColor());
 			UE_LOG(LogTemp, Warning, TEXT("HITTED: %s %s"), *PieceColorName, *PieceTypeName);
 		}
 	}
