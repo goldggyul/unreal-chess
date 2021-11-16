@@ -26,8 +26,20 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	void SetBoxStart(FVector Start);
+
+	void SpawnCurBox();
+
 private:
 	UPROPERTY(VisibleAnywhere)
 	class UCameraComponent* Camera;
 
+	UPROPERTY(VisibleAnywhere)
+	FVector PrevMove; // 이전에 수를 놨던 위치. 박스 시작 위치 설정용
+
+	UPROPERTY(VisibleAnywhere)
+	TSubclassOf<class APaperSpriteActor> CurBoxClass;
+
+	UPROPERTY(VisibleAnywhere)
+	class APaperSpriteActor* CurBox;
 };
