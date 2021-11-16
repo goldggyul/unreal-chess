@@ -17,6 +17,16 @@ void APiece::BeginPlay()
 	
 }
 
+void APiece::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	if (IsValid(PieceMesh))
+	{
+		PieceMesh->SetCollisionProfileName(TEXT("Piece"));
+	}
+}
+
 // Called every frame
 void APiece::Tick(float DeltaTime)
 {

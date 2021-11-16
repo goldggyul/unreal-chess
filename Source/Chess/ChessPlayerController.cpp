@@ -99,12 +99,27 @@ void AChessPlayerController::Left()
 
 void AChessPlayerController::Enter()
 {
+	switch (CurPlayer->GetState())
+	{
+	case EPlayerState::Idle:
+		CurPlayer->PickCurPiece();
+		break;
+	case EPlayerState::Pick:
+	{
+		// 선택할 수 있으면 놓고 턴 넘기기,
+		// 선택 못하면 Piece 다시 제자리에 놓고 Idle로
+	}
+	case EPlayerState::Put:
+	default:
+		break;
+	}
+
 	ChangePlayer();
 }
 
 void AChessPlayerController::ChangePlayer()
 {
-	UE_LOG(LogTemp, Warning, TEXT("턴 넘기기"));
+	UE_LOG(LogTemp, Warning, TEXT("NEXT TURN"));
 
 	CurPlayer->DestroyCurBox();
 

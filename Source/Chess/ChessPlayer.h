@@ -40,6 +40,8 @@ public:
 	void DestroyCurBox();
 	void MoveBoxToDest(FVector Dest);
 
+	void PickCurPiece();
+
 private:
 	UPROPERTY(VisibleAnywhere)
 	EPieceColor PieceColor;

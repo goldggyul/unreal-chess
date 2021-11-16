@@ -4,6 +4,8 @@
 #include "ChessPlayer.h"
 #include "Camera/CameraComponent.h"
 #include "PaperSpriteActor.h"
+#include "Piece.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values
 AChessPlayer::AChessPlayer()
@@ -120,5 +122,84 @@ void AChessPlayer::MoveBoxToDest(FVector Dest)
 		UE_LOG(LogTemp, Warning, TEXT("Box Moved"));
 		PrevMove = Dest;
 	}
+}
+
+void AChessPlayer::PickCurPiece()
+{
+	// 선택할 수 있으면 들기
+
+	// Test: 일단 자기꺼면 든다
+	FHitResult HitResult;
+
+	FVector Start = CurBox->GetActorLocation();
+	FVector End = Start;
+	Start.Z += 700.f;
+	
+	FCollisionObjectQueryParams Query;
+	Query.AddObjectTypesToQuery(ECollisionChannel::ECC_GameTraceChannel1);
+	if (GetWorld()->LineTraceSingleByObjectType(OUT HitResult, Start, End, Query))
+	{
+		APiece* HitPiece = Cast<APiece>(HitResult.GetActor());
+		if (IsValid(HitPiece))
+		{
+			// For debugging
+			FString PieceTypeName;
+			FString PieceColorName;
+
+			switch (HitPiece->GetType())
+			{
+			case EPieceType::Bishop:
+				PieceTypeName = TEXT("Bishop");
+				break;
+			case EPieceType::King:
+				PieceTypeName = TEXT("King");
+				break;
+			case EPieceType::Knight:
+				PieceTypeName = TEXT("Knight");
+				break;
+			case EPieceType::Pawn:
+				PieceTypeName = TEXT("Pawn");
+				break;
+			case EPieceType::Queen:
+				PieceTypeName = TEXT("Queen");
+				break;
+			case EPieceType::Rook:
+				PieceTypeName = TEXT("Rook");
+				break;
+			default:
+				break;
+			}
+
+			switch (HitPiece->GetColor())
+			{
+			case EPieceColor::Black:
+				PieceColorName = TEXT("Black");
+				break;
+			case EPieceColor::White:
+				PieceColorName = TEXT("White");
+				break;
+			default:
+				break;
+			}
+
+			UE_LOG(LogTemp, Warning, TEXT("HITTED: %s %s"), *PieceColorName, *PieceTypeName);
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("NO COLLISION"));
+	}
+
+	FVector PlayerViewPointLocation;
+	FRotator PlayerViewPointRotation;
+	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
+		OUT PlayerViewPointLocation,
+		OUT PlayerViewPointRotation
+	);
+	DrawDebugLine(
+		GetWorld(), PlayerViewPointLocation,
+		PlayerViewPointLocation + PlayerViewPointRotation.Vector() * 700.f,
+		FColor(255,0,0), false, 0.f, 0.f, 10.f
+	);
 }
 
