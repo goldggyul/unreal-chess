@@ -21,6 +21,9 @@ void AChessGameModeBase::BeginPlay()
 {
 	Super::BeginPlay();
 
+	SetFolderPath("/GameInfo");
+	GameState->SetFolderPath("/GameInfo");
+
 	//GetWorld()->SpawnActor<ABoard>(FVector::ZeroVector, FRotator::ZeroRotator);
 }
 

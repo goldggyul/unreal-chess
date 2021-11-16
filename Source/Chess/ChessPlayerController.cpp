@@ -17,5 +17,9 @@ void AChessPlayerController::BeginPlay()
 	CurPlayer->SetActorLabel(FString(TEXT("WhitePlayer")));
 	PrevPlayer->SetActorLabel(FString(TEXT("BlackPlayer")));
 
+	CurPlayer->SetFolderPath("/Player");
+	PrevPlayer->SetFolderPath("/Player");
+	SetFolderPath("/Player");
+
 	Possess(CurPlayer);
 }

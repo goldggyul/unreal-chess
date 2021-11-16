@@ -9,6 +9,7 @@ void AChessGameStateBase::BeginPlay()
 {
 	Super::BeginPlay();
 
+
 	//SpawnBoard();
 	//SpawnPieces();
 }
