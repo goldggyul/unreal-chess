@@ -18,7 +18,7 @@ ABoard::ABoard()
 	{
 		BoardMesh->SetStaticMesh(SM.Object);
 	}
-	BoardMesh->SetupAttachment(RootComponent);
+	SetRootComponent(BoardMesh);
 	BoardMesh->SetRelativeScale3D(FVector(2.f, 2.f, 2.f));
 	SquareSize = 300.f;
 	BoardMesh->SetRelativeLocation(BoardCenter);

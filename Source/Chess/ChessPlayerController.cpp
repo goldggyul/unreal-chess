@@ -51,10 +51,10 @@ void AChessPlayerController::SetupInputComponent()
 void AChessPlayerController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
-	UE_LOG(LogTemp, Warning, TEXT("POSSESS!"));
 	
 	if (IsValid(CurPlayer))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("POSSESS!"));
 		CurPlayer->SpawnCurBox();
 	}
 	else

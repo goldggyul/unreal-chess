@@ -17,6 +17,6 @@ AKnightPiece::AKnightPiece()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Can't load Knight mesh"));
 	}
-	PieceMesh->SetupAttachment(RootComponent);
+	SetRootComponent(PieceMesh);
 	PieceMesh->SetRelativeScale3D(FVector(2.f, 2.f, 2.f));
 }

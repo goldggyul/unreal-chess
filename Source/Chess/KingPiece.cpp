@@ -17,7 +17,7 @@ AKingPiece::AKingPiece()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Can't load King mesh"));
 	}
-	PieceMesh->SetupAttachment(RootComponent);
+	SetRootComponent(PieceMesh);
 	PieceMesh->SetRelativeScale3D(FVector(2.f, 2.f, 2.f));
 
 }
