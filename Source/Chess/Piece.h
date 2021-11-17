@@ -30,6 +30,8 @@ public:
 
 	virtual void UpdateLegalMoves();
 
+	bool IsEnableToPick() const;
+
 protected:
 	void SetType(EPieceType PieceType) { Type = PieceType; }
 

@@ -29,8 +29,7 @@ AChessPlayer::AChessPlayer()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Cannot load CurBox class"));
 	}
-
-	MyState = EPlayerState::Idle;
+	SetState(EPlayerState::Idle);
 }
 
 // Called when the game starts or when spawned
@@ -56,12 +55,12 @@ void AChessPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 void AChessPlayer::SetPieceColor(EPieceColor Color)
 {
-	PieceColor = Color;
+	MyColor = Color;
 }
 
 EPieceColor AChessPlayer::GetPieceColor() const
 {
-	return PieceColor;
+	return MyColor;
 }
 
 void AChessPlayer::SetBoxStart(FVector BoxStart)
@@ -111,7 +110,7 @@ void AChessPlayer::DestroyCurBox()
 	CurBox->Destroy();
 }
 
-void AChessPlayer::MoveBoxToDest(FVector Dest)
+void AChessPlayer::MoveCurBoxToDest(FVector Dest)
 {
 	//UE_LOG(LogTemp, Warning, TEXT("Move To (%f, %f, %f)"), Dest.X, Dest.Y, Dest.Z);
 
@@ -119,6 +118,7 @@ void AChessPlayer::MoveBoxToDest(FVector Dest)
 		return;
 	if (IsValid(CurBox))
 	{
+		Dest.Z = CurBoxZ;
 		CurBox->SetActorLocation(Dest);
 		//UE_LOG(LogTemp, Warning, TEXT("Box Moved"));
 		PrevMove = Dest;
@@ -147,6 +147,20 @@ void AChessPlayer::PickCurPiece()
 			FString PieceTypeName = ChessUtil::GetPieceTypeString(HitPiece->GetType());
 			FString PieceColorName = ChessUtil::GetColorString(HitPiece->GetColor());
 			UE_LOG(LogTemp, Warning, TEXT("HITTED: %s %s"), *PieceColorName, *PieceTypeName);
+
+			// Do Something
+			if (MyColor == HitPiece->GetColor())
+			{
+				if (HitPiece->IsEnableToPick())
+				{
+					SetState(EPlayerState::Pick);
+					UE_LOG(LogTemp, Warning, TEXT("Pick this piece!"));
+				}
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Cannot pick enemy's piece!"));
+			}
 		}
 	}
 	else
@@ -161,7 +175,7 @@ void AChessPlayer::PickCurPiece()
 
 	DrawDebugLine(
 		GetWorld(), LineStart, LineEnd,
-		FColor::Magenta, false, 2.f, 0.f, 10.f
+		FColor::Magenta, false, 1.f, 0.f, 10.f
 	);
 }
 

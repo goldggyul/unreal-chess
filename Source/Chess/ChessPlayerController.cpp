@@ -31,8 +31,8 @@ void AChessPlayerController::BeginPlay()
 	PrevPlayer->SetFolderPath("/Player");
 	SetFolderPath("/Player");
 
-	CurPlayer->SetBoxStart(FVector(1350.f,1950.f,10.f));
-	PrevPlayer->SetBoxStart(FVector(1050.f,450.f,10.f));
+	CurPlayer->SetBoxStart(FVector(1350.f,1950.f,CurBoxZ));
+	PrevPlayer->SetBoxStart(FVector(1050.f,450.f, CurBoxZ));
 
 	bShowMouseCursor = true;
 
@@ -80,7 +80,7 @@ void AChessPlayerController::MoveBoxToDirection(FVector Dir)
 	{
 		Dest += Dir * -300.f;
 	}
-	CurPlayer->MoveBoxToDest(Dest);
+	CurPlayer->MoveCurBoxToDest(Dest);
 }
 
 void AChessPlayerController::Up()
@@ -143,7 +143,7 @@ void AChessPlayerController::Click()
 
 		DrawDebugLine(
 			GetWorld(), LineStart, LineEnd,
-			FColor::Blue, false, 2.f, 0.f, 10.f
+			FColor::Blue, false, 1.f, 0.f, 30.f
 		);
 
 		if (ChessUtil::IsInBoard(HitPoint))
@@ -152,7 +152,7 @@ void AChessPlayerController::Click()
 			// ¿Ö Board¸¸?
 			UE_LOG(LogTemp, Warning, TEXT("Mouse Hit: %s (%f, %f, %f)"), *HitLabel, HitPoint.X, HitPoint.Y, HitPoint.Z);
 			FVector ClickedSquareCenter = ChessUtil::GetSquareCenter(HitPoint);
-			CurPlayer->MoveBoxToDest(ClickedSquareCenter);
+			CurPlayer->MoveCurBoxToDest(ClickedSquareCenter);
 			Enter();
 		}
 	}

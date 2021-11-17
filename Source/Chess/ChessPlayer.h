@@ -38,13 +38,13 @@ public:
 
 	void SpawnCurBox();
 	void DestroyCurBox();
-	void MoveBoxToDest(FVector Dest);
+	void MoveCurBoxToDest(FVector Dest);
 
 	void PickCurPiece();
 
 private:
 	UPROPERTY(VisibleAnywhere)
-	EPieceColor PieceColor;
+	EPieceColor MyColor;
 	
 	UPROPERTY(VisibleAnywhere)
 	EPlayerState MyState;

@@ -38,3 +38,9 @@ void APiece::UpdateLegalMoves()
 {
 }
 
+bool APiece::IsEnableToPick() const
+{
+	// if Legal Moves Exists
+	return true;
+}
+

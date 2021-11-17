@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "ChessInfo.h"
 
+#define CurBoxZ 10.f
+
 /**
  * 
  */
