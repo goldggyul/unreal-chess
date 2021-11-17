@@ -3,7 +3,6 @@
 
 #include "Board.h"
 
-const FVector BoardCenter(1200.f, 1200.f, 0.f);
 
 // Sets default values
 ABoard::ABoard()
@@ -20,7 +19,6 @@ ABoard::ABoard()
 	}
 	SetRootComponent(BoardMesh);
 	BoardMesh->SetRelativeScale3D(FVector(2.f, 2.f, 2.f));
-	SquareSize = 300.f;
 	BoardMesh->SetRelativeLocation(BoardCenter);
 
 	InitBoardState();
@@ -43,23 +41,6 @@ void ABoard::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-}
-
-FVector ABoard::TransformIndexToLocation(uint8 Index) const
-{
-	//FVector Origin, BoxExtent;
-	//GetActorBounds(false, Origin, BoxExtent);
-	//UE_LOG(LogTemp, Warning, TEXT("Board world size: %f %f %f"), BoxExtent.X, BoxExtent.Y, BoxExtent.Z);
-	//UE_LOG(LogTemp, Warning, TEXT("Board Center: % f % f % f"), Origin.X, Origin.Y, Origin.Z);
-
-	// 보드에서의 인덱스를 실제 레벨에서의 위치 벡터로 변환
-	int X = Index % 8 +1;
-	int Y = Index / 8 +1;
-	// Board의 왼쪽 상단 부분이 (0.f, 0.f, 0.f)
-	float LocationX = (BoardCenter.X - SquareSize * 4) + ((SquareSize / 2) * (2 * X - 1));
-	float LocationY = (BoardCenter.Y - SquareSize * 4) + ((SquareSize / 2) * (2 * Y - 1));
-	UE_LOG(LogTemp, Warning, TEXT("%d,%d -> %f %f "), X,Y, LocationX, LocationY);
-	return FVector(LocationX, LocationY, BoardCenter.Z);
 }
 
 void ABoard::InitBoardState()

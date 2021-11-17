@@ -3,6 +3,7 @@
 
 #include "ChessPlayerController.h"
 #include "ChessPlayer.h"
+#include "ChessInfo.h"
 
 AChessPlayerController::AChessPlayerController()
 {
@@ -12,6 +13,8 @@ AChessPlayerController::AChessPlayerController()
 void AChessPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
+
+	
 
 	CurPlayer = GetWorld()->SpawnActor<AChessPlayer>(FVector(1200.f, 2100.f, 2200.f), FRotator(-70.f, -90.f, 0.f));
 	PrevPlayer = GetWorld()->SpawnActor<AChessPlayer>(FVector(1200.f, 300.f, 2200.f), FRotator(-70.f, 90.f, 0.f));
@@ -29,7 +32,7 @@ void AChessPlayerController::BeginPlay()
 	CurPlayer->SetBoxStart(FVector(1350.f,1950.f,10.f));
 	PrevPlayer->SetBoxStart(FVector(1050.f,450.f,10.f));
 
-	CurPlayer->SpawnCurBox();
+	bShowMouseCursor = true;
 
 	OnPossess(CurPlayer);
 }
@@ -120,7 +123,28 @@ void AChessPlayerController::Enter()
 
 void AChessPlayerController::Click()
 {
+	if (!IsValid(CurPlayer))
+		return;
 
+	// Trace to see what is under the mouse cursor
+	FHitResult HitResult;
+	GetHitResultUnderCursor(ECC_Visibility, false, OUT HitResult);
+
+	if (HitResult.bBlockingHit)
+	{
+		FVector HitPoint = HitResult.ImpactPoint;
+		if (ChessUtil::IsInBoard(HitPoint))
+		{
+			FString HitLabel = HitResult.Actor->GetActorLabel();
+			// ¿Ö Board¸¸?
+			UE_LOG(LogTemp, Warning, TEXT("Mouse Hit: %s (%f, %f, %f)"), *HitLabel, HitPoint.X, HitPoint.Y, HitPoint.Z);
+			FVector ClickedSquareCenter = ChessUtil::GetSquareCenter(HitPoint);
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Mouse didn't hit anything"));
+	}
 }
 
 void AChessPlayerController::ChangePlayer()

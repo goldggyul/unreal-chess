@@ -25,8 +25,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	FVector TransformIndexToLocation(uint8 Index) const;
-
 	uint8 GetSquareSize() const { return SquareSize; }
 	EPieceColor GetPieceColor(uint8 Index) const { return PieceColor[Index]; }
 	EPieceType GetPieceType(uint8 Index) const { return PieceType[Index]; }
@@ -43,8 +41,4 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	TArray<EPieceType> PieceType;
-
-	UPROPERTY(VisibleAnywhere)
-	float SquareSize; // 한 칸의 가로(세로) 길이
-
 };
