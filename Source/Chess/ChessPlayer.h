@@ -30,17 +30,18 @@ public:
 	void SetPieceColor(EPieceColor Color);
 	EPieceColor GetPieceColor() const;
 
-	void SetBoxStart(FVector BoxStart);
-	FVector GetCurBoxLocation() const;
+	void SetPickBoxStart(FVector BoxStart);
+	FVector GetPickBoxLocation() const;
 
 	void SetState(EPlayerState CurState);
 	EPlayerState GetState() const;
 
-	void SpawnCurBox();
-	void DestroyCurBox();
-	void MoveCurBoxToDest(FVector Dest);
+	void SpawnPickBox();
+	void DestroyPickBox();
+	void MovePickBoxToDest(FVector Dest);
 
 	void PickCurPiece();
+	void PutPiece();
 
 private:
 	UPROPERTY(VisibleAnywhere)
@@ -56,10 +57,10 @@ private:
 	FVector PrevMove; // 이전에 수를 놨던 위치. 박스 시작 위치 설정용
 
 	UPROPERTY(VisibleAnywhere)
-	TSubclassOf<class APaperSpriteActor> CurBoxClass;
+	TSubclassOf<class APaperSpriteActor> PickBoxClass;
 
 	UPROPERTY(VisibleAnywhere)
-	class APaperSpriteActor* CurBox;
+	class APaperSpriteActor* PickBox;
 
 
 };

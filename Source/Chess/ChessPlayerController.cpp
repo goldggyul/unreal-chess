@@ -31,8 +31,8 @@ void AChessPlayerController::BeginPlay()
 	PrevPlayer->SetFolderPath("/Player");
 	SetFolderPath("/Player");
 
-	CurPlayer->SetBoxStart(FVector(1350.f,1950.f,CurBoxZ));
-	PrevPlayer->SetBoxStart(FVector(1050.f,450.f, CurBoxZ));
+	CurPlayer->SetPickBoxStart(FVector(1350.f,1950.f,PickBoxZ));
+	PrevPlayer->SetPickBoxStart(FVector(1050.f,450.f, PickBoxZ));
 
 	bShowMouseCursor = true;
 
@@ -61,7 +61,7 @@ void AChessPlayerController::OnPossess(APawn* InPawn)
 	if (IsValid(CurPlayer))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("POSSESS!"));
-		CurPlayer->SpawnCurBox();
+		CurPlayer->SpawnPickBox();
 	}
 	else
 	{
@@ -71,7 +71,7 @@ void AChessPlayerController::OnPossess(APawn* InPawn)
 
 void AChessPlayerController::MoveBoxToDirection(FVector Dir)
 {
-	FVector Dest = CurPlayer->GetCurBoxLocation();
+	FVector Dest = CurPlayer->GetPickBoxLocation();
 	if (CurPlayer->GetPieceColor() == EPieceColor::White)
 	{
 		Dest += Dir * 300.f;
@@ -80,7 +80,7 @@ void AChessPlayerController::MoveBoxToDirection(FVector Dir)
 	{
 		Dest += Dir * -300.f;
 	}
-	CurPlayer->MoveCurBoxToDest(Dest);
+	CurPlayer->MovePickBoxToDest(Dest);
 }
 
 void AChessPlayerController::Up()
@@ -105,16 +105,19 @@ void AChessPlayerController::Left()
 
 void AChessPlayerController::Enter()
 {
+	if (!IsValid(CurPlayer))
+		return;
 	switch (CurPlayer->GetState())
 	{
 	case EPlayerState::Idle:
 		CurPlayer->PickCurPiece();
 		break;
 	case EPlayerState::Pick:
-	{
+		// 이미 Pick 된 상태이므로 둘 수 있으면 두면 됨
 		// 선택할 수 있으면 놓고 턴 넘기기,
 		// 선택 못하면 Piece 다시 제자리에 놓고 Idle로
-	}
+		CurPlayer->PutPiece();
+		break;
 	case EPlayerState::Put:
 	default:
 		break;
@@ -127,7 +130,6 @@ void AChessPlayerController::Click()
 {
 	if (!IsValid(CurPlayer))
 		return;
-
 	// Trace to see what is under the mouse cursor
 	FHitResult HitResult;
 	GetHitResultUnderCursor(ECC_Visibility, false, OUT HitResult);
@@ -152,7 +154,7 @@ void AChessPlayerController::Click()
 			// 왜 Board만?
 			UE_LOG(LogTemp, Warning, TEXT("Mouse Hit: %s (%f, %f, %f)"), *HitLabel, HitPoint.X, HitPoint.Y, HitPoint.Z);
 			FVector ClickedSquareCenter = ChessUtil::GetSquareCenter(HitPoint);
-			CurPlayer->MoveCurBoxToDest(ClickedSquareCenter);
+			CurPlayer->MovePickBoxToDest(ClickedSquareCenter);
 			Enter();
 		}
 	}
@@ -166,7 +168,7 @@ void AChessPlayerController::ChangePlayer()
 {
 	UE_LOG(LogTemp, Warning, TEXT("NEXT TURN"));
 
-	CurPlayer->DestroyCurBox();
+	CurPlayer->DestroyPickBox();
 
 	UnPossess();
 	Swap(CurPlayer, PrevPlayer);

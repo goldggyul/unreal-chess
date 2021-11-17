@@ -20,14 +20,14 @@ AChessPlayer::AChessPlayer()
 
 	//AutoPossessPlayer = EAutoReceiveInput::Player0;
 
-	static ConstructorHelpers::FClassFinder<APaperSpriteActor> PS(TEXT("Blueprint'/Game/Blueprints/FocusBox/BS_CurBox.BS_CurBox_C'"));
+	static ConstructorHelpers::FClassFinder<APaperSpriteActor> PS(TEXT("Blueprint'/Game/Blueprints/FocusBox/BS_PickBox.BS_PickBox_C'"));
 	if (PS.Succeeded())
 	{
-		CurBoxClass = PS.Class;
+		PickBoxClass = PS.Class;
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Cannot load CurBox class"));
+		UE_LOG(LogTemp, Warning, TEXT("Cannot load PickBox class"));
 	}
 	SetState(EPlayerState::Idle);
 }
@@ -63,16 +63,16 @@ EPieceColor AChessPlayer::GetPieceColor() const
 	return MyColor;
 }
 
-void AChessPlayer::SetBoxStart(FVector BoxStart)
+void AChessPlayer::SetPickBoxStart(FVector BoxStart)
 {
 	PrevMove = BoxStart;
 }
 
-FVector AChessPlayer::GetCurBoxLocation() const
+FVector AChessPlayer::GetPickBoxLocation() const
 {
-	if (IsValid(CurBox))
+	if (IsValid(PickBox))
 	{
-		return CurBox->GetActorLocation();
+		return PickBox->GetActorLocation();
 	}
 	return FVector::ZeroVector;
 }
@@ -87,39 +87,39 @@ EPlayerState AChessPlayer::GetState() const
 	return MyState;
 }
 
-void AChessPlayer::SpawnCurBox()
+void AChessPlayer::SpawnPickBox()
 {
-	if (!IsValid(CurBoxClass))
+	if (!IsValid(PickBoxClass))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("CurBoxClass is not exist"));
+		UE_LOG(LogTemp, Warning, TEXT("PickBoxClass is not exist"));
 		return;
 	}
 
-	if (IsValid(CurBox))
+	if (IsValid(PickBox))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Destroy Previous CurBox"));
-		CurBox->Destroy();
+		UE_LOG(LogTemp, Warning, TEXT("Destroy Previous PickBox"));
+		PickBox->Destroy();
 	}
-	CurBox = GetWorld()->SpawnActor<APaperSpriteActor>(CurBoxClass, PrevMove, FRotator::ZeroRotator);
-	CurBox->SetActorLabel(TEXT("CurBox"));
-	CurBox->SetFolderPath("/Player");
+	PickBox = GetWorld()->SpawnActor<APaperSpriteActor>(PickBoxClass, PrevMove, FRotator::ZeroRotator);
+	PickBox->SetActorLabel(TEXT("PickBox"));
+	PickBox->SetFolderPath("/Player");
 }
 
-void AChessPlayer::DestroyCurBox()
+void AChessPlayer::DestroyPickBox()
 {
-	CurBox->Destroy();
+	PickBox->Destroy();
 }
 
-void AChessPlayer::MoveCurBoxToDest(FVector Dest)
+void AChessPlayer::MovePickBoxToDest(FVector Dest)
 {
 	//UE_LOG(LogTemp, Warning, TEXT("Move To (%f, %f, %f)"), Dest.X, Dest.Y, Dest.Z);
 
 	if (Dest.X < 150.f || Dest.X >2250.f || Dest.Y < 150.f || Dest.Y>2250.f)
 		return;
-	if (IsValid(CurBox))
+	if (IsValid(PickBox))
 	{
-		Dest.Z = CurBoxZ;
-		CurBox->SetActorLocation(Dest);
+		Dest.Z = PickBoxZ;
+		PickBox->SetActorLocation(Dest);
 		//UE_LOG(LogTemp, Warning, TEXT("Box Moved"));
 		PrevMove = Dest;
 	}
@@ -132,7 +132,7 @@ void AChessPlayer::PickCurPiece()
 	// Test: 일단 자기꺼면 든다
 	FHitResult HitResult;
 
-	FVector Start = CurBox->GetActorLocation();
+	FVector Start = PickBox->GetActorLocation();
 	FVector End = Start;
 	Start.Z += 700.f;
 	
@@ -169,7 +169,7 @@ void AChessPlayer::PickCurPiece()
 	}
 
 	// For debugging
-	FVector LineStart = CurBox->GetActorLocation();
+	FVector LineStart = PickBox->GetActorLocation();
 	FVector LineEnd = LineStart;
 	LineEnd.Z += 700.f;
 
@@ -177,5 +177,10 @@ void AChessPlayer::PickCurPiece()
 		GetWorld(), LineStart, LineEnd,
 		FColor::Magenta, false, 1.f, 0.f, 10.f
 	);
+}
+
+void AChessPlayer::PutPiece()
+{
+
 }
 
