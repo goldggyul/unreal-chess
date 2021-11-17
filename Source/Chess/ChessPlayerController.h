@@ -28,6 +28,7 @@ private:
 	void Right();
 	void Left();
 	void Enter();
+	void Click();
 
 	void ChangePlayer();
 

@@ -45,6 +45,7 @@ void AChessPlayerController::SetupInputComponent()
 		InputComponent->BindAction(TEXT("Right"), EInputEvent::IE_Pressed, this, &AChessPlayerController::Right);
 		InputComponent->BindAction(TEXT("Left"), EInputEvent::IE_Pressed, this, &AChessPlayerController::Left);
 		InputComponent->BindAction(TEXT("Enter"), EInputEvent::IE_Pressed, this, &AChessPlayerController::Enter);
+		InputComponent->BindAction(TEXT("Click"), EInputEvent::IE_Pressed, this, &AChessPlayerController::Click);
 	}
 }
 
@@ -114,7 +115,12 @@ void AChessPlayerController::Enter()
 		break;
 	}
 
-	ChangePlayer();
+	//ChangePlayer();
+}
+
+void AChessPlayerController::Click()
+{
+
 }
 
 void AChessPlayerController::ChangePlayer()

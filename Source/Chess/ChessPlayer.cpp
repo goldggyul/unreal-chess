@@ -112,14 +112,14 @@ void AChessPlayer::DestroyCurBox()
 
 void AChessPlayer::MoveBoxToDest(FVector Dest)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Move To (%f, %f, %f)"), Dest.X, Dest.Y, Dest.Z);
+	//UE_LOG(LogTemp, Warning, TEXT("Move To (%f, %f, %f)"), Dest.X, Dest.Y, Dest.Z);
 
 	if (Dest.X < 150.f || Dest.X >2250.f || Dest.Y < 150.f || Dest.Y>2250.f)
 		return;
 	if (IsValid(CurBox))
 	{
 		CurBox->SetActorLocation(Dest);
-		UE_LOG(LogTemp, Warning, TEXT("Box Moved"));
+		//UE_LOG(LogTemp, Warning, TEXT("Box Moved"));
 		PrevMove = Dest;
 	}
 }
@@ -153,16 +153,14 @@ void AChessPlayer::PickCurPiece()
 		UE_LOG(LogTemp, Warning, TEXT("NO COLLISION"));
 	}
 
-	FVector PlayerViewPointLocation;
-	FRotator PlayerViewPointRotation;
-	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(
-		OUT PlayerViewPointLocation,
-		OUT PlayerViewPointRotation
-	);
+	// For debugging
+	FVector LineStart = CurBox->GetActorLocation();
+	FVector LineEnd = LineStart;
+	LineEnd.Z += 700.f;
+
 	DrawDebugLine(
-		GetWorld(), PlayerViewPointLocation,
-		PlayerViewPointLocation + PlayerViewPointRotation.Vector() * 700.f,
-		FColor(255,0,0), false, 0.f, 0.f, 10.f
+		GetWorld(), LineStart, LineEnd,
+		FColor::Magenta, false, 2.f, 0.f, 10.f
 	);
 }
 
