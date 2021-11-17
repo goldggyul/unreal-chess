@@ -6,6 +6,7 @@
 #include "PaperSpriteActor.h"
 #include "Piece.h"
 #include "DrawDebugHelpers.h"
+#include "ChessUtil.h"
 
 // Sets default values
 AChessPlayer::AChessPlayer()

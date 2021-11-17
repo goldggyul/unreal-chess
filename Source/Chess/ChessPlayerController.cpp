@@ -4,6 +4,7 @@
 #include "ChessPlayerController.h"
 #include "ChessPlayer.h"
 #include "ChessInfo.h"
+#include "ChessUtil.h"
 
 AChessPlayerController::AChessPlayerController()
 {
