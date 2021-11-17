@@ -5,6 +5,7 @@
 #include "ChessPlayer.h"
 #include "ChessInfo.h"
 #include "ChessUtil.h"
+#include "DrawDebugHelpers.h"
 
 AChessPlayerController::AChessPlayerController()
 {
@@ -134,12 +135,25 @@ void AChessPlayerController::Click()
 	if (HitResult.bBlockingHit)
 	{
 		FVector HitPoint = HitResult.ImpactPoint;
+
+		// For debugging
+		FVector LineStart = HitPoint;
+		FVector LineEnd = LineStart;
+		LineEnd.Z += 100.f;
+
+		DrawDebugLine(
+			GetWorld(), LineStart, LineEnd,
+			FColor::Blue, false, 2.f, 0.f, 10.f
+		);
+
 		if (ChessUtil::IsInBoard(HitPoint))
 		{
 			FString HitLabel = HitResult.Actor->GetActorLabel();
 			// ¿Ö Board¸¸?
 			UE_LOG(LogTemp, Warning, TEXT("Mouse Hit: %s (%f, %f, %f)"), *HitLabel, HitPoint.X, HitPoint.Y, HitPoint.Z);
 			FVector ClickedSquareCenter = ChessUtil::GetSquareCenter(HitPoint);
+			CurPlayer->MoveBoxToDest(ClickedSquareCenter);
+			Enter();
 		}
 	}
 	else

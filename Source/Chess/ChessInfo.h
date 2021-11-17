@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 
-#define BoardCenter FVector(1200.f, 1200.f, 1200)
+#define BoardCenter FVector(1200.f, 1200.f, 10.f)
 #define SquareSize 300.f
 
 UENUM(BlueprintType)
