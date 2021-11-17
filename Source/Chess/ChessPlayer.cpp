@@ -19,7 +19,26 @@ AChessPlayer::AChessPlayer()
 	//Camera->SetupAttachment(RootComponent);
 	SetRootComponent(Camera);
 
-	//AutoPossessPlayer = EAutoReceiveInput::Player0;
+	static ConstructorHelpers::FObjectFinder<UMaterial> DM(TEXT("Material'/Game/Materials/M_Dark.M_Dark'"));
+	if (DM.Succeeded())
+	{
+		DarkMaterial = DM.Object;
+	}
+	static ConstructorHelpers::FObjectFinder<UMaterial> LM(TEXT("Material'/Game/Materials/M_Light.M_Light'"));
+	if (LM.Succeeded())
+	{
+		LightMaterial = LM.Object;
+	}
+	static ConstructorHelpers::FObjectFinder<UMaterialInstance> DMI(TEXT("MaterialInstanceConstant'/Game/Materials/MI_Dark_T.MI_Dark_T'"));
+	if (DMI.Succeeded())
+	{
+		TranslucentDarkMaterial = DMI.Object;
+	}
+	static ConstructorHelpers::FObjectFinder<UMaterialInstance> LMI(TEXT("MaterialInstanceConstant'/Game/Materials/MI_Light_T.MI_Light_T'"));
+	if (LMI.Succeeded())
+	{
+		TranslucentLightMaterial = LMI.Object;
+	}
 
 	static ConstructorHelpers::FClassFinder<APaperSpriteActor> PS(TEXT("Blueprint'/Game/Blueprints/FocusBox/BS_PickBox.BS_PickBox_C'"));
 	if (PS.Succeeded())
@@ -56,12 +75,12 @@ void AChessPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 void AChessPlayer::SetPieceColor(EPieceColor Color)
 {
-	MyColor = Color;
+	PlayerColor = Color;
 }
 
 EPieceColor AChessPlayer::GetPieceColor() const
 {
-	return MyColor;
+	return PlayerColor;
 }
 
 void AChessPlayer::SetPickBoxStart(FVector BoxStart)
@@ -135,7 +154,7 @@ void AChessPlayer::PickCurPiece()
 	if (IsValid(CurPiece))// Piece(Black or white) is here
 	{
 		// Do Something
-		if (MyColor == CurPiece->GetColor())
+		if (PlayerColor == CurPiece->GetColor())
 		{
 			if (CurPiece->IsEnableToPick())
 			{
@@ -163,19 +182,26 @@ void AChessPlayer::SpawnPickedPiece()
 	if (IsValid(CurPiece))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Spawn Picked Piece"));
-		FVector SpawnLocation = PickBox->GetActorLocation();
+
+		FVector SpawnLocation = CurPiece->GetActorLocation();
 		SpawnLocation.Z += 450.f;
-		PickedPiece = GetWorld()->SpawnActor<AStaticMeshActor>(SpawnLocation, FRotator::ZeroRotator);
+		FRotator SpawnRotation = CurPiece->GetActorRotation();
+		PickedPiece = GetWorld()->SpawnActor<AStaticMeshActor>(SpawnLocation, SpawnRotation);
+
 		PickedPiece->SetMobility(EComponentMobility::Movable);
-		PickedPiece->GetStaticMeshComponent()->SetStaticMesh(CurPiece->GetStaticMesh());
 		PickedPiece->SetActorRelativeScale3D(FVector(2.f, 2.f, 2.f));
 		PickedPiece->SetActorLabel(FString(TEXT("Picked Piece")));
+
+		UStaticMeshComponent* CurPieceMeshComp = CurPiece->GetStaticMeshComponent();
+		UStaticMeshComponent* PickedPieceMeshComp = PickedPiece->GetStaticMeshComponent();
+		PickedPieceMeshComp->SetStaticMesh(CurPieceMeshComp->GetStaticMesh());
+		SetMeshOpaque(false, CurPieceMeshComp);
+		SetMeshOpaque(true, PickedPieceMeshComp);
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Cannot pick: It's empty!"));
 	}
-
 
 }
 
@@ -222,5 +248,39 @@ APiece* AChessPlayer::GetCurPiece()
 		UE_LOG(LogTemp, Warning, TEXT("[LINE TRACE] NO COLLISION"));
 	}
 	return nullptr;
+}
+
+void AChessPlayer::SetMeshOpaque(bool bIsOpaque, class UStaticMeshComponent* Mesh) const
+{
+	if (!IsValid(Mesh))
+		return;
+
+	if (bIsOpaque) // 불투명
+	{
+		if (PlayerColor == EPieceColor::Black && IsValid(DarkMaterial))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Set Material: opaque dark"));
+			Mesh->SetMaterial(0, DarkMaterial);
+		}
+		else if (PlayerColor == EPieceColor::White && IsValid(LightMaterial))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Set Material: opaque light"));
+			Mesh->SetMaterial(0, LightMaterial);
+		}
+	}
+	else // 투명
+	{
+		if (PlayerColor == EPieceColor::Black && IsValid(TranslucentDarkMaterial))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Set Material: translucent dark"));
+			Mesh->SetMaterial(0, TranslucentDarkMaterial);
+		}
+		else if (PlayerColor == EPieceColor::White && IsValid(TranslucentLightMaterial))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Set Material: translucent light"));
+
+			Mesh->SetMaterial(0, TranslucentLightMaterial);
+		}
+	}
 }
 

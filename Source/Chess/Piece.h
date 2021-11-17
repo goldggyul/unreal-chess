@@ -25,16 +25,17 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	const EPieceColor GetColor() const { return Color; }
-	const EPieceType GetType() const { return Type; }
-	class UStaticMesh* GetStaticMesh() const;
+	const EPieceColor GetColor() const { return PieceColor; }
+	const EPieceType GetType() const { return PieceType; }
+	class UStaticMeshComponent* GetStaticMeshComponent();
 
 	virtual void UpdateLegalMoves();
 
 	bool IsEnableToPick() const;
 
+
 protected:
-	void SetType(EPieceType PieceType) { Type = PieceType; }
+	void SetType(EPieceType PT) { PieceType = PT; }
 
 protected:
 	UPROPERTY(VisibleAnywhere)
@@ -45,8 +46,8 @@ protected:
 
 private:
 	UPROPERTY(EditAnywhere, Category = PieceState)
-	EPieceColor Color;
+	EPieceColor PieceColor;
 
 	UPROPERTY(VisibleAnywhere, Category = PieceState)
-	EPieceType Type;
+	EPieceType PieceType;
 };

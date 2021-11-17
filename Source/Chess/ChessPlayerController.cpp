@@ -16,8 +16,6 @@ void AChessPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	
-
 	CurPlayer = GetWorld()->SpawnActor<AChessPlayer>(FVector(1200.f, 2100.f, 2200.f), FRotator(-70.f, -90.f, 0.f));
 	PrevPlayer = GetWorld()->SpawnActor<AChessPlayer>(FVector(1200.f, 300.f, 2200.f), FRotator(-70.f, 90.f, 0.f));
 
@@ -36,6 +34,7 @@ void AChessPlayerController::BeginPlay()
 
 	bShowMouseCursor = true;
 
+	Swap(CurPlayer, PrevPlayer);
 	OnPossess(CurPlayer);
 }
 
@@ -60,7 +59,7 @@ void AChessPlayerController::OnPossess(APawn* InPawn)
 	
 	if (IsValid(CurPlayer))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("POSSESS!"));
+		UE_LOG(LogTemp, Warning, TEXT("POSSESS! [%s]"), *(CurPlayer->GetActorLabel()));
 		CurPlayer->SpawnPickBox();
 	}
 	else
@@ -123,7 +122,7 @@ void AChessPlayerController::Enter()
 		break;
 	}
 
-	//ChangePlayer();
+	ChangePlayer();
 }
 
 void AChessPlayerController::Click()

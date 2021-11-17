@@ -46,10 +46,12 @@ public:
 
 	class APiece* GetCurPiece();
 
-	
+private:
+	void SetMeshOpaque(bool bIsOpaque, class UStaticMeshComponent* MeshComponent = nullptr) const;
+
 private:
 	UPROPERTY(VisibleAnywhere)
-	EPieceColor MyColor;
+	EPieceColor PlayerColor;
 	
 	UPROPERTY(VisibleAnywhere)
 	EPlayerState MyState;
@@ -69,4 +71,16 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	class AStaticMeshActor* PickedPiece;
 
+	// 불투명 <-> 투명하게 바꾸기 위해 머티리얼 저장
+	UPROPERTY(VisibleAnywhere, Category = PieceMaterials)
+	class UMaterial* DarkMaterial;
+
+	UPROPERTY(VisibleAnywhere, Category = PieceMaterials)
+	class UMaterial* LightMaterial;
+
+	UPROPERTY(VisibleAnywhere, Category = PieceMaterials)
+	class UMaterialInstance* TranslucentDarkMaterial;
+
+	UPROPERTY(VisibleAnywhere, Category = PieceMaterials)
+	class UMaterialInstance* TranslucentLightMaterial;
 };

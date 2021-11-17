@@ -8,6 +8,7 @@ APiece::APiece()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
 }
 
 // Called when the game starts or when spawned
@@ -34,10 +35,10 @@ void APiece::Tick(float DeltaTime)
 
 }
 
-UStaticMesh* APiece::GetStaticMesh() const
+UStaticMeshComponent* APiece::GetStaticMeshComponent()
 {
 	if (IsValid(PieceMesh))
-		return PieceMesh->GetStaticMesh();
+		return PieceMesh;
 	return nullptr;
 }
 
@@ -50,4 +51,3 @@ bool APiece::IsEnableToPick() const
 	// if Legal Moves Exists
 	return true;
 }
-
