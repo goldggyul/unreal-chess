@@ -144,6 +144,11 @@ void AChessPlayer::MovePickBoxToDest(FVector Dest)
 		PickBox->SetActorLocation(Dest);
 		//UE_LOG(LogTemp, Warning, TEXT("Box Moved"));
 		PrevMove = Dest;
+		if (IsValid(PickedPiece))
+		{
+			Dest.Z = PickedPiece->GetActorLocation().Z;
+			PickedPiece->SetActorLocation(Dest);
+		}
 	}
 }
 
