@@ -34,6 +34,13 @@ void APiece::Tick(float DeltaTime)
 
 }
 
+UStaticMesh* APiece::GetStaticMesh() const
+{
+	if (IsValid(PieceMesh))
+		return PieceMesh->GetStaticMesh();
+	return nullptr;
+}
+
 void APiece::UpdateLegalMoves()
 {
 }

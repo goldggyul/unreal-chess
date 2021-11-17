@@ -41,8 +41,12 @@ public:
 	void MovePickBoxToDest(FVector Dest);
 
 	void PickCurPiece();
+	void SpawnPickedPiece();
 	void PutPiece();
 
+	class APiece* GetCurPiece();
+
+	
 private:
 	UPROPERTY(VisibleAnywhere)
 	EPieceColor MyColor;
@@ -62,5 +66,7 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	class APaperSpriteActor* PickBox;
 
+	UPROPERTY(VisibleAnywhere)
+	class AStaticMeshActor* PickedPiece;
 
 };

@@ -27,6 +27,7 @@ public:
 
 	const EPieceColor GetColor() const { return Color; }
 	const EPieceType GetType() const { return Type; }
+	class UStaticMesh* GetStaticMesh() const;
 
 	virtual void UpdateLegalMoves();
 

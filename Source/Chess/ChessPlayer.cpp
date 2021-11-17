@@ -7,6 +7,7 @@
 #include "Piece.h"
 #include "DrawDebugHelpers.h"
 #include "ChessUtil.h"
+#include "Engine/StaticMeshActor.h"
 
 // Sets default values
 AChessPlayer::AChessPlayer()
@@ -112,6 +113,8 @@ void AChessPlayer::DestroyPickBox()
 
 void AChessPlayer::MovePickBoxToDest(FVector Dest)
 {
+	// 현재 State가 Pick이라면 Box를 움직일 때 Piece(혹은 그 복제품)도 움직여야 함
+
 	//UE_LOG(LogTemp, Warning, TEXT("Move To (%f, %f, %f)"), Dest.X, Dest.Y, Dest.Z);
 
 	if (Dest.X < 150.f || Dest.X >2250.f || Dest.Y < 150.f || Dest.Y>2250.f)
@@ -128,14 +131,78 @@ void AChessPlayer::MovePickBoxToDest(FVector Dest)
 void AChessPlayer::PickCurPiece()
 {
 	// 선택할 수 있으면 들기
+	APiece* CurPiece = GetCurPiece();
+	if (IsValid(CurPiece))// Piece(Black or white) is here
+	{
+		// Do Something
+		if (MyColor == CurPiece->GetColor())
+		{
+			if (CurPiece->IsEnableToPick())
+			{
+				SetState(EPlayerState::Pick);
+				UE_LOG(LogTemp, Warning, TEXT("Pick this piece!"));
+				SpawnPickedPiece();
+			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Cannot pick: It's enemy's piece!"));
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot pick: It's empty!"));
+	}
+}
 
+void AChessPlayer::SpawnPickedPiece()
+{
+	if (IsValid(PickedPiece))
+		PickedPiece->Destroy();
+	APiece* CurPiece = GetCurPiece();
+	if (IsValid(CurPiece))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Spawn Picked Piece"));
+		FVector SpawnLocation = PickBox->GetActorLocation();
+		SpawnLocation.Z += 450.f;
+		PickedPiece = GetWorld()->SpawnActor<AStaticMeshActor>(SpawnLocation, FRotator::ZeroRotator);
+		PickedPiece->SetMobility(EComponentMobility::Movable);
+		PickedPiece->GetStaticMeshComponent()->SetStaticMesh(CurPiece->GetStaticMesh());
+		PickedPiece->SetActorRelativeScale3D(FVector(2.f, 2.f, 2.f));
+		PickedPiece->SetActorLabel(FString(TEXT("Picked Piece")));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot pick: It's empty!"));
+	}
+
+
+}
+
+void AChessPlayer::PutPiece()
+{
+
+}
+
+APiece* AChessPlayer::GetCurPiece()
+{
 	// Test: 일단 자기꺼면 든다
 	FHitResult HitResult;
 
 	FVector Start = PickBox->GetActorLocation();
 	FVector End = Start;
 	Start.Z += 700.f;
-	
+
+	// For debugging
+	FVector LineStart = PickBox->GetActorLocation();
+	FVector LineEnd = LineStart;
+	LineEnd.Z += 700.f;
+	DrawDebugLine(
+		GetWorld(), LineStart, LineEnd,
+		FColor::Magenta, false, 1.f, 0.f, 10.f
+	);
+
+	// Line Trace
 	FCollisionObjectQueryParams Query;
 	Query.AddObjectTypesToQuery(ECollisionChannel::ECC_GameTraceChannel1);
 	if (GetWorld()->LineTraceSingleByObjectType(OUT HitResult, Start, End, Query))
@@ -146,41 +213,14 @@ void AChessPlayer::PickCurPiece()
 			// For debugging
 			FString PieceTypeName = ChessUtil::GetPieceTypeString(HitPiece->GetType());
 			FString PieceColorName = ChessUtil::GetColorString(HitPiece->GetColor());
-			UE_LOG(LogTemp, Warning, TEXT("HITTED: %s %s"), *PieceColorName, *PieceTypeName);
-
-			// Do Something
-			if (MyColor == HitPiece->GetColor())
-			{
-				if (HitPiece->IsEnableToPick())
-				{
-					SetState(EPlayerState::Pick);
-					UE_LOG(LogTemp, Warning, TEXT("Pick this piece!"));
-				}
-			}
-			else
-			{
-				UE_LOG(LogTemp, Warning, TEXT("Cannot pick enemy's piece!"));
-			}
+			UE_LOG(LogTemp, Warning, TEXT("[LINE TRACE] HITTED: %s %s"), *PieceColorName, *PieceTypeName);
+			return HitPiece;
 		}
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("NO COLLISION"));
+		UE_LOG(LogTemp, Warning, TEXT("[LINE TRACE] NO COLLISION"));
 	}
-
-	// For debugging
-	FVector LineStart = PickBox->GetActorLocation();
-	FVector LineEnd = LineStart;
-	LineEnd.Z += 700.f;
-
-	DrawDebugLine(
-		GetWorld(), LineStart, LineEnd,
-		FColor::Magenta, false, 1.f, 0.f, 10.f
-	);
-}
-
-void AChessPlayer::PutPiece()
-{
-
+	return nullptr;
 }
 
