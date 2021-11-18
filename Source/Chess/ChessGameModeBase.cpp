@@ -23,19 +23,19 @@ void AChessGameModeBase::BeginPlay()
 
 	SetFolderPath("/GameInfo");
 	GameState->SetFolderPath("/GameInfo");
-
+	
 	//GetWorld()->SpawnActor<ABoard>(FVector::ZeroVector, FRotator::ZeroRotator);
 }
 
 
-AActor* AChessGameModeBase::ChoosePlayerStart_Implementation(AController* Player)
-{
-	TArray<AActor*> Starts;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), Starts);
-	UE_LOG(LogTemp, Warning, TEXT("SELECTED %d"), Starts.Num());
-
-	APlayerStart* CurStart = Cast<APlayerStart>(Starts[0]);
-	Starts.RemoveAt(0);
-	return CurStart;
-}
+//AActor* AChessGameModeBase::ChoosePlayerStart_Implementation(AController* Player)
+//{
+//	TArray<AActor*> Starts;
+//	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APlayerStart::StaticClass(), Starts);
+//	UE_LOG(LogTemp, Warning, TEXT("SELECTED %d"), Starts.Num());
+//
+//	APlayerStart* CurStart = Cast<APlayerStart>(Starts[0]);
+//	Starts.RemoveAt(0);
+//	return CurStart;
+//}
 

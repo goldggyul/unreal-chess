@@ -5,8 +5,6 @@
 #include "CoreMinimal.h"
 #include "ChessInfo.h"
 
-#define PickBoxZ 10.f
-
 /**
  * 
  */

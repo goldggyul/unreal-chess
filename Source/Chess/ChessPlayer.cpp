@@ -161,7 +161,7 @@ void AChessPlayer::PickPiece()
 	if (IsValid(CurPiece))// Piece(Black or white) is here
 	{
 		// Do Something
-		if (PlayerColor == CurPiece->GetColor())
+		if (PlayerColor == CurPiece->GetPieceColor())
 		{
 			if (CurPiece->IsAbleToPick())
 			{
@@ -197,7 +197,8 @@ void AChessPlayer::SpawnPickedPiece()
 		PickedPiece->SetMobility(EComponentMobility::Movable);
 		PickedPiece->SetActorRelativeScale3D(FVector(2.f, 2.f, 2.f));
 		PickedPiece->SetActorLabel(FString(TEXT("Picked Piece")));
-
+		PickedPiece->GetStaticMeshComponent()->SetCollisionProfileName(
+			CurPiece->GetStaticMeshComponent()->GetCollisionProfileName());
 		UStaticMeshComponent* CurPieceMeshComp = CurPiece->GetStaticMeshComponent();
 		UStaticMeshComponent* PickedPieceMeshComp = PickedPiece->GetStaticMeshComponent();
 		PickedPieceMeshComp->SetStaticMesh(CurPieceMeshComp->GetStaticMesh());
@@ -210,24 +211,26 @@ void AChessPlayer::SpawnPickedPiece()
 	}
 }
 
-void AChessPlayer::PutPiece()
+bool AChessPlayer::PutPiece()
 {
 	// 현재 위치에 놓을 수 있으면 놓는다.
 	if (!IsValid(CurPiece) || !IsValid(PickedPiece) || !IsValid(PickBox))
-		return;
+		return false;
 	FVector CurPickLocation = PickedPiece->GetActorLocation();
 	CurPickLocation.Z = 0;
 	if (CurPiece->IsAbleToPut(CurPickLocation))
 	{
 		PickedPiece->Destroy();
-		CurPiece->SetActorLocation(CurPickLocation);
+		CurPiece->Put(CurPickLocation);
 		SetMeshOpaque(true, CurPiece->GetStaticMeshComponent());
 		CurPiece = nullptr;
 		SetState(EPlayerState::Idle);
+		return true;
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Cannot put here!"));
+		return false;
 	}
 }
 
@@ -258,8 +261,8 @@ APiece* AChessPlayer::GetCurPiece()
 		if (IsValid(HitPiece))
 		{
 			// For debugging
-			FString PieceTypeName = ChessUtil::GetPieceTypeString(HitPiece->GetType());
-			FString PieceColorName = ChessUtil::GetColorString(HitPiece->GetColor());
+			FString PieceTypeName = ChessUtil::GetPieceTypeString(HitPiece->GetPieceType());
+			FString PieceColorName = ChessUtil::GetColorString(HitPiece->GetPieceColor());
 			UE_LOG(LogTemp, Warning, TEXT("[LINE TRACE] HITTED: %s %s"), *PieceColorName, *PieceTypeName);
 			return HitPiece;
 		}

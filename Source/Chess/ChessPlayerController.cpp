@@ -6,6 +6,7 @@
 #include "ChessInfo.h"
 #include "ChessUtil.h"
 #include "DrawDebugHelpers.h"
+#include "Engine/EngineTypes.h"
 
 AChessPlayerController::AChessPlayerController()
 {
@@ -112,11 +113,14 @@ void AChessPlayerController::Enter()
 		CurPlayer->PickPiece();
 		break;
 	case EPlayerState::Pick:
+	{
 		// 이미 Pick 된 상태이므로 둘 수 있으면 두면 됨
 		// 선택할 수 있으면 놓고 턴 넘기기,
 		// 선택 못하면 Piece 다시 제자리에 놓고 Idle로
-		CurPlayer->PutPiece();
-		ChangePlayer();
+		bool bIsSuccessful = CurPlayer->PutPiece();
+		if(bIsSuccessful)
+			ChangePlayer();
+	}
 		break;
 	case EPlayerState::Put:
 	default:

@@ -6,6 +6,7 @@
 
 #define BoardCenter FVector(1200.f, 1200.f, 0.f)
 #define SquareSize 300.f
+#define PickBoxZ 10.f
 
 UENUM(BlueprintType)
 enum class EPieceColor : uint8
