@@ -79,7 +79,7 @@ void AChessPlayerController::MoveBoxToDirection(FVector Dir)
 	{
 		Dest += Dir * -300.f;
 	}
-	CurPlayer->MovePickBoxToDest(Dest);
+	CurPlayer->MovePickBox(Dest);
 }
 
 void AChessPlayerController::Up()
@@ -109,20 +109,19 @@ void AChessPlayerController::Enter()
 	switch (CurPlayer->GetState())
 	{
 	case EPlayerState::Idle:
-		CurPlayer->PickCurPiece();
+		CurPlayer->PickPiece();
 		break;
 	case EPlayerState::Pick:
 		// 이미 Pick 된 상태이므로 둘 수 있으면 두면 됨
 		// 선택할 수 있으면 놓고 턴 넘기기,
 		// 선택 못하면 Piece 다시 제자리에 놓고 Idle로
 		CurPlayer->PutPiece();
+		ChangePlayer();
 		break;
 	case EPlayerState::Put:
 	default:
 		break;
 	}
-
-	ChangePlayer();
 }
 
 void AChessPlayerController::Click()
@@ -153,7 +152,7 @@ void AChessPlayerController::Click()
 			// 왜 Board만?
 			UE_LOG(LogTemp, Warning, TEXT("Mouse Hit: %s (%f, %f, %f)"), *HitLabel, HitPoint.X, HitPoint.Y, HitPoint.Z);
 			FVector ClickedSquareCenter = ChessUtil::GetSquareCenter(HitPoint);
-			CurPlayer->MovePickBoxToDest(ClickedSquareCenter);
+			CurPlayer->MovePickBox(ClickedSquareCenter);
 			Enter();
 		}
 	}

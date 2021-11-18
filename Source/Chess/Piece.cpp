@@ -44,10 +44,17 @@ UStaticMeshComponent* APiece::GetStaticMeshComponent()
 
 void APiece::UpdateLegalMoves()
 {
+	
 }
 
-bool APiece::IsEnableToPick() const
+bool APiece::IsAbleToPick() const
 {
 	// if Legal Moves Exists
+	return true;
+}
+
+bool APiece::IsAbleToPut(FVector Dest) const
+{
+	// 
 	return true;
 }

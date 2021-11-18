@@ -38,9 +38,9 @@ public:
 
 	void SpawnPickBox();
 	void DestroyPickBox();
-	void MovePickBoxToDest(FVector Dest);
+	void MovePickBox(FVector Dest);
 
-	void PickCurPiece();
+	void PickPiece();
 	void SpawnPickedPiece();
 	void PutPiece();
 
@@ -70,6 +70,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	class AStaticMeshActor* PickedPiece;
+
+	UPROPERTY(VisibleAnywhere)
+	class APiece* CurPiece;
 
 	// 불투명 <-> 투명하게 바꾸기 위해 머티리얼 저장
 	UPROPERTY(VisibleAnywhere, Category = PieceMaterials)

@@ -31,8 +31,8 @@ public:
 
 	virtual void UpdateLegalMoves();
 
-	bool IsEnableToPick() const;
-
+	bool IsAbleToPick() const;
+	bool IsAbleToPut(FVector Dest) const;
 
 protected:
 	void SetType(EPieceType PT) { PieceType = PT; }

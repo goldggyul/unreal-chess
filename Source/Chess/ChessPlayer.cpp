@@ -130,7 +130,7 @@ void AChessPlayer::DestroyPickBox()
 	PickBox->Destroy();
 }
 
-void AChessPlayer::MovePickBoxToDest(FVector Dest)
+void AChessPlayer::MovePickBox(FVector Dest)
 {
 	// 현재 State가 Pick이라면 Box를 움직일 때 Piece(혹은 그 복제품)도 움직여야 함
 
@@ -152,16 +152,18 @@ void AChessPlayer::MovePickBoxToDest(FVector Dest)
 	}
 }
 
-void AChessPlayer::PickCurPiece()
+void AChessPlayer::PickPiece()
 {
 	// 선택할 수 있으면 들기
-	APiece* CurPiece = GetCurPiece();
+
+	// 현재 선택된 피스 저장
+	CurPiece = GetCurPiece();
 	if (IsValid(CurPiece))// Piece(Black or white) is here
 	{
 		// Do Something
 		if (PlayerColor == CurPiece->GetColor())
 		{
-			if (CurPiece->IsEnableToPick())
+			if (CurPiece->IsAbleToPick())
 			{
 				SetState(EPlayerState::Pick);
 				UE_LOG(LogTemp, Warning, TEXT("Pick this piece!"));
@@ -183,7 +185,6 @@ void AChessPlayer::SpawnPickedPiece()
 {
 	if (IsValid(PickedPiece))
 		PickedPiece->Destroy();
-	APiece* CurPiece = GetCurPiece();
 	if (IsValid(CurPiece))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Spawn Picked Piece"));
@@ -207,12 +208,27 @@ void AChessPlayer::SpawnPickedPiece()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Cannot pick: It's empty!"));
 	}
-
 }
 
 void AChessPlayer::PutPiece()
 {
-
+	// 현재 위치에 놓을 수 있으면 놓는다.
+	if (!IsValid(CurPiece) || !IsValid(PickedPiece) || !IsValid(PickBox))
+		return;
+	FVector CurPickLocation = PickedPiece->GetActorLocation();
+	CurPickLocation.Z = 0;
+	if (CurPiece->IsAbleToPut(CurPickLocation))
+	{
+		PickedPiece->Destroy();
+		CurPiece->SetActorLocation(CurPickLocation);
+		SetMeshOpaque(true, CurPiece->GetStaticMeshComponent());
+		CurPiece = nullptr;
+		SetState(EPlayerState::Idle);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot put here!"));
+	}
 }
 
 APiece* AChessPlayer::GetCurPiece()
