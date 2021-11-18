@@ -78,7 +78,10 @@ bool APiece::IsAbleToPick()
 	UpdateLegalMoves();
 	ShowLegalMoves();
 
-	return true;
+	if (LegalMoves.Num() > 0)
+		return true;
+	UE_LOG(LogTemp, Warning, TEXT("Can't move this piece!"));
+	return false;
 }
 
 bool APiece::IsAbleToPut(FVector Dest) const

@@ -199,6 +199,8 @@ void AChessPlayer::SpawnPickedPiece()
 		PickedPiece->SetActorLabel(FString(TEXT("Picked Piece")));
 		PickedPiece->GetStaticMeshComponent()->SetCollisionProfileName(
 			CurPiece->GetStaticMeshComponent()->GetCollisionProfileName());
+		PickedPiece->SetFolderPath("/Player");
+
 		UStaticMeshComponent* CurPieceMeshComp = CurPiece->GetStaticMeshComponent();
 		UStaticMeshComponent* PickedPieceMeshComp = PickedPiece->GetStaticMeshComponent();
 		PickedPieceMeshComp->SetStaticMesh(CurPieceMeshComp->GetStaticMesh());
