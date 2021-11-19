@@ -48,45 +48,42 @@ void APawnPiece::UpdateLegalMoves()
 	*	2) Player에 정보 주기? 턴이 바뀔 때 직전에 폰이 처음으로 움직였다면 정보를 줘야한다. 즉 ChangePlayer일 때 앙파상을 Set
 	*/
 
-	// Test: 일단 자기꺼면 든다
-	FVector Location = GetActorLocation();
-	FVector Differ = GetPieceFowardVector() * SquareSize;
-	// 한 칸 앞
-	Location += Differ;
-	AActor* HitActor = ChessUtil::GetCollidedPiece(GetWorld(), Location);
-	APiece* HitPiece = Cast<APiece>(HitActor);
-	if (!IsValid(HitPiece))
-	{
-		AddToLegalMoves(Location);
-	}
-	// 첫 번째 움직임인 경우 두 칸 앞
+	TSet<FVector> Differs;
+	Differs.Add(GetPieceFowardVector() * SquareSize);
 	if (IsFirstMove())
 	{
+		// 첫 번째 움직임인 경우 두 칸 앞도 체크
+		Differs.Add(2 * GetPieceFowardVector() * SquareSize);
+	}
+	for (auto Differ : Differs)
+	{
+		FVector Location = GetActorLocation();
 		Location += Differ;
-		HitActor = ChessUtil::GetCollidedPiece(GetWorld(), Location);
-		HitPiece = Cast<APiece>(HitActor);
-
+		AActor* HitActor = ChessUtil::GetCollidedPiece(GetWorld(), Location);
+		APiece* HitPiece = Cast<APiece>(HitActor);
 		if (!IsValid(HitPiece))
 		{
 			AddToLegalMoves(Location);
 		}
-	}
-	// 적의 기물 잡기: 대각선 전방
-	// 1. 오른쪽 대각선
-	Location = GetActorLocation() + GetPieceFowardVector() * SquareSize + GetPieceRightVector() * SquareSize;
-	HitActor = ChessUtil::GetCollidedPiece(GetWorld(), Location);
-	HitPiece = Cast<APiece>(HitActor);
-	if (IsValid(HitPiece) && (HitPiece->GetPieceColor() != GetPieceColor()))
-	{
-		AddToLegalMoves(Location);
+		else
+		{
+			break;
+		}
 	}
 
-	// 1. 왼쪽 대각선
-	Location = GetActorLocation() + GetPieceFowardVector() * SquareSize - GetPieceRightVector() * SquareSize;
-	HitActor = ChessUtil::GetCollidedPiece(GetWorld(), Location);
-	HitPiece = Cast<APiece>(HitActor);
-	if (IsValid(HitPiece) && (HitPiece->GetPieceColor() != GetPieceColor()))
+	// 적의 기물 잡기: 대각선 전방
+	Differs.Empty();
+	Differs.Add(GetPieceFowardVector() * SquareSize + GetPieceRightVector() * SquareSize);
+	Differs.Add(GetPieceFowardVector() * SquareSize - GetPieceRightVector() * SquareSize);
+	for (auto Differ : Differs)
 	{
-		AddToLegalMoves(Location);
+		FVector Location = GetActorLocation();
+		Location += Differ;
+		AActor* HitActor = ChessUtil::GetCollidedPiece(GetWorld(), Location);
+		APiece* HitPiece = Cast<APiece>(HitActor);
+		if (IsValid(HitPiece) && (HitPiece->GetPieceColor() != GetPieceColor()))
+		{
+			AddToLegalMoves(Location);
+		}
 	}
 }

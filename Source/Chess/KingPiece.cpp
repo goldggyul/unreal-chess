@@ -21,3 +21,9 @@ AKingPiece::AKingPiece()
 	PieceMesh->SetRelativeScale3D(FVector(2.f, 2.f, 2.f));
 
 }
+
+void AKingPiece::UpdateLegalMoves()
+{
+	Super::UpdateLegalMoves();
+
+}

@@ -18,5 +18,5 @@ public:
 	ARookPiece();
 
 protected:
-	virtual void UpdateLegalMoves();
+	virtual void UpdateLegalMoves() override;
 };

@@ -16,4 +16,7 @@ class CHESS_API AKingPiece : public APiece
 	
 public:
 	AKingPiece();
+
+protected:
+	virtual void UpdateLegalMoves() override;
 };
