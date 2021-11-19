@@ -40,7 +40,6 @@ void ARookPiece::UpdateLegalMoves()
 		FVector Location = GetActorLocation();
 		for (int i = 0; i < 7; i++) // 한번에 최대 7칸
 		{
-	
 			Location += Differ;
 			AActor* HitActor = UChessUtil::GetCollidedPiece(GetWorld(), Location);
 			APiece* HitPiece = Cast<APiece>(HitActor);

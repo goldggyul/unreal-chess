@@ -30,16 +30,14 @@ void AKingPiece::UpdateLegalMoves()
 	// 0 1 2
 	// 3   4
 	// 5 6 7
-	FVector PieceForward = GetPieceFowardVector();
-	FVector PieceRight = GetPieceRightVector();
-	Differs.Add(PieceForward - PieceRight);
-	Differs.Add(PieceForward);
-	Differs.Add(PieceForward + PieceRight);
-	Differs.Add(-PieceRight);
-	Differs.Add(PieceRight);
-	Differs.Add(-PieceForward - PieceRight);
-	Differs.Add(-PieceForward);
-	Differs.Add(-PieceForward + PieceRight);
+	Differs.Add(GetPieceFowardVector()); // 상
+	Differs.Add(-GetPieceFowardVector()); // 하
+	Differs.Add(-GetPieceRightVector()); // 좌
+	Differs.Add(GetPieceRightVector()); // 우
+	Differs.Add(GetPieceFowardVector() - GetPieceRightVector()); // 왼쪽 상단
+	Differs.Add(GetPieceFowardVector() + GetPieceRightVector()); // 오른쪽 상단
+	Differs.Add(-GetPieceFowardVector() - GetPieceRightVector()); // 왼쪽 하단
+	Differs.Add(-GetPieceFowardVector() + GetPieceRightVector()); // 오른쪽 하단
 	for (auto Differ : Differs)
 	{
 		FVector Location = GetActorLocation();
