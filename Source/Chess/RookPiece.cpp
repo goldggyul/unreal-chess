@@ -26,9 +26,8 @@ void ARookPiece::UpdateLegalMoves()
 	Super::UpdateLegalMoves();
 
 	/*
-	* 룩의 행마법
-	* 1. 상하좌우 직진
-	* ※ 캐슬링 시 같이 움직임: 킹에서 움직이게 할 예정
+	* 룩의 행마법 : 상하좌우 직진
+	* ※ 캐슬링 시 같이 움직여야함: 킹에서 움직이게 할 예정
 	*/
 	
 	TSet<FVector> Differs;
@@ -41,7 +40,7 @@ void ARookPiece::UpdateLegalMoves()
 		FVector Location = GetActorLocation();
 		for (int i = 0; i < 7; i++) // 한번에 최대 7칸
 		{
-			
+	
 			Location += Differ;
 			AActor* HitActor = UChessUtil::GetCollidedPiece(GetWorld(), Location);
 			APiece* HitPiece = Cast<APiece>(HitActor);
