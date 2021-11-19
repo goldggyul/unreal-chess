@@ -213,17 +213,17 @@ void AChessPlayer::SpawnPickedPiece()
 	}
 }
 
-bool AChessPlayer::PutPiece()
+bool AChessPlayer::PutCurPiece()
 {
 	// 현재 위치에 놓을 수 있으면 놓는다.
 	if (!IsValid(CurPiece) || !IsValid(PickedPiece) || !IsValid(PickBox))
 		return false;
 	FVector CurPickLocation = PickedPiece->GetActorLocation();
 	CurPickLocation.Z = 0;
-	if (CurPiece->IsAbleToPut(CurPickLocation))
+	if (CurPiece->IsAbleToPutAt(CurPickLocation))
 	{
 		PickedPiece->Destroy();
-		CurPiece->Put(CurPickLocation);
+		CurPiece->PutAt(CurPickLocation);
 		SetMeshOpaque(true, CurPiece->GetStaticMeshComponent());
 		CurPiece = nullptr;
 		SetState(EPlayerState::Idle);

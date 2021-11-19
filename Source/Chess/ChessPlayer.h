@@ -42,7 +42,7 @@ public:
 
 	void PickPiece();
 	void SpawnPickedPiece();
-	bool PutPiece();
+	bool PutCurPiece();
 
 	class APiece* GetCurPiece();
 

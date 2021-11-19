@@ -19,6 +19,7 @@ public:
 
 private:
 	void ShowLegalMoves();
+	void DestroyMoveBoxes();
 
 protected:
 	// Called when the game starts or when spawned
@@ -26,6 +27,8 @@ protected:
 	virtual void PostInitializeComponents() override;
 
 	void SetType(EPieceType PT) { PieceType = PT; }
+	bool IsFirstMove() const { return bIsFirstMove; }
+	virtual void UpdateLegalMoves();
 	
 public:	
 	// Called every frame
@@ -35,15 +38,12 @@ public:
 	const EPieceType GetPieceType() const { return PieceType; }
 	class UStaticMeshComponent* GetStaticMeshComponent();
 
-	virtual void UpdateLegalMoves();
-
 	bool IsAbleToPick();
-	bool IsAbleToPut(FVector Dest) const;
-	virtual void Put(FVector Dest);
+	bool IsAbleToPutAt(FVector Dest) const;
+	virtual void PutAt(FVector Dest);
 
 	FVector GetPieceFowardVector() const;
 	FVector GetPieceRightVector() const;
-	void DestroyMoveBoxes();
 
 protected:
 	UPROPERTY(VisibleAnywhere)
@@ -52,8 +52,6 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	TSet<FVector> LegalMoves;
 
-	bool IsFirstMove() const { return bIsFirstMove; }
-
 private:
 	UPROPERTY(EditAnywhere, Category = PieceState)
 	EPieceColor PieceColor;
@@ -61,6 +59,7 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = PieceState)
 	EPieceType PieceType;
 
+	UPROPERTY(VisibleAnywhere, Category = PieceState)
 	bool bIsFirstMove;
 
 	UPROPERTY(VisibleAnywhere, Category = Moves)

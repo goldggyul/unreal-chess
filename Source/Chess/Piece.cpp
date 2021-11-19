@@ -84,15 +84,15 @@ bool APiece::IsAbleToPick()
 	return false;
 }
 
-bool APiece::IsAbleToPut(FVector Dest) const
+bool APiece::IsAbleToPutAt(FVector Dest) const
 {
 	// if Dest in Legal Moves
 	return LegalMoves.Contains(Dest);
 }
 
-void APiece::Put(FVector Dest)
+void APiece::PutAt(FVector Dest)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Super: Put piece"));
+	UE_LOG(LogTemp, Warning, TEXT("Super: PutAt piece"));
 
 	if(bIsFirstMove)
 		bIsFirstMove = false;

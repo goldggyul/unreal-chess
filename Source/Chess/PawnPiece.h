@@ -17,5 +17,6 @@ class CHESS_API APawnPiece : public APiece
 public:
 	APawnPiece();
 
+protected:
 	virtual void UpdateLegalMoves() override;
 };
