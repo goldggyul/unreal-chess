@@ -16,4 +16,7 @@ class CHESS_API ARookPiece : public APiece
 	
 public:
 	ARookPiece();
+
+protected:
+	virtual void UpdateLegalMoves();
 };

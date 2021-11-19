@@ -34,6 +34,14 @@ void APiece::ShowLegalMoves()
 	}
 }
 
+void APiece::AddToLegalMoves(const FVector Location)
+{
+	if (ChessUtil::IsInBoard(Location))
+	{
+		LegalMoves.Add(Location);
+	}
+}
+
 // Called when the game starts or when spawned
 void APiece::BeginPlay()
 {

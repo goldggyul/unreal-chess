@@ -29,6 +29,7 @@ protected:
 	void SetType(EPieceType PT) { PieceType = PT; }
 	bool IsFirstMove() const { return bIsFirstMove; }
 	virtual void UpdateLegalMoves();
+	void AddToLegalMoves(const FVector Location);
 	
 public:	
 	// Called every frame

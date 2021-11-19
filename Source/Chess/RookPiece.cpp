@@ -20,3 +20,43 @@ ARookPiece::ARookPiece()
 	SetRootComponent(PieceMesh);
 	PieceMesh->SetRelativeScale3D(FVector(2.f, 2.f, 2.f));
 }
+
+void ARookPiece::UpdateLegalMoves()
+{
+	Super::UpdateLegalMoves();
+
+	/*
+	* 룩의 행마법
+	* 1. 상하좌우 직진
+	* ※ 캐슬링 시 같이 움직임: 킹에서 움직이게 할 예정
+	*/
+	
+	TSet<FVector> Differs;
+	Differs.Add(GetPieceFowardVector() * SquareSize); // 상
+	Differs.Add(-GetPieceFowardVector() * SquareSize); // 하
+	Differs.Add(-GetPieceRightVector() * SquareSize); // 좌
+	Differs.Add(GetPieceRightVector() * SquareSize); // 우
+	for (auto Differ : Differs)
+	{
+		FVector Location = GetActorLocation();
+		for (int i = 0; i < 7; i++) // 한번에 최대 7칸
+		{
+			
+			Location += Differ;
+			AActor* HitActor = ChessUtil::GetCollidedPiece(GetWorld(), Location);
+			APiece* HitPiece = Cast<APiece>(HitActor);
+			if (!IsValid(HitPiece))
+			{
+				AddToLegalMoves(Location);
+			}
+			else
+			{
+				if (HitPiece->GetPieceColor() != GetPieceColor())
+				{
+					AddToLegalMoves(Location);
+				}
+				break;
+			}
+		}
+	}
+}

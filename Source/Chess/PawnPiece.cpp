@@ -49,45 +49,44 @@ void APawnPiece::UpdateLegalMoves()
 	*/
 
 	// Test: 일단 자기꺼면 든다
-	FVector Start = GetActorLocation();
+	FVector Location = GetActorLocation();
 	FVector Differ = GetPieceFowardVector() * SquareSize;
 	// 한 칸 앞
-	Start += Differ;
-	AActor* HitActor = ChessUtil::GetCollidedPiece(GetWorld(), Start);
+	Location += Differ;
+	AActor* HitActor = ChessUtil::GetCollidedPiece(GetWorld(), Location);
 	APiece* HitPiece = Cast<APiece>(HitActor);
 	if (!IsValid(HitPiece))
 	{
-		LegalMoves.Add(Start);
+		AddToLegalMoves(Location);
 	}
 	// 첫 번째 움직임인 경우 두 칸 앞
 	if (IsFirstMove())
 	{
-		Start += Differ;
-		HitActor = ChessUtil::GetCollidedPiece(GetWorld(), Start);
+		Location += Differ;
+		HitActor = ChessUtil::GetCollidedPiece(GetWorld(), Location);
 		HitPiece = Cast<APiece>(HitActor);
 
 		if (!IsValid(HitPiece))
 		{
-			LegalMoves.Add(Start);
+			AddToLegalMoves(Location);
 		}
 	}
 	// 적의 기물 잡기: 대각선 전방
 	// 1. 오른쪽 대각선
-	Start = GetActorLocation() + GetPieceFowardVector() * SquareSize + GetPieceRightVector() * SquareSize;
-	HitActor = ChessUtil::GetCollidedPiece(GetWorld(), Start);
+	Location = GetActorLocation() + GetPieceFowardVector() * SquareSize + GetPieceRightVector() * SquareSize;
+	HitActor = ChessUtil::GetCollidedPiece(GetWorld(), Location);
 	HitPiece = Cast<APiece>(HitActor);
 	if (IsValid(HitPiece) && (HitPiece->GetPieceColor() != GetPieceColor()))
 	{
-		LegalMoves.Add(Start);
-
+		AddToLegalMoves(Location);
 	}
 
 	// 1. 왼쪽 대각선
-	Start = GetActorLocation() + GetPieceFowardVector() * SquareSize - GetPieceRightVector() * SquareSize;
-	HitActor = ChessUtil::GetCollidedPiece(GetWorld(), Start);
+	Location = GetActorLocation() + GetPieceFowardVector() * SquareSize - GetPieceRightVector() * SquareSize;
+	HitActor = ChessUtil::GetCollidedPiece(GetWorld(), Location);
 	HitPiece = Cast<APiece>(HitActor);
 	if (IsValid(HitPiece) && (HitPiece->GetPieceColor() != GetPieceColor()))
 	{
-		LegalMoves.Add(Start);
+		AddToLegalMoves(Location);
 	}
 }

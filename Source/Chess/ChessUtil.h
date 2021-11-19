@@ -84,7 +84,7 @@ public:
 	static AActor* GetCollidedPiece(const UWorld* World, FVector Point)
 	{
 		FVector Bottom = Point;
-		FVector Top = Bottom;
+		FVector Top = Point;
 		Top.Z += 700.f;
 
 		DrawDebugLine(
