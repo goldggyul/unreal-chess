@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "ChessInfo.h"
+#include "DrawDebugHelpers.h"
 
 /**
  * 
@@ -78,5 +79,30 @@ public:
 		float LocationY = (BoardCenter.Y - SquareSize * 4) + ((SquareSize / 2) * (2 * Y - 1));
 		UE_LOG(LogTemp, Warning, TEXT("SquareCenter: %d,%d -> %f %f "), X, Y, LocationX, LocationY);
 		return FVector(LocationX, LocationY, BoardCenter.Z);
+	}
+
+	static AActor* GetCollidedPiece(const UWorld* World, FVector Point)
+	{
+		FVector Bottom = Point;
+		FVector Top = Bottom;
+		Top.Z += 700.f;
+
+		DrawDebugLine(
+			World, Top, Bottom,
+			FColor::Magenta, false, 1.f, 0.f, 10.f
+		);
+
+		FHitResult HitResult;
+		FCollisionObjectQueryParams Query;
+		Query.AddObjectTypesToQuery(ECollisionChannel::ECC_GameTraceChannel1);
+		if (World->LineTraceSingleByObjectType(OUT HitResult, Top, Bottom, Query))
+		{
+			return HitResult.GetActor();
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[LINE TRACE] NO COLLISION"));
+		}
+		return nullptr;
 	}
 };

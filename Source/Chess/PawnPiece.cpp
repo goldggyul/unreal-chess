@@ -49,85 +49,45 @@ void APawnPiece::UpdateLegalMoves()
 	*/
 
 	// Test: 일단 자기꺼면 든다
-	FHitResult HitResult;
-
 	FVector Start = GetActorLocation();
-	FVector End = Start;
 	FVector Differ = GetPieceFowardVector() * SquareSize;
-
-	// Line Trace
-	FCollisionObjectQueryParams ObjectQuery;
-	ObjectQuery.AddObjectTypesToQuery(ECollisionChannel::ECC_GameTraceChannel1);
-	FCollisionQueryParams Query = FCollisionQueryParams::DefaultQueryParam;
-	Query.AddIgnoredActor(GetOwner());
-	
-	/*
-	가장 가까운 부딪힌 액터를 얻어옴
-	충돌 없음: 그냥 가능
-	충돌 있음: 몇 Differ인지를 확인 -> 그 충돌칸 전까지 다 LegalMoves에 넣고,
-	폰의 경우엔 적의 
-	*/
-
 	// 한 칸 앞
-	End += Differ;
-	DrawDebugLine(
-		GetWorld(), Start, End,
-		FColor::Orange, false, 1.f, 0.f, 10.f
-	);
-
-	GetWorld()->LineTraceSingleByObjectType(OUT HitResult, Start, End, ObjectQuery, Query);
-	APiece* HitPiece = Cast<APiece>(HitResult.GetActor());
+	Start += Differ;
+	AActor* HitActor = ChessUtil::GetCollidedPiece(GetWorld(), Start);
+	APiece* HitPiece = Cast<APiece>(HitActor);
 	if (!IsValid(HitPiece))
 	{
-		LegalMoves.Add(End);
+		LegalMoves.Add(Start);
 	}
-
 	// 첫 번째 움직임인 경우 두 칸 앞
 	if (IsFirstMove())
 	{
-		End += Differ;
-		DrawDebugLine(
-			GetWorld(), Start, End,
-			FColor::Orange, false, 1.f, 0.f, 10.f
-		);
-		GetWorld()->LineTraceSingleByObjectType(OUT HitResult, Start, End, ObjectQuery, Query);
-		HitPiece = Cast<APiece>(HitResult.GetActor());
+		Start += Differ;
+		HitActor = ChessUtil::GetCollidedPiece(GetWorld(), Start);
+		HitPiece = Cast<APiece>(HitActor);
+
 		if (!IsValid(HitPiece))
 		{
-			LegalMoves.Add(End);
+			LegalMoves.Add(Start);
 		}
 	}
-
 	// 적의 기물 잡기: 대각선 전방
 	// 1. 오른쪽 대각선
-	End  = Start + GetPieceFowardVector() * SquareSize + GetPieceRightVector() * SquareSize;
-	DrawDebugLine(
-		GetWorld(), Start, End,
-		FColor::Orange, false, 1.f, 0.f, 10.f
-	);
-	GetWorld()->LineTraceSingleByObjectType(OUT HitResult, Start, End, ObjectQuery, Query);
-	if (HitResult.bBlockingHit)
+	Start = GetActorLocation() + GetPieceFowardVector() * SquareSize + GetPieceRightVector() * SquareSize;
+	HitActor = ChessUtil::GetCollidedPiece(GetWorld(), Start);
+	HitPiece = Cast<APiece>(HitActor);
+	if (IsValid(HitPiece) && (HitPiece->GetPieceColor() != GetPieceColor()))
 	{
-		HitPiece = Cast<APiece>(HitResult.GetActor());
-		if (HitPiece->GetPieceColor() != GetPieceColor()) // 적의 기물 -> 잡을 수 있음
-		{
-			LegalMoves.Add(End);
-		}
+		LegalMoves.Add(Start);
+
 	}
 
 	// 1. 왼쪽 대각선
-	End = Start + GetPieceFowardVector() * SquareSize - GetPieceRightVector() * SquareSize;
-	DrawDebugLine(
-		GetWorld(), Start, End,
-		FColor::Orange, false, 1.f, 0.f, 10.f
-	);
-	GetWorld()->LineTraceSingleByObjectType(OUT HitResult, Start, End, ObjectQuery, Query);
-	if (HitResult.bBlockingHit)
+	Start = GetActorLocation() + GetPieceFowardVector() * SquareSize - GetPieceRightVector() * SquareSize;
+	HitActor = ChessUtil::GetCollidedPiece(GetWorld(), Start);
+	HitPiece = Cast<APiece>(HitActor);
+	if (IsValid(HitPiece) && (HitPiece->GetPieceColor() != GetPieceColor()))
 	{
-		HitPiece = Cast<APiece>(HitResult.GetActor());
-		if (HitPiece->GetPieceColor() != GetPieceColor()) // 적의 기물 -> 잡을 수 있음
-		{
-			LegalMoves.Add(End);
-		}
+		LegalMoves.Add(Start);
 	}
 }

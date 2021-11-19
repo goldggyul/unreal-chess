@@ -239,41 +239,21 @@ bool AChessPlayer::PutPiece()
 APiece* AChessPlayer::GetCurPiece()
 {
 	// Test: 일단 자기꺼면 든다
-	FHitResult HitResult;
-
 	FVector Start = PickBox->GetActorLocation();
-	FVector End = Start;
-	Start.Z += 700.f;
-
-	// For debugging
-	FVector LineStart = PickBox->GetActorLocation();
-	FVector LineEnd = LineStart;
-	LineEnd.Z += 700.f;
-	DrawDebugLine(
-		GetWorld(), LineStart, LineEnd,
-		FColor::Magenta, false, 1.f, 0.f, 10.f
-	);
-
-	// Line Trace
-	FCollisionObjectQueryParams Query;
-	Query.AddObjectTypesToQuery(ECollisionChannel::ECC_GameTraceChannel1);
-	if (GetWorld()->LineTraceSingleByObjectType(OUT HitResult, Start, End, Query))
+	AActor* HitActor = ChessUtil::GetCollidedPiece(GetWorld(), Start);
+	APiece* HitPiece = Cast<APiece>(HitActor);
+	if (IsValid(HitPiece))
 	{
-		APiece* HitPiece = Cast<APiece>(HitResult.GetActor());
-		if (IsValid(HitPiece))
-		{
-			// For debugging
-			FString PieceTypeName = ChessUtil::GetPieceTypeString(HitPiece->GetPieceType());
-			FString PieceColorName = ChessUtil::GetColorString(HitPiece->GetPieceColor());
-			UE_LOG(LogTemp, Warning, TEXT("[LINE TRACE] HITTED: %s %s"), *PieceColorName, *PieceTypeName);
-			return HitPiece;
-		}
+		// For debugging
+		FString PieceTypeName = ChessUtil::GetPieceTypeString(HitPiece->GetPieceType());
+		FString PieceColorName = ChessUtil::GetColorString(HitPiece->GetPieceColor());
+		UE_LOG(LogTemp, Warning, TEXT("[LINE TRACE] HITTED: %s %s"), *PieceColorName, *PieceTypeName);
+		return HitPiece;
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("[LINE TRACE] NO COLLISION"));
+		return nullptr;
 	}
-	return nullptr;
 }
 
 void AChessPlayer::SetMeshOpaque(bool bIsOpaque, class UStaticMeshComponent* Mesh) const
