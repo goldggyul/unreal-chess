@@ -20,3 +20,9 @@ ABishopPiece::ABishopPiece()
 	SetRootComponent(PieceMesh);
 	PieceMesh->SetRelativeScale3D(PieceMeshSize);
 }
+
+void ABishopPiece::UpdateLegalMoves()
+{
+	Super::UpdateLegalMoves();
+
+}

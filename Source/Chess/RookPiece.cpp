@@ -32,10 +32,10 @@ void ARookPiece::UpdateLegalMoves()
 	*/
 	
 	TSet<FVector> Differs;
-	Differs.Add(GetPieceFowardVector() * SquareSize); // ╩С
-	Differs.Add(-GetPieceFowardVector() * SquareSize); // го
-	Differs.Add(-GetPieceRightVector() * SquareSize); // аб
-	Differs.Add(GetPieceRightVector() * SquareSize); // ©Л
+	Differs.Add(GetPieceFowardVector()); // ╩С
+	Differs.Add(-GetPieceFowardVector()); // го
+	Differs.Add(-GetPieceRightVector()); // аб
+	Differs.Add(GetPieceRightVector()); // ©Л
 	for (auto Differ : Differs)
 	{
 		FVector Location = GetActorLocation();

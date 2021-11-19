@@ -16,4 +16,7 @@ class CHESS_API ABishopPiece : public APiece
 	
 public:
 	ABishopPiece();
+
+protected:
+	virtual void UpdateLegalMoves() override;
 };

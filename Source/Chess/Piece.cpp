@@ -123,18 +123,18 @@ FVector APiece::GetPieceFowardVector() const
 {
 	if (GetPieceColor() == EPieceColor::Black)
 	{
-		return FVector(0.0f, 1.0f, 0.0f);
+		return FVector(0.0f, 1.0f, 0.0f) * SquareSize;
 	}
-	return FVector(0.0f, -1.0f, 0.0f);
+	return FVector(0.0f, -1.0f, 0.0f) * SquareSize;
 }
 
 FVector APiece::GetPieceRightVector() const
 {
 	if (GetPieceColor() == EPieceColor::Black)
 	{
-		return FVector(-1.0f, 0.0f, 0.0f);
+		return FVector(-1.0f, 0.0f, 0.0f) * SquareSize;
 	}
-	return FVector(1.0f, 0.0f, 0.0f);
+	return FVector(1.0f, 0.0f, 0.0f) * SquareSize;
 }
 
 void APiece::DestroyMoveBoxes()

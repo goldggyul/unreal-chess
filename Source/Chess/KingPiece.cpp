@@ -30,8 +30,8 @@ void AKingPiece::UpdateLegalMoves()
 	// 0 1 2
 	// 3   4
 	// 5 6 7
-	FVector PieceForward = GetActorForwardVector() * SquareSize;
-	FVector PieceRight = GetActorRightVector() * SquareSize;
+	FVector PieceForward = GetPieceFowardVector();
+	FVector PieceRight = GetPieceRightVector();
 	Differs.Add(PieceForward - PieceRight);
 	Differs.Add(PieceForward);
 	Differs.Add(PieceForward + PieceRight);
@@ -47,6 +47,10 @@ void AKingPiece::UpdateLegalMoves()
 		AActor* HitActor = UChessUtil::GetCollidedPiece(GetWorld(), Location);
 		APiece* HitPiece = Cast<APiece>(HitActor);
 		if (!IsValid(HitPiece))
+		{
+			AddToLegalMoves(Location);
+		}
+		else if (HitPiece->GetPieceColor() != GetPieceColor())
 		{
 			AddToLegalMoves(Location);
 		}

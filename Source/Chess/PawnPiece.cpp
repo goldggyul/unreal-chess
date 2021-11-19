@@ -49,11 +49,11 @@ void APawnPiece::UpdateLegalMoves()
 	*/
 
 	TSet<FVector> Differs;
-	Differs.Add(GetPieceFowardVector() * SquareSize);
+	Differs.Add(GetPieceFowardVector());
 	if (IsFirstMove())
 	{
 		// 첫 번째 움직임인 경우 두 칸 앞도 체크
-		Differs.Add(2 * GetPieceFowardVector() * SquareSize);
+		Differs.Add(GetPieceFowardVector()*2);
 	}
 	for (auto Differ : Differs)
 	{
@@ -73,8 +73,8 @@ void APawnPiece::UpdateLegalMoves()
 
 	// 적의 기물 잡기: 대각선 전방
 	Differs.Empty();
-	Differs.Add(GetPieceFowardVector() * SquareSize + GetPieceRightVector() * SquareSize);
-	Differs.Add(GetPieceFowardVector() * SquareSize - GetPieceRightVector() * SquareSize);
+	Differs.Add(GetPieceFowardVector() + GetPieceRightVector());
+	Differs.Add(GetPieceFowardVector() - GetPieceRightVector());
 	for (auto Differ : Differs)
 	{
 		FVector Location = GetActorLocation();
