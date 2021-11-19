@@ -26,10 +26,11 @@ void AKingPiece::UpdateLegalMoves()
 {
 	Super::UpdateLegalMoves();
 
+	/*
+	* 킹의 행마법 : 상하좌우+대각방향 한 칸만
+	*/
+
 	TSet<FVector> Differs;
-	// 0 1 2
-	// 3   4
-	// 5 6 7
 	Differs.Add(GetPieceFowardVector()); // 상
 	Differs.Add(-GetPieceFowardVector()); // 하
 	Differs.Add(-GetPieceRightVector()); // 좌
@@ -53,5 +54,4 @@ void AKingPiece::UpdateLegalMoves()
 			AddToLegalMoves(Location);
 		}
 	}
-	UE_LOG(LogTemp, Warning, TEXT("%s Legal Move Num: %d"), *GetActorLabel(), LegalMoves.Num());
 }

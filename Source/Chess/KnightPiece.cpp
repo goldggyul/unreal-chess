@@ -20,3 +20,40 @@ AKnightPiece::AKnightPiece()
 	SetRootComponent(PieceMesh);
 	PieceMesh->SetRelativeScale3D(FVector(2.f, 2.f, 2.f));
 }
+
+void AKnightPiece::UpdateLegalMoves()
+{
+	Super::UpdateLegalMoves();
+
+	TSet<FVector> Differs;
+
+	/*
+	* 나이트의 행마법 : L자 모양. 수평 두칸 후 수직 한칸 혹은 수직 두칸 후 수평 한칸
+	*/
+	// 수평 두칸 후 수직 한칸
+	Differs.Add(GetPieceFowardVector() * 2 - GetPieceRightVector()); // 앞 2 + 왼쪽
+	Differs.Add(GetPieceFowardVector() * 2 + GetPieceRightVector()); // 앞 2 + 오른쪽
+	Differs.Add(-GetPieceFowardVector() * 2 - GetPieceRightVector()); // 아래 2 + 왼쪽
+	Differs.Add(-GetPieceFowardVector() * 2 + GetPieceRightVector()); // 아래 2 + 오른쪽
+	// 수직 두칸 후 수평 한칸
+	Differs.Add(GetPieceFowardVector() - GetPieceRightVector() * 2); // 앞 + 왼쪽 2 
+	Differs.Add(GetPieceFowardVector() + GetPieceRightVector() * 2); // 앞 + 오른쪽 2
+	Differs.Add(-GetPieceFowardVector() - GetPieceRightVector() * 2); // 아래 + 왼쪽 2 
+	Differs.Add(-GetPieceFowardVector() + GetPieceRightVector() * 2); // 아래 + 오른쪽 2
+
+	for (auto Differ : Differs)
+	{
+		FVector Location = GetActorLocation();
+		Location += Differ;
+		AActor* HitActor = UChessUtil::GetCollidedPiece(GetWorld(), Location);
+		APiece* HitPiece = Cast<APiece>(HitActor);
+		if (!IsValid(HitPiece))
+		{
+			AddToLegalMoves(Location);
+		}
+		else if (HitPiece->GetPieceColor() != GetPieceColor())
+		{
+			AddToLegalMoves(Location);
+		}
+	}
+}

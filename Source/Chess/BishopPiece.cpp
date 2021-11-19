@@ -24,10 +24,12 @@ ABishopPiece::ABishopPiece()
 void ABishopPiece::UpdateLegalMoves()
 {
 	Super::UpdateLegalMoves();
+
 	/*
 	* 비숍의 행마법
 	* 대각선 방향 직진
 	*/
+
 	TSet<FVector> Differs;
 	Differs.Add(GetPieceFowardVector() - GetPieceRightVector()); // 왼쪽 상단
 	Differs.Add(GetPieceFowardVector() + GetPieceRightVector()); // 오른쪽 상단
