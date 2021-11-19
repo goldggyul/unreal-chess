@@ -12,7 +12,7 @@ ABoard::ABoard()
 
 	/* mesh ¼³Á¤ */
 	BoardMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BOARD MESH"));
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> SM(TEXT("StaticMesh'/Game/Meshes/Pieces/SM_Board.SM_Board'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> SM(TEXT("StaticMesh'/Game/Meshes/Board/SM_WoodBoard.SM_WoodBoard'"));
 	if (SM.Succeeded())
 	{
 		BoardMesh->SetStaticMesh(SM.Object);
