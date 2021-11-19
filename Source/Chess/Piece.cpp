@@ -146,4 +146,5 @@ void APiece::DestroyMoveBoxes()
 			MoveBox->Destroy();
 		}
 	}
+	MoveBoxes.Empty();
 }

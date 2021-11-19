@@ -30,6 +30,7 @@ void AKnightPiece::UpdateLegalMoves()
 	/*
 	* 나이트의 행마법 : L자 모양. 수평 두칸 후 수직 한칸 혹은 수직 두칸 후 수평 한칸
 	*/
+
 	// 수평 두칸 후 수직 한칸
 	Differs.Add(GetPieceFowardVector() * 2 - GetPieceRightVector()); // 앞 2 + 왼쪽
 	Differs.Add(GetPieceFowardVector() * 2 + GetPieceRightVector()); // 앞 2 + 오른쪽

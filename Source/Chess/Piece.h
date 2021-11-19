@@ -27,7 +27,6 @@ protected:
 	virtual void PostInitializeComponents() override;
 
 	void SetType(EPieceType PT) { PieceType = PT; }
-	bool IsFirstMove() const { return bIsFirstMove; }
 	virtual void UpdateLegalMoves();
 	void AddToLegalMoves(const FVector Location);
 	
@@ -45,6 +44,8 @@ public:
 
 	FVector GetPieceFowardVector() const;
 	FVector GetPieceRightVector() const;
+
+	bool IsFirstMove() const { return bIsFirstMove; }
 
 protected:
 	UPROPERTY(VisibleAnywhere)
