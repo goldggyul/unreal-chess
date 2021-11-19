@@ -4,9 +4,13 @@
 
 #include "CoreMinimal.h"
 
-#define BoardCenter FVector(1200.f, 1200.f, 0.f)
-#define SquareSize 300.f
-#define PickBoxZ 10.f
+#define BoardCenter FVector(1200.0f, 1200.0f, 0.0f)
+#define PieceMeshSize FVector(2.0f, 2.0f, 2.0f)
+#define SquareSize 300.0f
+#define PickBoxZ 10.0f
+#define MoveBoxZ 5.0f
+#define PickedPieceZ 450.0f
+#define CollisionRange 700.0f
 
 UENUM(BlueprintType)
 enum class EPieceColor : uint8

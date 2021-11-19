@@ -3,14 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "UObject/NoExportTypes.h"
 #include "ChessInfo.h"
 #include "DrawDebugHelpers.h"
+#include "ChessUtil.generated.h"
 
 /**
  * 
  */
-class CHESS_API ChessUtil
+UCLASS()
+class CHESS_API UChessUtil : public UObject
 {
+	GENERATED_BODY()
+	
 public:
 	static FString GetColorString(EPieceColor Color)
 	{
@@ -60,11 +65,11 @@ public:
 
 	static bool IsInBoard(const FVector Point)
 	{
-		FVector LeftTop = BoardCenter - FVector(SquareSize * 4, SquareSize * 4, 0);
-		FVector RightBottom = BoardCenter + FVector(SquareSize * 4, SquareSize * 4, 0);
+		FVector LeftTop = BoardCenter - FVector(SquareSize * 4.0f, SquareSize * 4.0f, 0.0f);
+		FVector RightBottom = BoardCenter + FVector(SquareSize * 4.0f, SquareSize * 4.0f, 0.0f);
 		if (Point.X < LeftTop.X || Point.X > RightBottom.X)
 			return false;
-		if (Point.Y<LeftTop.Y || Point.X>RightBottom.Y)
+		if (Point.Y < LeftTop.Y || Point.Y > RightBottom.Y)
 			return false;
 		return true;
 	}
@@ -74,7 +79,7 @@ public:
 		// 보드에서의 인덱스를 실제 레벨에서의 위치 벡터로 변환
 		int X = Point.X / SquareSize + 1;
 		int Y = Point.Y / SquareSize + 1;
-		// Board의 왼쪽 상단 부분이 (0.f, 0.f, 0.f)
+		// Board의 왼쪽 상단 부분이 (0.0f, 0.0f, 0.0f)
 		float LocationX = (BoardCenter.X - SquareSize * 4) + ((SquareSize / 2) * (2 * X - 1));
 		float LocationY = (BoardCenter.Y - SquareSize * 4) + ((SquareSize / 2) * (2 * Y - 1));
 		UE_LOG(LogTemp, Warning, TEXT("SquareCenter: %d,%d -> %f %f "), X, Y, LocationX, LocationY);
@@ -83,13 +88,19 @@ public:
 
 	static AActor* GetCollidedPiece(const UWorld* World, FVector Point)
 	{
+		if (!UChessUtil::IsInBoard(Point))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[LINE TRACE] OUT OF BOARD"));
+			return nullptr;
+		}
+
 		FVector Bottom = Point;
 		FVector Top = Point;
-		Top.Z += 700.f;
+		Top.Z += CollisionRange;
 
 		DrawDebugLine(
 			World, Top, Bottom,
-			FColor::Magenta, false, 1.f, 0.f, 10.f
+			FColor::Magenta, false, 1.0f, 0.0f, 10.0f
 		);
 
 		FHitResult HitResult;
@@ -105,4 +116,5 @@ public:
 		}
 		return nullptr;
 	}
+
 };

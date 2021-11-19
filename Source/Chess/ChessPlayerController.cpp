@@ -17,8 +17,8 @@ void AChessPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	CurPlayer = GetWorld()->SpawnActor<AChessPlayer>(FVector(1200.f, 2100.f, 2200.f), FRotator(-70.f, -90.f, 0.f));
-	PrevPlayer = GetWorld()->SpawnActor<AChessPlayer>(FVector(1200.f, 300.f, 2200.f), FRotator(-70.f, 90.f, 0.f));
+	CurPlayer = GetWorld()->SpawnActor<AChessPlayer>(FVector(1200.0f, 2100.0f, 2200.0f), FRotator(-70.0f, -90.0f, 0.0f));
+	PrevPlayer = GetWorld()->SpawnActor<AChessPlayer>(FVector(1200.0f, 300.0f, 2200.0f), FRotator(-70.0f, 90.0f, 0.0f));
 
 	CurPlayer->SetActorLabel(FString(TEXT("WhitePlayer")));
 	PrevPlayer->SetActorLabel(FString(TEXT("BlackPlayer")));
@@ -30,8 +30,8 @@ void AChessPlayerController::BeginPlay()
 	PrevPlayer->SetFolderPath("/Player");
 	SetFolderPath("/Player");
 
-	CurPlayer->SetPickBoxStart(FVector(1350.f,1950.f,PickBoxZ));
-	PrevPlayer->SetPickBoxStart(FVector(1050.f,450.f, PickBoxZ));
+	CurPlayer->SetPickBoxStart(FVector(1350.0f,1950.0f,PickBoxZ));
+	PrevPlayer->SetPickBoxStart(FVector(1050.0f,450.0f, PickBoxZ));
 
 	bShowMouseCursor = true;
 
@@ -74,33 +74,33 @@ void AChessPlayerController::MoveBoxToDirection(FVector Dir)
 	FVector Dest = CurPlayer->GetPickBoxLocation();
 	if (CurPlayer->GetPieceColor() == EPieceColor::White)
 	{
-		Dest += Dir * 300.f;
+		Dest += Dir * SquareSize;
 	}
 	else
 	{
-		Dest += Dir * -300.f;
+		Dest += Dir * SquareSize;
 	}
 	CurPlayer->MovePickBox(Dest);
 }
 
 void AChessPlayerController::Up()
 {
-	MoveBoxToDirection(FVector(0.f, -1.f, 0.f));
+	MoveBoxToDirection(FVector(0.0f, -1.0f, 0.0f));
 }
 
 void AChessPlayerController::Down()
 {
-	MoveBoxToDirection(FVector(0.f, 1.f, 0.f));
+	MoveBoxToDirection(FVector(0.0f, 1.0f, 0.0f));
 }
 
 void AChessPlayerController::Right()
 {
-	MoveBoxToDirection(FVector(1.f, 0.f, 0.f));
+	MoveBoxToDirection(FVector(1.0f, 0.0f, 0.0f));
 }
 
 void AChessPlayerController::Left()
 {
-	MoveBoxToDirection(FVector(-1.f, 0.f, 0.f));
+	MoveBoxToDirection(FVector(-1.0f, 0.0f, 0.0f));
 }
 
 void AChessPlayerController::Enter()
@@ -143,19 +143,19 @@ void AChessPlayerController::Click()
 		// For debugging
 		FVector LineStart = HitPoint;
 		FVector LineEnd = LineStart;
-		LineEnd.Z += 100.f;
+		LineEnd.Z += 100.0f;
 
 		DrawDebugLine(
 			GetWorld(), LineStart, LineEnd,
-			FColor::Blue, false, 1.f, 0.f, 30.f
+			FColor::Blue, false, 1.0f, 0.0f, 30.0f
 		);
 
-		if (ChessUtil::IsInBoard(HitPoint))
+		if (UChessUtil::IsInBoard(HitPoint))
 		{
 			FString HitLabel = HitResult.Actor->GetActorLabel();
 			// ¿Ö Board¸¸?
 			UE_LOG(LogTemp, Warning, TEXT("Mouse Hit: %s (%f, %f, %f)"), *HitLabel, HitPoint.X, HitPoint.Y, HitPoint.Z);
-			FVector ClickedSquareCenter = ChessUtil::GetSquareCenter(HitPoint);
+			FVector ClickedSquareCenter = UChessUtil::GetSquareCenter(HitPoint);
 			CurPlayer->MovePickBox(ClickedSquareCenter);
 			Enter();
 		}

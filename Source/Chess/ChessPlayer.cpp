@@ -135,9 +135,10 @@ void AChessPlayer::MovePickBox(FVector Dest)
 	// 현재 State가 Pick이라면 Box를 움직일 때 Piece(혹은 그 복제품)도 움직여야 함
 
 	//UE_LOG(LogTemp, Warning, TEXT("Move To (%f, %f, %f)"), Dest.X, Dest.Y, Dest.Z);
-
-	if (Dest.X < 150.f || Dest.X >2250.f || Dest.Y < 150.f || Dest.Y>2250.f)
+	if (!UChessUtil::IsInBoard(Dest))
+	{
 		return;
+	}
 	if (IsValid(PickBox))
 	{
 		Dest.Z = PickBoxZ;
@@ -190,12 +191,12 @@ void AChessPlayer::SpawnPickedPiece()
 		UE_LOG(LogTemp, Warning, TEXT("Spawn Picked Piece"));
 
 		FVector SpawnLocation = CurPiece->GetActorLocation();
-		SpawnLocation.Z += 450.f;
+		SpawnLocation.Z += PickedPieceZ;
 		FRotator SpawnRotation = CurPiece->GetActorRotation();
 		PickedPiece = GetWorld()->SpawnActor<AStaticMeshActor>(SpawnLocation, SpawnRotation);
 
 		PickedPiece->SetMobility(EComponentMobility::Movable);
-		PickedPiece->SetActorRelativeScale3D(FVector(2.f, 2.f, 2.f));
+		PickedPiece->SetActorRelativeScale3D(PieceMeshSize);
 		PickedPiece->SetActorLabel(FString(TEXT("Picked Piece")));
 		PickedPiece->GetStaticMeshComponent()->SetCollisionProfileName(
 			CurPiece->GetStaticMeshComponent()->GetCollisionProfileName());
@@ -240,13 +241,13 @@ APiece* AChessPlayer::GetCurPiece()
 {
 	// Test: 일단 자기꺼면 든다
 	FVector Start = PickBox->GetActorLocation();
-	AActor* HitActor = ChessUtil::GetCollidedPiece(GetWorld(), Start);
+	AActor* HitActor = UChessUtil::GetCollidedPiece(GetWorld(), Start);
 	APiece* HitPiece = Cast<APiece>(HitActor);
 	if (IsValid(HitPiece))
 	{
 		// For debugging
-		FString PieceTypeName = ChessUtil::GetPieceTypeString(HitPiece->GetPieceType());
-		FString PieceColorName = ChessUtil::GetColorString(HitPiece->GetPieceColor());
+		FString PieceTypeName = UChessUtil::GetPieceTypeString(HitPiece->GetPieceType());
+		FString PieceColorName = UChessUtil::GetColorString(HitPiece->GetPieceColor());
 		UE_LOG(LogTemp, Warning, TEXT("[LINE TRACE] HITTED: %s %s"), *PieceColorName, *PieceTypeName);
 		return HitPiece;
 	}

@@ -43,7 +43,7 @@ void ARookPiece::UpdateLegalMoves()
 		{
 			
 			Location += Differ;
-			AActor* HitActor = ChessUtil::GetCollidedPiece(GetWorld(), Location);
+			AActor* HitActor = UChessUtil::GetCollidedPiece(GetWorld(), Location);
 			APiece* HitPiece = Cast<APiece>(HitActor);
 			if (!IsValid(HitPiece))
 			{

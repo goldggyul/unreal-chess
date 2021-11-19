@@ -18,7 +18,7 @@ AKingPiece::AKingPiece()
 		UE_LOG(LogTemp, Warning, TEXT("Can't load King mesh"));
 	}
 	SetRootComponent(PieceMesh);
-	PieceMesh->SetRelativeScale3D(FVector(2.f, 2.f, 2.f));
+	PieceMesh->SetRelativeScale3D(PieceMeshSize);
 
 }
 
@@ -26,4 +26,30 @@ void AKingPiece::UpdateLegalMoves()
 {
 	Super::UpdateLegalMoves();
 
+	TSet<FVector> Differs;
+	// 0 1 2
+	// 3   4
+	// 5 6 7
+	FVector PieceForward = GetActorForwardVector() * SquareSize;
+	FVector PieceRight = GetActorRightVector() * SquareSize;
+	Differs.Add(PieceForward - PieceRight);
+	Differs.Add(PieceForward);
+	Differs.Add(PieceForward + PieceRight);
+	Differs.Add(-PieceRight);
+	Differs.Add(PieceRight);
+	Differs.Add(-PieceForward - PieceRight);
+	Differs.Add(-PieceForward);
+	Differs.Add(-PieceForward + PieceRight);
+	for (auto Differ : Differs)
+	{
+		FVector Location = GetActorLocation();
+		Location += Differ;
+		AActor* HitActor = UChessUtil::GetCollidedPiece(GetWorld(), Location);
+		APiece* HitPiece = Cast<APiece>(HitActor);
+		if (!IsValid(HitPiece))
+		{
+			AddToLegalMoves(Location);
+		}
+	}
+	UE_LOG(LogTemp, Warning, TEXT("%s Legal Move Num: %d"), *GetActorLabel(), LegalMoves.Num());
 }

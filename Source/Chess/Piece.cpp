@@ -28,15 +28,17 @@ void APiece::ShowLegalMoves()
 	for (auto Location : LegalMoves)
 	{
 		FVector MoveBoxLocation = Location;
-		MoveBoxLocation.Z = 5.f;
-		MoveBoxes.Add(GetWorld()->SpawnActor<APaperSpriteActor>(
-			MoveBoxClass, MoveBoxLocation, FRotator::ZeroRotator));
+		MoveBoxLocation.Z = MoveBoxZ;
+		APaperSpriteActor* MoveBox = GetWorld()->SpawnActor<APaperSpriteActor>(
+			MoveBoxClass, MoveBoxLocation, FRotator::ZeroRotator);
+		MoveBox->SetFolderPath("/MoveBoxes");
+		MoveBoxes.Add(MoveBox);
 	}
 }
 
 void APiece::AddToLegalMoves(const FVector Location)
 {
-	if (ChessUtil::IsInBoard(Location))
+	if (UChessUtil::IsInBoard(Location))
 	{
 		LegalMoves.Add(Location);
 	}
@@ -95,7 +97,15 @@ bool APiece::IsAbleToPick()
 bool APiece::IsAbleToPutAt(FVector Dest) const
 {
 	// if Dest in Legal Moves
-	return LegalMoves.Contains(Dest);
+	UE_LOG(LogTemp, Warning, TEXT("[Checking...] %f %f %f"), Dest.X, Dest.Y, Dest.Z);
+	for (auto MoveLocation : LegalMoves)
+	{
+		if (Dest.Equals(MoveLocation, true))
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 void APiece::PutAt(FVector Dest)
@@ -113,18 +123,18 @@ FVector APiece::GetPieceFowardVector() const
 {
 	if (GetPieceColor() == EPieceColor::Black)
 	{
-		return FVector(0.f, 1.f, 0.f);
+		return FVector(0.0f, 1.0f, 0.0f);
 	}
-	return FVector(0.f, -1.f, 0.f);
+	return FVector(0.0f, -1.0f, 0.0f);
 }
 
 FVector APiece::GetPieceRightVector() const
 {
 	if (GetPieceColor() == EPieceColor::Black)
 	{
-		return FVector(-1.f, 0.f, 0.f);
+		return FVector(-1.0f, 0.0f, 0.0f);
 	}
-	return FVector(1.f, 0.f, 0.f);
+	return FVector(1.0f, 0.0f, 0.0f);
 }
 
 void APiece::DestroyMoveBoxes()

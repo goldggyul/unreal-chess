@@ -19,7 +19,7 @@ APawnPiece::APawnPiece()
 		UE_LOG(LogTemp, Warning, TEXT("Can't load pawn mesh"));
 	}
 	SetRootComponent(PieceMesh);
-	PieceMesh->SetRelativeScale3D(FVector(2.f, 2.f, 2.f));
+	PieceMesh->SetRelativeScale3D(PieceMeshSize);
 }
 
 void APawnPiece::UpdateLegalMoves()
@@ -59,7 +59,7 @@ void APawnPiece::UpdateLegalMoves()
 	{
 		FVector Location = GetActorLocation();
 		Location += Differ;
-		AActor* HitActor = ChessUtil::GetCollidedPiece(GetWorld(), Location);
+		AActor* HitActor = UChessUtil::GetCollidedPiece(GetWorld(), Location);
 		APiece* HitPiece = Cast<APiece>(HitActor);
 		if (!IsValid(HitPiece))
 		{
@@ -79,7 +79,7 @@ void APawnPiece::UpdateLegalMoves()
 	{
 		FVector Location = GetActorLocation();
 		Location += Differ;
-		AActor* HitActor = ChessUtil::GetCollidedPiece(GetWorld(), Location);
+		AActor* HitActor = UChessUtil::GetCollidedPiece(GetWorld(), Location);
 		APiece* HitPiece = Cast<APiece>(HitActor);
 		if (IsValid(HitPiece) && (HitPiece->GetPieceColor() != GetPieceColor()))
 		{
