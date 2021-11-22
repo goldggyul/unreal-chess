@@ -223,12 +223,13 @@ bool AChessPlayer::PutCurPiece()
 	CurPickLocation.Z = 0;
 	if (CurPiece->IsAbleToPutAt(CurPickLocation))
 	{
+		bool bIsOtherLocation = (CurPiece->GetActorLocation() != CurPickLocation); // 제자리가 아닌 유효한 곳에 놨는지
 		PickedPiece->Destroy();
 		CurPiece->PutAt(CurPickLocation);
 		SetMeshOpaque(true, CurPiece->GetStaticMeshComponent());
 		CurPiece = nullptr;
 		SetState(EPlayerState::Idle);
-		return true;
+		return bIsOtherLocation;
 	}
 	else
 	{

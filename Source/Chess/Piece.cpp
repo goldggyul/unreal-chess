@@ -98,6 +98,10 @@ bool APiece::IsAbleToPutAt(FVector Dest) const
 {
 	// if Dest in Legal Moves
 	UE_LOG(LogTemp, Warning, TEXT("[Checking...] %f %f %f"), Dest.X, Dest.Y, Dest.Z);
+	
+	if (GetActorLocation() == Dest)
+		return true;
+
 	for (auto MoveLocation : LegalMoves)
 	{
 		if (Dest.Equals(MoveLocation, true))
@@ -114,6 +118,14 @@ void APiece::PutAt(FVector Dest)
 
 	if(bIsFirstMove)
 		bIsFirstMove = false;
+
+	AActor* HitActor = UChessUtil::GetCollidedPiece(GetWorld(), Dest);
+	APiece* HitPiece = Cast<APiece>(HitActor);
+	if (IsValid(HitPiece) && HitPiece->GetPieceColor() != GetPieceColor())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Catch piece!"));
+		HitPiece->Destroy();
+	}
 
 	SetActorLocation(Dest);
 	DestroyMoveBoxes();
