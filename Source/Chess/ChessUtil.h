@@ -117,4 +117,21 @@ public:
 		return nullptr;
 	}
 
+	static FVector GetPlayerForwardVector(EPieceColor Color)
+	{
+		if (Color == EPieceColor::Black)
+		{
+			return FVector(0.0f, 1.0f, 0.0f) * SquareSize;
+		}
+		return FVector(0.0f, -1.0f, 0.0f) * SquareSize;
+	}
+
+	static FVector GetPlayerRightVector(EPieceColor Color)
+	{
+		if (Color == EPieceColor::Black)
+		{
+			return FVector(-1.0f, 0.0f, 0.0f) * SquareSize;
+		}
+		return FVector(1.0f, 0.0f, 0.0f) * SquareSize;
+	}
 };

@@ -48,12 +48,16 @@ void APawnPiece::UpdateLegalMoves()
 	*	2) Player에 정보 주기? 턴이 바뀔 때 직전에 폰이 처음으로 움직였다면 정보를 줘야한다. 즉 ChangePlayer일 때 앙파상을 Set
 	*/
 
+
+	FVector FowardVector = UChessUtil::GetPlayerForwardVector(GetPieceColor());
+	FVector RightVector = UChessUtil::GetPlayerRightVector(GetPieceColor());
+
 	TSet<FVector> Differs;
-	Differs.Add(GetPieceFowardVector());
+	Differs.Add(FowardVector);
 	if (IsFirstMove())
 	{
 		// 첫 번째 움직임인 경우 두 칸 앞도 체크
-		Differs.Add(GetPieceFowardVector()*2);
+		Differs.Add(FowardVector*2);
 	}
 	for (auto Differ : Differs)
 	{
@@ -73,8 +77,9 @@ void APawnPiece::UpdateLegalMoves()
 
 	// 적의 기물 잡기: 대각선 전방
 	Differs.Empty();
-	Differs.Add(GetPieceFowardVector() + GetPieceRightVector());
-	Differs.Add(GetPieceFowardVector() - GetPieceRightVector());
+	Differs.Add(FowardVector + RightVector);
+	Differs.Add(FowardVector - RightVector);
+
 	for (auto Differ : Differs)
 	{
 		FVector Location = GetActorLocation();

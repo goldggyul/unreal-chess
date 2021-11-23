@@ -30,11 +30,15 @@ void ARookPiece::UpdateLegalMoves()
 	* ※ 캐슬링 시 같이 움직여야함: 킹에서 움직이게 할 예정
 	*/
 	
+	FVector FowardVector = UChessUtil::GetPlayerForwardVector(GetPieceColor());
+	FVector RightVector = UChessUtil::GetPlayerRightVector(GetPieceColor());
+
 	TSet<FVector> Differs;
-	Differs.Add(GetPieceFowardVector()); // 상
-	Differs.Add(-GetPieceFowardVector()); // 하
-	Differs.Add(-GetPieceRightVector()); // 좌
-	Differs.Add(GetPieceRightVector()); // 우
+	Differs.Add(FowardVector); // 상
+	Differs.Add(-FowardVector); // 하
+	Differs.Add(-RightVector); // 좌
+	Differs.Add(RightVector); // 우
+
 	for (auto Differ : Differs)
 	{
 		FVector Location = GetActorLocation();

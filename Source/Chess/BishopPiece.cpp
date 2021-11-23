@@ -30,11 +30,15 @@ void ABishopPiece::UpdateLegalMoves()
 	* 대각선 방향 직진
 	*/
 
+	FVector FowardVector = UChessUtil::GetPlayerForwardVector(GetPieceColor());
+	FVector RightVector = UChessUtil::GetPlayerRightVector(GetPieceColor());
+
 	TSet<FVector> Differs;
-	Differs.Add(GetPieceFowardVector() - GetPieceRightVector()); // 왼쪽 상단
-	Differs.Add(GetPieceFowardVector() + GetPieceRightVector()); // 오른쪽 상단
-	Differs.Add(-GetPieceFowardVector() - GetPieceRightVector()); // 왼쪽 하단
-	Differs.Add(-GetPieceFowardVector() + GetPieceRightVector()); // 오른쪽 하단
+	Differs.Add(FowardVector - RightVector); // 왼쪽 상단
+	Differs.Add(FowardVector + RightVector); // 오른쪽 상단
+	Differs.Add(-FowardVector - RightVector); // 왼쪽 하단
+	Differs.Add(-FowardVector + RightVector); // 오른쪽 하단
+
 	for (auto Differ : Differs)
 	{
 		FVector Location = GetActorLocation();

@@ -28,6 +28,7 @@ protected:
 
 	void SetType(EPieceType PT) { PieceType = PT; }
 	virtual void UpdateLegalMoves();
+	void RemoveCheckMoves();
 	void AddToLegalMoves(const FVector Location);
 	
 public:	
@@ -42,11 +43,8 @@ public:
 	bool IsAbleToPutAt(FVector Dest) const;
 	virtual void PutAt(FVector Dest);
 
-	FVector GetPieceFowardVector() const;
-	FVector GetPieceRightVector() const;
-
 	bool IsFirstMove() const { return bIsFirstMove; }
-
+	
 protected:
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* PieceMesh;

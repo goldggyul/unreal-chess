@@ -23,8 +23,8 @@ void AChessPlayerController::BeginPlay()
 	CurPlayer->SetActorLabel(FString(TEXT("WhitePlayer")));
 	PrevPlayer->SetActorLabel(FString(TEXT("BlackPlayer")));
 
-	CurPlayer->SetPieceColor(EPieceColor::White);
-	PrevPlayer->SetPieceColor(EPieceColor::Black);
+	CurPlayer->SetPlayerColor(EPieceColor::White);
+	PrevPlayer->SetPlayerColor(EPieceColor::Black);
 
 	CurPlayer->SetFolderPath("/Player");
 	PrevPlayer->SetFolderPath("/Player");
@@ -69,62 +69,57 @@ void AChessPlayerController::OnPossess(APawn* InPawn)
 	}
 }
 
-void AChessPlayerController::MoveBoxToDirection(FVector Dir)
+void AChessPlayerController::PlayerTick(float DeltaTime)
 {
-	FVector Dest = CurPlayer->GetPickBoxLocation();
-	if (CurPlayer->GetPieceColor() == EPieceColor::White)
+	Super::PlayerTick(DeltaTime);
+
+	if (CurPlayer->IsPicking())
 	{
-		Dest += Dir * SquareSize;
+
 	}
-	else
-	{
-		Dest += Dir * SquareSize;
-	}
-	CurPlayer->MovePickBox(Dest);
 }
 
 void AChessPlayerController::Up()
 {
-	MoveBoxToDirection(FVector(0.0f, -1.0f, 0.0f));
+	FVector CurBoxLocation = CurPlayer->GetPickBoxLocation();
+	FVector Differ = UChessUtil::GetPlayerForwardVector(CurPlayer->GetPlayerColor());
+	CurPlayer->MovePickBox(CurBoxLocation + Differ);
 }
 
 void AChessPlayerController::Down()
 {
-	MoveBoxToDirection(FVector(0.0f, 1.0f, 0.0f));
+	FVector CurBoxLocation = CurPlayer->GetPickBoxLocation();
+	FVector Differ = UChessUtil::GetPlayerForwardVector(CurPlayer->GetPlayerColor());
+	CurPlayer->MovePickBox(CurBoxLocation - Differ);
 }
 
 void AChessPlayerController::Right()
 {
-	MoveBoxToDirection(FVector(1.0f, 0.0f, 0.0f));
+	FVector CurBoxLocation = CurPlayer->GetPickBoxLocation();
+	FVector Differ = UChessUtil::GetPlayerRightVector(CurPlayer->GetPlayerColor());
+	CurPlayer->MovePickBox(CurBoxLocation + Differ);
 }
 
 void AChessPlayerController::Left()
 {
-	MoveBoxToDirection(FVector(-1.0f, 0.0f, 0.0f));
+	FVector CurBoxLocation = CurPlayer->GetPickBoxLocation();
+	FVector Differ = UChessUtil::GetPlayerRightVector(CurPlayer->GetPlayerColor());
+	CurPlayer->MovePickBox(CurBoxLocation - Differ);
 }
 
 void AChessPlayerController::Enter()
 {
 	if (!IsValid(CurPlayer))
 		return;
-	switch (CurPlayer->GetState())
+	if (CurPlayer->IsPicking())
 	{
-	case EPlayerState::Idle:
-		CurPlayer->PickPiece();
-		break;
-	case EPlayerState::Pick:
-	{
-		// 이미 Pick 된 상태이므로 둘 수 있으면 두면 됨
-		// 선택할 수 있으면 놓고 턴 넘기기,
-		// 선택 못하면 Piece 다시 제자리에 놓고 Idle로
 		bool bIsPutSucceeded = CurPlayer->PutCurPiece();
-		if(bIsPutSucceeded)
+		if (bIsPutSucceeded)
 			ChangePlayer();
 	}
-		break;
-	case EPlayerState::Put:
-	default:
-		break;
+	else
+	{
+		CurPlayer->PickPiece();
 	}
 }
 
@@ -175,4 +170,8 @@ void AChessPlayerController::ChangePlayer()
 	UnPossess();
 	Swap(CurPlayer, PrevPlayer);
 	OnPossess(CurPlayer);
+
+	CurPlayer->UpdateThreatMap();
+
+	// if Checkmate.. Check.. Stalemate... : Show UI
 }

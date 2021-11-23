@@ -29,15 +29,20 @@ void AQueenPiece::UpdateLegalMoves()
 	* 퀸의 행마법 : 상하좌우+대각방향 직진
 	*/
 
+	FVector FowardVector = UChessUtil::GetPlayerForwardVector(GetPieceColor());
+	FVector RightVector = UChessUtil::GetPlayerRightVector(GetPieceColor());
+
 	TSet<FVector> Differs;
-	Differs.Add(GetPieceFowardVector()); // 상
-	Differs.Add(-GetPieceFowardVector()); // 하
-	Differs.Add(-GetPieceRightVector()); // 좌
-	Differs.Add(GetPieceRightVector()); // 우
-	Differs.Add(GetPieceFowardVector() - GetPieceRightVector()); // 왼쪽 상단
-	Differs.Add(GetPieceFowardVector() + GetPieceRightVector()); // 오른쪽 상단
-	Differs.Add(-GetPieceFowardVector() - GetPieceRightVector()); // 왼쪽 하단
-	Differs.Add(-GetPieceFowardVector() + GetPieceRightVector()); // 오른쪽 하단
+
+	Differs.Add(FowardVector); // 상
+	Differs.Add(-FowardVector); // 하
+	Differs.Add(-RightVector); // 좌
+	Differs.Add(RightVector); // 우
+	Differs.Add(FowardVector - RightVector); // 왼쪽 상단
+	Differs.Add(FowardVector + RightVector); // 오른쪽 상단
+	Differs.Add(-FowardVector - RightVector); // 왼쪽 하단
+	Differs.Add(-FowardVector + RightVector); // 오른쪽 하단
+
 	for (auto Differ : Differs)
 	{
 		FVector Location = GetActorLocation();

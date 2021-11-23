@@ -20,9 +20,9 @@ protected:
 	virtual void SetupInputComponent() override;
 	virtual void OnPossess(APawn* InPawn) override;
 
-private:
-	void MoveBoxToDirection(FVector Dir);
+	virtual void PlayerTick(float DeltaTime) override;
 
+private:
 	void Up();
 	void Down();
 	void Right();

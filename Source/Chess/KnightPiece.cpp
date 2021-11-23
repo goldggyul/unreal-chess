@@ -25,22 +25,24 @@ void AKnightPiece::UpdateLegalMoves()
 {
 	Super::UpdateLegalMoves();
 
-	TSet<FVector> Differs;
+	FVector FowardVector = UChessUtil::GetPlayerForwardVector(GetPieceColor());
+	FVector RightVector = UChessUtil::GetPlayerRightVector(GetPieceColor());
 
 	/*
 	* 나이트의 행마법 : L자 모양. 수평 두칸 후 수직 한칸 혹은 수직 두칸 후 수평 한칸
 	*/
 
+	TSet<FVector> Differs;
 	// 수평 두칸 후 수직 한칸
-	Differs.Add(GetPieceFowardVector() * 2 - GetPieceRightVector()); // 앞 2 + 왼쪽
-	Differs.Add(GetPieceFowardVector() * 2 + GetPieceRightVector()); // 앞 2 + 오른쪽
-	Differs.Add(-GetPieceFowardVector() * 2 - GetPieceRightVector()); // 아래 2 + 왼쪽
-	Differs.Add(-GetPieceFowardVector() * 2 + GetPieceRightVector()); // 아래 2 + 오른쪽
+	Differs.Add(FowardVector * 2 - RightVector); // 앞 2 + 왼쪽
+	Differs.Add(FowardVector * 2 + RightVector); // 앞 2 + 오른쪽
+	Differs.Add(-FowardVector * 2 - RightVector); // 아래 2 + 왼쪽
+	Differs.Add(-FowardVector * 2 + RightVector); // 아래 2 + 오른쪽
 	// 수직 두칸 후 수평 한칸
-	Differs.Add(GetPieceFowardVector() - GetPieceRightVector() * 2); // 앞 + 왼쪽 2 
-	Differs.Add(GetPieceFowardVector() + GetPieceRightVector() * 2); // 앞 + 오른쪽 2
-	Differs.Add(-GetPieceFowardVector() - GetPieceRightVector() * 2); // 아래 + 왼쪽 2 
-	Differs.Add(-GetPieceFowardVector() + GetPieceRightVector() * 2); // 아래 + 오른쪽 2
+	Differs.Add(FowardVector - RightVector * 2); // 앞 + 왼쪽 2 
+	Differs.Add(FowardVector + RightVector * 2); // 앞 + 오른쪽 2
+	Differs.Add(-FowardVector - RightVector * 2); // 아래 + 왼쪽 2 
+	Differs.Add(-FowardVector + RightVector * 2); // 아래 + 오른쪽 2
 
 	for (auto Differ : Differs)
 	{

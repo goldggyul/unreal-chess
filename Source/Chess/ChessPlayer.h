@@ -16,10 +16,6 @@ public:
 	// Sets default values for this pawn's properties
 	AChessPlayer();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -27,40 +23,52 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	void SetPieceColor(EPieceColor Color);
-	EPieceColor GetPieceColor() const;
+	void SetPlayerColor(EPieceColor Color);
+	EPieceColor GetPlayerColor() const;
 
 	void SetPickBoxStart(FVector BoxStart);
 	FVector GetPickBoxLocation() const;
 
-	void SetState(EPlayerState CurState);
-	EPlayerState GetState() const;
+	void SetPicking(bool Picking);
+	bool IsPicking() const;
 
 	void SpawnPickBox();
 	void DestroyPickBox();
 	void MovePickBox(FVector Dest);
 
 	void PickPiece();
-	void SpawnPickedPiece();
 	bool PutCurPiece();
 
-	class APiece* GetCurPiece();
+	void UpdateThreatMap();
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 
 private:
 	void SetMeshOpaque(bool bIsOpaque, class UStaticMeshComponent* MeshComponent = nullptr) const;
+
+	void ShowThreatMap();
+
+	void SpawnPickedPiece();
+	class APiece* GetCurPiece();
+
 
 private:
 	UPROPERTY(VisibleAnywhere)
 	EPieceColor PlayerColor;
 	
 	UPROPERTY(VisibleAnywhere)
-	EPlayerState MyState;
+	bool bIsPicking;
 
 	UPROPERTY(VisibleAnywhere)
 	class UCameraComponent* Camera;
 
 	UPROPERTY(VisibleAnywhere)
 	FVector PrevMove; // 이전에 수를 놨던 위치. 박스 시작 위치 설정용
+
+	UPROPERTY(VisibleAnywhere)
+	class UThreatMap* ThreatMap;
 
 	UPROPERTY(VisibleAnywhere)
 	TSubclassOf<class APaperSpriteActor> PickBoxClass;
@@ -74,7 +82,7 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	class APiece* CurPiece;
 
-	// 불투명 <-> 투명하게 바꾸기 위해 머티리얼 저장
+	// 피스들 불투명 <-> 투명하게 바꾸기 위해 머티리얼 저장
 	UPROPERTY(VisibleAnywhere, Category = PieceMaterials)
 	class UMaterial* DarkMaterial;
 
@@ -86,4 +94,6 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = PieceMaterials)
 	class UMaterialInstance* TranslucentLightMaterial;
+
+
 };

@@ -80,6 +80,21 @@ void APiece::UpdateLegalMoves()
 	LegalMoves.Empty();
 }
 
+void APiece::RemoveCheckMoves()
+{
+	FVector OriginalLocation = GetActorLocation();
+	for (auto Move : LegalMoves)
+	{
+		//LegalMoves.Remove(Move);
+		SetActorLocation(Move);
+
+		// 킹이 체크면 Remove
+		
+
+	}
+	SetActorLocation(OriginalLocation);
+}
+
 bool APiece::IsAbleToPick()
 {
 	// if Legal Moves Exists
@@ -116,7 +131,8 @@ void APiece::PutAt(FVector Dest)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Super: PutAt piece"));
 
-	if(bIsFirstMove)
+	bool bIsOtherLocation = (GetActorLocation() != Dest); // 제자리가 아닌 유효한 곳에 놨는지
+	if(bIsOtherLocation && bIsFirstMove)
 		bIsFirstMove = false;
 
 	AActor* HitActor = UChessUtil::GetCollidedPiece(GetWorld(), Dest);
@@ -126,27 +142,8 @@ void APiece::PutAt(FVector Dest)
 		UE_LOG(LogTemp, Warning, TEXT("Catch piece!"));
 		HitPiece->Destroy();
 	}
-
 	SetActorLocation(Dest);
 	DestroyMoveBoxes();
-}
-
-FVector APiece::GetPieceFowardVector() const
-{
-	if (GetPieceColor() == EPieceColor::Black)
-	{
-		return FVector(0.0f, 1.0f, 0.0f) * SquareSize;
-	}
-	return FVector(0.0f, -1.0f, 0.0f) * SquareSize;
-}
-
-FVector APiece::GetPieceRightVector() const
-{
-	if (GetPieceColor() == EPieceColor::Black)
-	{
-		return FVector(-1.0f, 0.0f, 0.0f) * SquareSize;
-	}
-	return FVector(1.0f, 0.0f, 0.0f) * SquareSize;
 }
 
 void APiece::DestroyMoveBoxes()

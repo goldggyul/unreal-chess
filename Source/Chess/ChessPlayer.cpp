@@ -7,6 +7,7 @@
 #include "Piece.h"
 #include "DrawDebugHelpers.h"
 #include "ChessUtil.h"
+#include "ThreatMap.h"
 #include "Engine/StaticMeshActor.h"
 
 // Sets default values
@@ -49,7 +50,10 @@ AChessPlayer::AChessPlayer()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Cannot load PickBox class"));
 	}
-	SetState(EPlayerState::Idle);
+
+	SetPicking(false);
+
+	ThreatMap = CreateDefaultSubobject<UThreatMap>(TEXT("THREAT MAP"));
 }
 
 // Called when the game starts or when spawned
@@ -73,12 +77,13 @@ void AChessPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 }
 
-void AChessPlayer::SetPieceColor(EPieceColor Color)
+void AChessPlayer::SetPlayerColor(EPieceColor Color)
 {
 	PlayerColor = Color;
+	ThreatMap->SetPlayerColor(Color);
 }
 
-EPieceColor AChessPlayer::GetPieceColor() const
+EPieceColor AChessPlayer::GetPlayerColor() const
 {
 	return PlayerColor;
 }
@@ -97,14 +102,14 @@ FVector AChessPlayer::GetPickBoxLocation() const
 	return FVector::ZeroVector;
 }
 
-void AChessPlayer::SetState(EPlayerState CurState)
+void AChessPlayer::SetPicking(bool Picking)
 {
-	MyState = CurState;
+	bIsPicking = Picking;
 }
 
-EPlayerState AChessPlayer::GetState() const
+bool AChessPlayer::IsPicking() const
 {
-	return MyState;
+	return bIsPicking;
 }
 
 void AChessPlayer::SpawnPickBox()
@@ -166,9 +171,9 @@ void AChessPlayer::PickPiece()
 		{
 			if (CurPiece->IsAbleToPick())
 			{
-				SetState(EPlayerState::Pick);
 				UE_LOG(LogTemp, Warning, TEXT("Pick this piece!"));
 				SpawnPickedPiece();
+				SetPicking(true);
 			}
 		}
 		else
@@ -228,7 +233,7 @@ bool AChessPlayer::PutCurPiece()
 		CurPiece->PutAt(CurPickLocation);
 		SetMeshOpaque(true, CurPiece->GetStaticMeshComponent());
 		CurPiece = nullptr;
-		SetState(EPlayerState::Idle);
+		SetPicking(false);
 		return bIsOtherLocation;
 	}
 	else
@@ -236,6 +241,11 @@ bool AChessPlayer::PutCurPiece()
 		UE_LOG(LogTemp, Warning, TEXT("Cannot put here!"));
 		return false;
 	}
+}
+
+void AChessPlayer::UpdateThreatMap()
+{
+
 }
 
 APiece* AChessPlayer::GetCurPiece()
@@ -290,5 +300,10 @@ void AChessPlayer::SetMeshOpaque(bool bIsOpaque, class UStaticMeshComponent* Mes
 			Mesh->SetMaterial(0, TranslucentLightMaterial);
 		}
 	}
+}
+
+void AChessPlayer::ShowThreatMap()
+{
+
 }
 
