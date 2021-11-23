@@ -22,9 +22,9 @@ APawnPiece::APawnPiece()
 	PieceMesh->SetRelativeScale3D(PieceMeshSize);
 }
 
-void APawnPiece::UpdateLegalMoves()
+void APawnPiece::UpdateMoves()
 {
-	Super::UpdateLegalMoves();
+	Super::UpdateMoves();
 
 	// 일단 Legal Moves 말고 Possible Moves만
 
@@ -59,7 +59,7 @@ void APawnPiece::UpdateLegalMoves()
 		// 첫 번째 움직임인 경우 두 칸 앞도 체크
 		Differs.Add(FowardVector*2);
 	}
-	for (auto Differ : Differs)
+	for (auto& Differ : Differs)
 	{
 		FVector Location = GetActorLocation();
 		Location += Differ;
@@ -67,7 +67,7 @@ void APawnPiece::UpdateLegalMoves()
 		APiece* HitPiece = Cast<APiece>(HitActor);
 		if (!IsValid(HitPiece))
 		{
-			AddToLegalMoves(Location);
+			AddToMoves(Location);
 		}
 		else
 		{
@@ -80,7 +80,7 @@ void APawnPiece::UpdateLegalMoves()
 	Differs.Add(FowardVector + RightVector);
 	Differs.Add(FowardVector - RightVector);
 
-	for (auto Differ : Differs)
+	for (auto& Differ : Differs)
 	{
 		FVector Location = GetActorLocation();
 		Location += Differ;
@@ -88,7 +88,7 @@ void APawnPiece::UpdateLegalMoves()
 		APiece* HitPiece = Cast<APiece>(HitActor);
 		if (IsValid(HitPiece) && (HitPiece->GetPieceColor() != GetPieceColor()))
 		{
-			AddToLegalMoves(Location);
+			AddToMoves(Location);
 		}
 	}
 }

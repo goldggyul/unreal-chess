@@ -22,9 +22,9 @@ AKingPiece::AKingPiece()
 
 }
 
-void AKingPiece::UpdateLegalMoves()
+void AKingPiece::UpdateMoves()
 {
-	Super::UpdateLegalMoves();
+	Super::UpdateMoves();
 
 	/*
 	* 킹의 행마법 : 상하좌우+대각방향 한 칸만
@@ -43,7 +43,7 @@ void AKingPiece::UpdateLegalMoves()
 	Differs.Add(-FowardVector - RightVector); // 왼쪽 하단
 	Differs.Add(-FowardVector + RightVector); // 오른쪽 하단
 
-	for (auto Differ : Differs)
+	for (auto& Differ : Differs)
 	{
 		FVector Location = GetActorLocation();
 		Location += Differ;
@@ -51,11 +51,11 @@ void AKingPiece::UpdateLegalMoves()
 		APiece* HitPiece = Cast<APiece>(HitActor);
 		if (!IsValid(HitPiece))
 		{
-			AddToLegalMoves(Location);
+			AddToMoves(Location);
 		}
 		else if (HitPiece->GetPieceColor() != GetPieceColor())
 		{
-			AddToLegalMoves(Location);
+			AddToMoves(Location);
 		}
 	}
 
@@ -67,7 +67,7 @@ void AKingPiece::UpdateLegalMoves()
 		Differs.Empty();
 		Differs.Add(RightVector);
 		Differs.Add(-RightVector);
-		for (auto Differ : Differs)
+		for (auto& Differ : Differs)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Checking castling..."));
 
@@ -94,7 +94,7 @@ void AKingPiece::UpdateLegalMoves()
 				&& HitPiece->IsFirstMove())
 			{
 				UE_LOG(LogTemp, Warning, TEXT("Able to castling!"));
-				AddToLegalMoves(HitPiece->GetActorLocation() - Differ);
+				AddToMoves(HitPiece->GetActorLocation() - Differ);
 			}
 		}
 	}

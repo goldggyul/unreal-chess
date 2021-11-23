@@ -21,9 +21,9 @@ ABishopPiece::ABishopPiece()
 	PieceMesh->SetRelativeScale3D(PieceMeshSize);
 }
 
-void ABishopPiece::UpdateLegalMoves()
+void ABishopPiece::UpdateMoves()
 {
-	Super::UpdateLegalMoves();
+	Super::UpdateMoves();
 
 	/*
 	* 비숍의 행마법
@@ -39,7 +39,7 @@ void ABishopPiece::UpdateLegalMoves()
 	Differs.Add(-FowardVector - RightVector); // 왼쪽 하단
 	Differs.Add(-FowardVector + RightVector); // 오른쪽 하단
 
-	for (auto Differ : Differs)
+	for (auto& Differ : Differs)
 	{
 		FVector Location = GetActorLocation();
 		for (int i = 0; i < 7; i++) // 한번에 최대 7칸
@@ -49,13 +49,13 @@ void ABishopPiece::UpdateLegalMoves()
 			APiece* HitPiece = Cast<APiece>(HitActor);
 			if (!IsValid(HitPiece))
 			{
-				AddToLegalMoves(Location);
+				AddToMoves(Location);
 			}
 			else
 			{
 				if (HitPiece->GetPieceColor() != GetPieceColor())
 				{
-					AddToLegalMoves(Location);
+					AddToMoves(Location);
 				}
 				break;
 			}

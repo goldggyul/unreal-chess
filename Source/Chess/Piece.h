@@ -17,21 +17,7 @@ public:
 	// Sets default values for this actor's properties
 	APiece();
 
-private:
-	void ShowLegalMoves();
-	void DestroyMoveBoxes();
-
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-	virtual void PostInitializeComponents() override;
-
-	void SetType(EPieceType PT) { PieceType = PT; }
-	virtual void UpdateLegalMoves();
-	void RemoveCheckMoves();
-	void AddToLegalMoves(const FVector Location);
-	
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -39,18 +25,36 @@ public:
 	const EPieceType GetPieceType() const { return PieceType; }
 	class UStaticMeshComponent* GetStaticMeshComponent();
 
+	virtual void UpdateMoves();
+	void RemoveCheckMoves();
+	bool CanMoveTo(FVector Location);
+
 	bool IsAbleToPick();
 	bool IsAbleToPutAt(FVector Dest) const;
 	virtual void PutAt(FVector Dest);
 
 	bool IsFirstMove() const { return bIsFirstMove; }
 	
+	TSet<FVector> GetMoves() { return Moves; };
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+	virtual void PostInitializeComponents() override;
+
+	void SetType(EPieceType PT) { PieceType = PT; }
+	void AddToMoves(const FVector Location);
+
+private:
+	void ShowMoves();
+	void DestroyMoveBoxes();
+
 protected:
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* PieceMesh;
 
 	UPROPERTY(VisibleAnywhere)
-	TSet<FVector> LegalMoves;
+	TSet<FVector> Moves;
 
 private:
 	UPROPERTY(EditAnywhere, Category = PieceState)
@@ -63,7 +67,7 @@ private:
 	bool bIsFirstMove;
 
 	UPROPERTY(VisibleAnywhere, Category = Moves)
-	TArray<class APaperSpriteActor*> MoveBoxes;
+	TSet<class APaperSpriteActor*> MoveBoxes;
 
 	UPROPERTY(VisibleAnywhere, Category = Moves)
 	TSubclassOf<class APaperSpriteActor> MoveBoxClass;

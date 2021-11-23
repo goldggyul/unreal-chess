@@ -18,5 +18,5 @@ public:
 	ABishopPiece();
 
 protected:
-	virtual void UpdateLegalMoves() override;
+	virtual void UpdateMoves() override;
 };

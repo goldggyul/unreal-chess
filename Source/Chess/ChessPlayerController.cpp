@@ -181,6 +181,6 @@ void AChessPlayerController::ChangePlayer()
 	OnPossess(CurPlayer);
 
 	CurPlayer->UpdateThreatMap();
-
+	CurPlayer->ShowThreatMap();
 	// if Checkmate.. Check.. Stalemate... : Show UI
 }

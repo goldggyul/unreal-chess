@@ -21,9 +21,9 @@ AQueenPiece::AQueenPiece()
 	PieceMesh->SetRelativeScale3D(FVector(2.f, 2.f, 2.f));
 }
 
-void AQueenPiece::UpdateLegalMoves()
+void AQueenPiece::UpdateMoves()
 {
-	Super::UpdateLegalMoves();
+	Super::UpdateMoves();
 
 	/*
 	* 퀸의 행마법 : 상하좌우+대각방향 직진
@@ -53,13 +53,13 @@ void AQueenPiece::UpdateLegalMoves()
 			APiece* HitPiece = Cast<APiece>(HitActor);
 			if (!IsValid(HitPiece))
 			{
-				AddToLegalMoves(Location);
+				AddToMoves(Location);
 			}
 			else
 			{
 				if (HitPiece->GetPieceColor() != GetPieceColor())
 				{
-					AddToLegalMoves(Location);
+					AddToMoves(Location);
 				}
 				break;
 			}

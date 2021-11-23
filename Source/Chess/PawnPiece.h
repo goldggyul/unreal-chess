@@ -18,5 +18,5 @@ public:
 	APawnPiece();
 
 protected:
-	virtual void UpdateLegalMoves() override;
+	virtual void UpdateMoves() override;
 };

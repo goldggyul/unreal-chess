@@ -3,6 +3,7 @@
 
 #include "Piece.h"
 #include "PaperSpriteActor.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 APiece::APiece()
@@ -19,13 +20,13 @@ APiece::APiece()
 	}
 }
 
-void APiece::ShowLegalMoves()
+void APiece::ShowMoves()
 {
 	if (!IsValid(MoveBoxClass))
 		return;
 	DestroyMoveBoxes();
 
-	for (auto Location : LegalMoves)
+	for (auto& Location : Moves)
 	{
 		FVector MoveBoxLocation = Location;
 		MoveBoxLocation.Z = MoveBoxZ;
@@ -36,11 +37,11 @@ void APiece::ShowLegalMoves()
 	}
 }
 
-void APiece::AddToLegalMoves(const FVector Location)
+void APiece::AddToMoves(const FVector Location)
 {
 	if (UChessUtil::IsInBoard(Location))
 	{
-		LegalMoves.Add(Location);
+		Moves.Add(Location);
 	}
 }
 
@@ -75,35 +76,75 @@ UStaticMeshComponent* APiece::GetStaticMeshComponent()
 	return nullptr;
 }
 
-void APiece::UpdateLegalMoves()
+void APiece::UpdateMoves()
 {
-	LegalMoves.Empty();
+	Moves.Empty();
 }
 
 void APiece::RemoveCheckMoves()
 {
 	FVector OriginalLocation = GetActorLocation();
-	for (auto Move : LegalMoves)
+
+	TSet<APiece*> EnemyPieces;
+	APiece* MyKing = nullptr;
+
+	TArray<AActor*> Actors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APiece::StaticClass(), Actors);
+	for (auto& Actor : Actors)
 	{
-		//LegalMoves.Remove(Move);
-		SetActorLocation(Move);
-
-		// 킹이 체크면 Remove
-		
-
+		APiece* Piece = Cast<APiece>(Actor);
+		if (IsValid(Piece))
+		{
+			if (Piece->GetPieceColor() != PieceColor)
+			{
+				EnemyPieces.Add(Piece);
+			}
+			else if (Piece->GetPieceColor() == PieceColor && Piece->GetPieceType() == EPieceType::King)
+			{
+				MyKing = Piece;
+			}
+		}
 	}
+
+	// 임시로 둬보면서 킹이 체크인지 확인
+	if (IsValid(MyKing))
+	{
+		for (auto& Move : Moves)
+		{
+			SetActorLocation(Move);
+
+			// 킹이 체크면 Remove
+			FVector MyKingLocation = MyKing->GetActorLocation();
+
+			for (auto& EnemyPiece : EnemyPieces)
+			{
+				EnemyPiece->UpdateMoves();
+				if (EnemyPiece->CanMoveTo(MyKingLocation))
+				{
+					Moves.Remove(Move);
+					break;
+				}
+			}
+		}
+	}
+
 	SetActorLocation(OriginalLocation);
+}
+
+bool APiece::CanMoveTo(FVector Location)
+{
+	return Moves.Contains(Location);
 }
 
 bool APiece::IsAbleToPick()
 {
 	// if Legal Moves Exists
 
-	// Temp: UpdateLegalMoves
-	UpdateLegalMoves();
-	ShowLegalMoves();
+	// Temp: UpdateMoves
+	UpdateMoves();
+	ShowMoves();
 
-	if (LegalMoves.Num() > 0)
+	if (Moves.Num() > 0)
 		return true;
 	UE_LOG(LogTemp, Warning, TEXT("Can't move this piece!"));
 	return false;
@@ -117,7 +158,7 @@ bool APiece::IsAbleToPutAt(FVector Dest) const
 	if (GetActorLocation() == Dest)
 		return true;
 
-	for (auto MoveLocation : LegalMoves)
+	for (auto& MoveLocation : Moves)
 	{
 		if (Dest.Equals(MoveLocation, true))
 		{
@@ -150,7 +191,7 @@ void APiece::DestroyMoveBoxes()
 {
 	if (MoveBoxes.Num() != 0)
 	{
-		for (auto MoveBox : MoveBoxes)
+		for (auto& MoveBox : MoveBoxes)
 		{
 			MoveBox->Destroy();
 		}

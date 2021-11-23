@@ -21,9 +21,9 @@ ARookPiece::ARookPiece()
 	PieceMesh->SetRelativeScale3D(FVector(2.f, 2.f, 2.f));
 }
 
-void ARookPiece::UpdateLegalMoves()
+void ARookPiece::UpdateMoves()
 {
-	Super::UpdateLegalMoves();
+	Super::UpdateMoves();
 
 	/*
 	* 룩의 행마법 : 상하좌우 직진
@@ -39,7 +39,7 @@ void ARookPiece::UpdateLegalMoves()
 	Differs.Add(-RightVector); // 좌
 	Differs.Add(RightVector); // 우
 
-	for (auto Differ : Differs)
+	for (auto& Differ : Differs)
 	{
 		FVector Location = GetActorLocation();
 		for (int i = 0; i < 7; i++) // 한번에 최대 7칸
@@ -49,13 +49,13 @@ void ARookPiece::UpdateLegalMoves()
 			APiece* HitPiece = Cast<APiece>(HitActor);
 			if (!IsValid(HitPiece))
 			{
-				AddToLegalMoves(Location);
+				AddToMoves(Location);
 			}
 			else
 			{
 				if (HitPiece->GetPieceColor() != GetPieceColor())
 				{
-					AddToLegalMoves(Location);
+					AddToMoves(Location);
 				}
 				break;
 			}

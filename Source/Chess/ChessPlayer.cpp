@@ -245,7 +245,11 @@ bool AChessPlayer::PutCurPiece()
 
 void AChessPlayer::UpdateThreatMap()
 {
-
+	if (IsValid(ThreatMap))
+	{
+		ThreatMap->Update();
+		// if Checkmate.. Check.. Stalemate... : Show UI
+	}
 }
 
 APiece* AChessPlayer::GetCurPiece()
@@ -304,6 +308,8 @@ void AChessPlayer::SetMeshOpaque(bool bIsOpaque, class UStaticMeshComponent* Mes
 
 void AChessPlayer::ShowThreatMap()
 {
-
+	if (IsValid(ThreatMap))
+	{
+		ThreatMap->Show();
+	}
 }
-

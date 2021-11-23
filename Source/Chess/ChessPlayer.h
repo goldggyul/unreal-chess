@@ -40,6 +40,7 @@ public:
 	bool PutCurPiece();
 
 	void UpdateThreatMap();
+	void ShowThreatMap();
 
 protected:
 	// Called when the game starts or when spawned
@@ -47,8 +48,6 @@ protected:
 
 private:
 	void SetMeshOpaque(bool bIsOpaque, class UStaticMeshComponent* MeshComponent = nullptr) const;
-
-	void ShowThreatMap();
 
 	void SpawnPickedPiece();
 	class APiece* GetCurPiece();

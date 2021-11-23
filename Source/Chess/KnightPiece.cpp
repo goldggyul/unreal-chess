@@ -21,9 +21,9 @@ AKnightPiece::AKnightPiece()
 	PieceMesh->SetRelativeScale3D(FVector(2.f, 2.f, 2.f));
 }
 
-void AKnightPiece::UpdateLegalMoves()
+void AKnightPiece::UpdateMoves()
 {
-	Super::UpdateLegalMoves();
+	Super::UpdateMoves();
 
 	FVector FowardVector = UChessUtil::GetPlayerForwardVector(GetPieceColor());
 	FVector RightVector = UChessUtil::GetPlayerRightVector(GetPieceColor());
@@ -44,7 +44,7 @@ void AKnightPiece::UpdateLegalMoves()
 	Differs.Add(-FowardVector - RightVector * 2); // 아래 + 왼쪽 2 
 	Differs.Add(-FowardVector + RightVector * 2); // 아래 + 오른쪽 2
 
-	for (auto Differ : Differs)
+	for (auto& Differ : Differs)
 	{
 		FVector Location = GetActorLocation();
 		Location += Differ;
@@ -52,11 +52,11 @@ void AKnightPiece::UpdateLegalMoves()
 		APiece* HitPiece = Cast<APiece>(HitActor);
 		if (!IsValid(HitPiece))
 		{
-			AddToLegalMoves(Location);
+			AddToMoves(Location);
 		}
 		else if (HitPiece->GetPieceColor() != GetPieceColor())
 		{
-			AddToLegalMoves(Location);
+			AddToMoves(Location);
 		}
 	}
 }
