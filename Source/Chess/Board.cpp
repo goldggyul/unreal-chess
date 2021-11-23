@@ -3,7 +3,6 @@
 
 #include "Board.h"
 
-
 // Sets default values
 ABoard::ABoard()
 {
@@ -20,68 +19,4 @@ ABoard::ABoard()
 	SetRootComponent(BoardMesh);
 	BoardMesh->SetRelativeScale3D(PieceMeshSize);
 	BoardMesh->SetRelativeLocation(BoardCenter);
-
-	InitBoardState();
-
 }
-
-void ABoard::PostInitializeComponents()
-{
-	Super::PostInitializeComponents();
-}
-
-// Called when the game starts or when spawned
-void ABoard::BeginPlay()
-{
-	Super::BeginPlay();
-}
-
-// Called every frame
-void ABoard::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
-void ABoard::InitBoardState()
-{
-	/* Init PieceColor */
-	PieceColor.Init(EPieceColor::None, 8 * 8);
-	// 인덱스는 왼쪽 위부터 0번
-	for (int i = 0; i < 2 * 8; i++)
-	{
-		PieceColor[i] = EPieceColor::Black;
-		PieceColor[63 - i] = EPieceColor::White;
-	}
-	/* Init Type */
-	PieceType.Init(EPieceType::None, 8 * 8);
-	// Rook
-	PieceType[0] = EPieceType::Rook;
-	PieceType[7] = EPieceType::Rook;
-	PieceType[56] = EPieceType::Rook;
-	PieceType[63] = EPieceType::Rook;
-	// Knight
-	PieceType[1] = EPieceType::Knight;
-	PieceType[6] = EPieceType::Knight;
-	PieceType[57] = EPieceType::Knight;
-	PieceType[62] = EPieceType::Knight;
-	// Bishop
-	PieceType[2] = EPieceType::Bishop;
-	PieceType[5] = EPieceType::Bishop;
-	PieceType[58] = EPieceType::Bishop;
-	PieceType[61] = EPieceType::Bishop;
-	// Queen
-	PieceType[3] = EPieceType::Queen;
-	PieceType[59] = EPieceType::Queen;
-	// King
-	PieceType[4] = EPieceType::King;
-	PieceType[58] = EPieceType::King;
-	// Pawn
-	for (int i = 0; i < 8; i++)
-	{
-		PieceType[8 + i] = EPieceType::Pawn;
-		PieceType[48 + i] = EPieceType::Pawn;
-	}
-}
-
-

@@ -8,11 +8,11 @@
 
 UThreatMap::UThreatMap()
 {
-	static ConstructorHelpers::FClassFinder<APaperSpriteActor> PS(TEXT("Blueprint'/Game/Blueprints/FocusBox/BS_ThreatBox.BS_ThreatBox'"));
-	if (PS.Succeeded())
-	{
-		ThreatBoxClass = PS.Class;
-	}
+	//static ConstructorHelpers::FClassFinder<APaperSpriteActor> PS(TEXT("Blueprint'/Game/Blueprints/FocusBox/BS_ThreatBox.BS_ThreatBox'"));
+	//if (PS.Succeeded())
+	//{
+	//	ThreatBoxClass = PS.Class;
+	//}
 }
 
 void UThreatMap::SetPlayerColor(EPieceColor Color)
