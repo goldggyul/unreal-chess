@@ -17,10 +17,9 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void PlayerTick(float DeltaTime) override;
 	virtual void SetupInputComponent() override;
 	virtual void OnPossess(APawn* InPawn) override;
-
-	virtual void PlayerTick(float DeltaTime) override;
 
 private:
 	void Up();
@@ -30,6 +29,8 @@ private:
 	void Enter();
 	void Click();
 
+	bool MoveBoxToMouse();
+
 	void ChangePlayer();
 
 private:
@@ -38,4 +39,6 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	class AChessPlayer* PrevPlayer;
+
+	FVector MousePos;
 };

@@ -10,7 +10,6 @@
 
 AChessPlayerController::AChessPlayerController()
 {
-
 }
 
 void AChessPlayerController::BeginPlay()
@@ -37,6 +36,21 @@ void AChessPlayerController::BeginPlay()
 
 	Swap(CurPlayer, PrevPlayer);
 	OnPossess(CurPlayer);
+}
+
+void AChessPlayerController::PlayerTick(float DeltaTime)
+{
+	Super::PlayerTick(DeltaTime);
+
+	FVector CurMousePos;
+	if (GetMousePosition(CurMousePos.X, CurMousePos.Y))
+	{
+		if (!MousePos.Equals(CurMousePos))
+		{
+			MoveBoxToMouse();
+		}
+	}
+	MousePos = CurMousePos;
 }
 
 void AChessPlayerController::SetupInputComponent()
@@ -66,16 +80,6 @@ void AChessPlayerController::OnPossess(APawn* InPawn)
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Cur Player is not valid!"));
-	}
-}
-
-void AChessPlayerController::PlayerTick(float DeltaTime)
-{
-	Super::PlayerTick(DeltaTime);
-
-	if (CurPlayer->IsPicking())
-	{
-
 	}
 }
 
@@ -111,6 +115,7 @@ void AChessPlayerController::Enter()
 {
 	if (!IsValid(CurPlayer))
 		return;
+
 	if (CurPlayer->IsPicking())
 	{
 		bool bIsPutSucceeded = CurPlayer->PutCurPiece();
@@ -125,8 +130,16 @@ void AChessPlayerController::Enter()
 
 void AChessPlayerController::Click()
 {
+	bool bIsMovingSucceed = MoveBoxToMouse();
+	if(bIsMovingSucceed)
+		Enter();
+}
+
+bool AChessPlayerController::MoveBoxToMouse()
+{
 	if (!IsValid(CurPlayer))
-		return;
+		return false;
+
 	// Trace to see what is under the mouse cursor
 	FHitResult HitResult;
 	GetHitResultUnderCursor(ECC_Visibility, false, OUT HitResult);
@@ -148,17 +161,13 @@ void AChessPlayerController::Click()
 		if (UChessUtil::IsInBoard(HitPoint))
 		{
 			FString HitLabel = HitResult.Actor->GetActorLabel();
-			// ¿Ö Board¸¸?
-			UE_LOG(LogTemp, Warning, TEXT("Mouse Hit: %s (%f, %f, %f)"), *HitLabel, HitPoint.X, HitPoint.Y, HitPoint.Z);
 			FVector ClickedSquareCenter = UChessUtil::GetSquareCenter(HitPoint);
 			CurPlayer->MovePickBox(ClickedSquareCenter);
-			Enter();
+			return true;
 		}
 	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Mouse didn't hit anything"));
-	}
+	
+	return false;
 }
 
 void AChessPlayerController::ChangePlayer()
