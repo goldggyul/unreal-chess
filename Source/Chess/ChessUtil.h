@@ -117,6 +117,15 @@ public:
 		return nullptr;
 	}
 
+	static FRotator GetPlayerDirection(EPieceColor Color)
+	{
+		if (Color == EPieceColor::Black)
+		{
+			return FRotator(0.0f, 180.0f, 0.0f);
+		}
+		return FRotator(0.0f, 0.0f, 0.0f);
+	}
+
 	static FVector GetPlayerForwardVector(EPieceColor Color)
 	{
 		if (Color == EPieceColor::Black)

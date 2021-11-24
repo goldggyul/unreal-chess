@@ -34,7 +34,6 @@ void AChessPlayerController::BeginPlay()
 
 	bShowMouseCursor = true;
 
-	Swap(CurPlayer, PrevPlayer);
 	OnPossess(CurPlayer);
 }
 
@@ -76,11 +75,15 @@ void AChessPlayerController::OnPossess(APawn* InPawn)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("POSSESS! [%s]"), *(CurPlayer->GetActorLabel()));
 		CurPlayer->SpawnPickBox();
+		CurPlayer->UpdateThreatMap();
+		CurPlayer->ShowThreatMap();
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Cur Player is not valid!"));
 	}
+
+
 }
 
 void AChessPlayerController::Up()
@@ -175,12 +178,12 @@ void AChessPlayerController::ChangePlayer()
 	UE_LOG(LogTemp, Warning, TEXT("NEXT TURN"));
 
 	CurPlayer->DestroyPickBox();
+	CurPlayer->DestroyThreatMap();
 
 	UnPossess();
 	Swap(CurPlayer, PrevPlayer);
 	OnPossess(CurPlayer);
 
-	CurPlayer->UpdateThreatMap();
-	CurPlayer->ShowThreatMap();
-	// if Checkmate.. Check.. Stalemate... : Show UI
+
+	// if Checkmate.. Check.. Stalemate... : ShowMap UI
 }

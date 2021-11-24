@@ -3,16 +3,12 @@
 
 #include "ThreatMap.h"
 #include "Piece.h"
+#include "ThreatBox.h"
 #include "Kismet/GameplayStatics.h"
 
 
 UThreatMap::UThreatMap()
 {
-	//static ConstructorHelpers::FClassFinder<APaperSpriteActor> PS(TEXT("Blueprint'/Game/Blueprints/FocusBox/BS_ThreatBox.BS_ThreatBox'"));
-	//if (PS.Succeeded())
-	//{
-	//	ThreatBoxClass = PS.Class;
-	//}
 }
 
 void UThreatMap::SetPlayerColor(EPieceColor Color)
@@ -20,9 +16,10 @@ void UThreatMap::SetPlayerColor(EPieceColor Color)
 	PlayerColor = Color;
 }
 
-void UThreatMap::Update()
+void UThreatMap::UpdateMap()
 {
-	AddPieces();
+	DestroyMap();
+	UpdatePieces();
 
 	for (auto& PlayerPiece : PlayerPieces)
 	{
@@ -53,18 +50,54 @@ void UThreatMap::Update()
 	}
 }
 
-void UThreatMap::Show()
+void UThreatMap::ShowMap()
 {
+	FRotator BoxRotation = UChessUtil::GetPlayerDirection(PlayerColor);
+
 	for (auto& SquareState : SquareStates)
 	{
 		FVector& Location = SquareState.Key;
+		Location.Z = 1;
 		FPieceCount& PieceCount = SquareState.Value;
 
+		if (PieceCount.BlackCount == 0 && PieceCount.WhiteCount == 0)
+		{
+			continue;
+		}
+
+		AThreatBox* ThreatBox = GetWorld()->SpawnActor<AThreatBox>(Location, BoxRotation);
+		ThreatBox->SetFolderPath(TEXT("/ThreatBox"));
+		if (PlayerColor == EPieceColor::White)
+		{
+			ThreatBox->SetShapeAndColor(PieceCount.WhiteCount, PieceCount.BlackCount);
+		}
+		else
+		{
+			ThreatBox->SetShapeAndColor(PieceCount.BlackCount, PieceCount.WhiteCount);
+		}
+		ThreatBoxes.Add(ThreatBox);
+		
 	}
 }
 
-void UThreatMap::AddPieces()
+void UThreatMap::DestroyMap()
 {
+	for (auto& ThreatBox : ThreatBoxes)
+	{
+		if (IsValid(ThreatBox))
+		{
+			ThreatBox->Destroy();
+		}
+	}
+	ThreatBoxes.Empty();
+	SquareStates.Empty();
+}
+
+void UThreatMap::UpdatePieces()
+{
+	PlayerPieces.Empty();
+	EnemyPieces.Empty();
+
 	TArray<AActor*> Actors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APiece::StaticClass(), Actors);
 	for (auto& Actor : Actors)

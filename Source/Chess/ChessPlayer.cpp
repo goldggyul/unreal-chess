@@ -247,8 +247,8 @@ void AChessPlayer::UpdateThreatMap()
 {
 	if (IsValid(ThreatMap))
 	{
-		ThreatMap->Update();
-		// if Checkmate.. Check.. Stalemate... : Show UI
+		ThreatMap->UpdateMap();
+		// if Checkmate.. Check.. Stalemate... : ShowMap UI
 	}
 }
 
@@ -310,6 +310,14 @@ void AChessPlayer::ShowThreatMap()
 {
 	if (IsValid(ThreatMap))
 	{
-		ThreatMap->Show();
+		ThreatMap->ShowMap();
+	}
+}
+
+void AChessPlayer::DestroyThreatMap()
+{
+	if (IsValid(ThreatMap))
+	{
+		ThreatMap->DestroyMap();
 	}
 }

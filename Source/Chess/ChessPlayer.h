@@ -41,6 +41,7 @@ public:
 
 	void UpdateThreatMap();
 	void ShowThreatMap();
+	void DestroyThreatMap();
 
 protected:
 	// Called when the game starts or when spawned

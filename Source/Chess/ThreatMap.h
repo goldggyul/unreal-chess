@@ -15,7 +15,7 @@ USTRUCT()
 struct FPieceCount
 {
 	GENERATED_BODY()
-	
+
 	int WhiteCount = 0;
 	int BlackCount = 0;
 
@@ -43,28 +43,26 @@ public:
 public:
 	void SetPlayerColor(EPieceColor Color);
 
-	void Update();
-	void Show();
+	void UpdateMap();
+	void ShowMap();
+	void DestroyMap();
 
 private:
-	void AddPieces();
+	void UpdatePieces();
 
 private:
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = ThreatMap)
 	EPieceColor PlayerColor;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = ThreatMap)
 	TSet<class APiece*> PlayerPieces;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = ThreatMap)
 	TSet<class APiece*> EnemyPieces;
 
-	UPROPERTY(VisibleAnyWhere)
+	UPROPERTY(VisibleAnywhere, Category = ThreatMap)
 	TMap<FVector, FPieceCount> SquareStates;
 
-	UPROPERTY(VisibleAnywhere, Category = ThreatBox)
-	TSet<class APaperSpriteActor*> ThreatBoxes;
-
-	UPROPERTY(VisibleAnywhere, Category = ThreatBox)
-	TSubclassOf<class APaperSpriteActor> ThreatBoxClass;
+	UPROPERTY(VisibleAnywhere, Category = ThreatMap)
+	TSet<class AThreatBox*> ThreatBoxes;
 };
