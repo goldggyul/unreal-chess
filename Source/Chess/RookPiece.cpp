@@ -21,9 +21,9 @@ ARookPiece::ARookPiece()
 	PieceMesh->SetRelativeScale3D(FVector(2.f, 2.f, 2.f));
 }
 
-void ARookPiece::UpdateMoves()
+void ARookPiece::UpdateBasicMoves()
 {
-	Super::UpdateMoves();
+	Super::UpdateBasicMoves();
 
 	/*
 	* 룩의 행마법 : 상하좌우 직진

@@ -42,5 +42,6 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	class AChessPlayer* PrevPlayer;
 
+	UPROPERTY()
 	FVector MousePos;
 };

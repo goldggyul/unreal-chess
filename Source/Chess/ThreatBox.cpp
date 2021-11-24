@@ -56,12 +56,7 @@ void AThreatBox::BeginPlay()
 void AThreatBox::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	 
-	//if (IsValid(QuarterSquare))
-	//{
-	//	UE_LOG(LogTemp, Warning,TEXT("Texturing.."));
-	//	DynamicMaterial->SetTextureParameterValue(TEXT("SquareTexture"), QuarterSquare);
-	//}
+
 }
 
 void AThreatBox::SetShapeAndColor(uint8 PlayerCount, uint8 EnemyCount)

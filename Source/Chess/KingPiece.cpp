@@ -22,9 +22,9 @@ AKingPiece::AKingPiece()
 
 }
 
-void AKingPiece::UpdateMoves()
+void AKingPiece::UpdateBasicMoves()
 {
-	Super::UpdateMoves();
+	Super::UpdateBasicMoves();
 
 	/*
 	* 킹의 행마법 : 상하좌우+대각방향 한 칸만

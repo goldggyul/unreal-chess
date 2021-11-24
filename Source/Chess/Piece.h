@@ -8,6 +8,7 @@
 #include "ChessUtil.h"
 #include "Piece.generated.h"
 
+
 UCLASS()
 class CHESS_API APiece : public AActor
 {
@@ -25,8 +26,8 @@ public:
 	const EPieceType GetPieceType() const { return PieceType; }
 	class UStaticMeshComponent* GetStaticMeshComponent();
 
-	virtual void UpdateMoves();
-	void RemoveCheckMoves();
+	virtual void UpdateBasicMoves();
+	void RemoveMoveKingCheckedByEnemies(APiece* MyKing, TSet<APiece*>& EnemyPieces);
 	bool CanMoveTo(FVector Location);
 
 	bool IsAbleToPick();

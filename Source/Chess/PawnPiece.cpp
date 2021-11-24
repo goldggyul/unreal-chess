@@ -22,9 +22,9 @@ APawnPiece::APawnPiece()
 	PieceMesh->SetRelativeScale3D(PieceMeshSize);
 }
 
-void APawnPiece::UpdateMoves()
+void APawnPiece::UpdateBasicMoves()
 {
-	Super::UpdateMoves();
+	Super::UpdateBasicMoves();
 
 	// 일단 Legal Moves 말고 Possible Moves만
 

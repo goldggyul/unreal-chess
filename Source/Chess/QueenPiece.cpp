@@ -21,9 +21,9 @@ AQueenPiece::AQueenPiece()
 	PieceMesh->SetRelativeScale3D(FVector(2.f, 2.f, 2.f));
 }
 
-void AQueenPiece::UpdateMoves()
+void AQueenPiece::UpdateBasicMoves()
 {
-	Super::UpdateMoves();
+	Super::UpdateBasicMoves();
 
 	/*
 	* 퀸의 행마법 : 상하좌우+대각방향 직진

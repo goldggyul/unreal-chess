@@ -21,9 +21,9 @@ AKnightPiece::AKnightPiece()
 	PieceMesh->SetRelativeScale3D(FVector(2.f, 2.f, 2.f));
 }
 
-void AKnightPiece::UpdateMoves()
+void AKnightPiece::UpdateBasicMoves()
 {
-	Super::UpdateMoves();
+	Super::UpdateBasicMoves();
 
 	FVector FowardVector = UChessUtil::GetPlayerForwardVector(GetPieceColor());
 	FVector RightVector = UChessUtil::GetPlayerRightVector(GetPieceColor());

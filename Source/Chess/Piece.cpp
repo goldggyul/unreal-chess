@@ -76,58 +76,37 @@ UStaticMeshComponent* APiece::GetStaticMeshComponent()
 	return nullptr;
 }
 
-void APiece::UpdateMoves()
+void APiece::UpdateBasicMoves()
 {
 	Moves.Empty();
 }
 
-void APiece::RemoveCheckMoves()
+void APiece::RemoveMoveKingCheckedByEnemies(APiece* MyKing, TSet<APiece*>& EnemyPieces)
 {
 	FVector OriginalLocation = GetActorLocation();
 
-	TSet<APiece*> EnemyPieces;
-	APiece* MyKing = nullptr;
-
-	TArray<AActor*> Actors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APiece::StaticClass(), Actors);
-	for (auto& Actor : Actors)
-	{
-		APiece* Piece = Cast<APiece>(Actor);
-		if (IsValid(Piece))
-		{
-			if (Piece->GetPieceColor() != PieceColor)
-			{
-				EnemyPieces.Add(Piece);
-			}
-			else if (Piece->GetPieceColor() == PieceColor && Piece->GetPieceType() == EPieceType::King)
-			{
-				MyKing = Piece;
-			}
-		}
-	}
-
 	// 임시로 둬보면서 킹이 체크인지 확인
-	if (IsValid(MyKing))
+	if (!IsValid(MyKing))
+		return;
+
+	for (auto& Move : Moves)
 	{
-		for (auto& Move : Moves)
+		SetActorLocation(Move);
+
+		// 킹이 체크면 Remove
+		FVector MyKingLocation = MyKing->GetActorLocation();
+
+		for (auto& EnemyPiece : EnemyPieces)
 		{
-			SetActorLocation(Move);
-
-			// 킹이 체크면 Remove
-			FVector MyKingLocation = MyKing->GetActorLocation();
-
-			for (auto& EnemyPiece : EnemyPieces)
+			EnemyPiece->UpdateBasicMoves();
+			if (EnemyPiece->CanMoveTo(MyKingLocation))
 			{
-				EnemyPiece->UpdateMoves();
-				if (EnemyPiece->CanMoveTo(MyKingLocation))
-				{
-					Moves.Remove(Move);
-					break;
-				}
+				Moves.Remove(Move);
+				break;
 			}
 		}
 	}
-
+	
 	SetActorLocation(OriginalLocation);
 }
 
@@ -186,12 +165,9 @@ void APiece::PutAt(FVector Dest)
 
 void APiece::DestroyMoveBoxes()
 {
-	if (MoveBoxes.Num() != 0)
+	for (auto& MoveBox : MoveBoxes)
 	{
-		for (auto& MoveBox : MoveBoxes)
-		{
-			MoveBox->Destroy();
-		}
+		MoveBox->Destroy();
 	}
 	MoveBoxes.Empty();
 }

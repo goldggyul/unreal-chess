@@ -33,6 +33,19 @@ struct FPieceCount
 			BlackCount++;
 		}
 	}
+
+	int GetEnemyCount(EPieceColor PlayerColor)
+	{
+		if (PlayerColor == EPieceColor::White)
+		{
+			return BlackCount;
+		}
+		else if (PlayerColor == EPieceColor::Black)
+		{
+			return WhiteCount;
+		}
+		return 0;
+	}
 };
 
 UCLASS()
@@ -62,6 +75,9 @@ private:
 	TSet<class APiece*> PlayerPieces;
 
 	UPROPERTY(VisibleAnywhere, Category = ThreatMap)
+	class APiece* PlayerKing;
+
+	UPROPERTY(VisibleAnywhere, Category = ThreatMap)
 	TSet<class APiece*> EnemyPieces;
 
 	UPROPERTY(VisibleAnywhere, Category = ThreatMap)
@@ -69,4 +85,13 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = ThreatMap)
 	TSet<class AThreatBox*> ThreatBoxes;
+
+	UPROPERTY(VisibleAnywhere, Category = ThreatMap)
+	bool bIsCheck;
+
+	UPROPERTY(VisibleAnywhere, Category = ThreatMap)
+	bool bIsCheckmate;
+
+	UPROPERTY(VisibleAnywhere, Category = ThreatMap)
+	bool bIsStalemate;
 };

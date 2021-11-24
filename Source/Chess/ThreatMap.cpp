@@ -13,46 +13,82 @@ UThreatMap::UThreatMap()
 
 void UThreatMap::SetPlayerColor(EPieceColor Color)
 {
+	UE_LOG(LogTemp, Log, TEXT("SetPlayerColor"));
+
 	PlayerColor = Color;
 	InitPieces();
 }
 
 void UThreatMap::UpdateMap()
 {
+	UE_LOG(LogTemp, Log, TEXT("UpdateMap"));
+
 	DestroyMap();
 	UpdatePieces();
 
+	UE_LOG(LogTemp, Log, TEXT("UpdatePlayerMoves"));
+
+	bool bCanMove = false;
 	for (auto& PlayerPiece : PlayerPieces)
 	{
-		PlayerPiece->UpdateMoves(); // 기본 움직임
-		PlayerPiece->RemoveCheckMoves(); // 체크 되는 상황의 움직임 제거
-	}
-	for (auto& EnemyPiece : EnemyPieces)
-	{
-		EnemyPiece->UpdateMoves(); // 기본 움직임
-	}
+		PlayerPiece->UpdateBasicMoves(); // 기본 움직임
+		PlayerPiece->RemoveMoveKingCheckedByEnemies(PlayerKing, EnemyPieces); // 체크 되는 상황의 움직임 제거
 
-	// threat map 업데이트
-	for (auto& Piece : PlayerPieces)
-	{
-		for (auto& Move : Piece->GetMoves())
+		// threat map 업데이트
+		for (auto& Move : PlayerPiece->GetMoves())
 		{
+			if (!bCanMove)
+			{
+				bCanMove = true;
+			}
 			FPieceCount& PieceCount = SquareStates.FindOrAdd(Move);
-			SquareStates[Move].AddCount(Piece->GetPieceColor());
+			SquareStates[Move].AddCount(PlayerPiece->GetPieceColor());
 		}
 	}
-	for (auto& Piece : EnemyPieces)
+
+	UE_LOG(LogTemp, Log, TEXT("UpdateEnemyMoves"));
+
+	for (auto& EnemyPiece : EnemyPieces)
 	{
-		for (auto& Move : Piece->GetMoves())
+		EnemyPiece->UpdateBasicMoves(); // 기본 움직임
+
+		// threat map 업데이트
+		for (auto& Move : EnemyPiece->GetMoves())
 		{
 			FPieceCount& PieceCount = SquareStates.FindOrAdd(Move);
-			SquareStates[Move].AddCount(Piece->GetPieceColor());
+			SquareStates[Move].AddCount(EnemyPiece->GetPieceColor());
+		}
+	}
+
+	// 게임 상태 업데이트
+	UE_LOG(LogTemp, Log, TEXT("UpdateGameState"));
+
+	FPieceCount* KingSquareCount = SquareStates.Find(PlayerKing->GetActorLocation());
+	if (KingSquareCount != nullptr)
+	{
+		if (KingSquareCount->GetEnemyCount(PlayerColor) > 0)
+		{
+			bIsCheck = true;
+		}
+	}
+
+	if (!bCanMove)
+	{
+		if (bIsCheck)
+		{
+			bIsCheckmate = true;
+		}
+		else
+		{
+			bIsStalemate = true;
 		}
 	}
 }
 
 void UThreatMap::ShowMap()
 {
+	UE_LOG(LogTemp, Log, TEXT("ShowMap"));
+
 	FRotator BoxRotation = UChessUtil::GetPlayerDirection(PlayerColor);
 
 	for (auto& SquareState : SquareStates)
@@ -77,17 +113,18 @@ void UThreatMap::ShowMap()
 			ThreatBox->SetShapeAndColor(PieceCount.BlackCount, PieceCount.WhiteCount);
 		}
 		ThreatBoxes.Add(ThreatBox);
-		
 	}
 }
 
 void UThreatMap::DestroyMap()
 {
-	for (auto& ThreatBox : ThreatBoxes)
+	UE_LOG(LogTemp, Log, TEXT("DestroyMap"));
+
+	for (auto It = ThreatBoxes.CreateConstIterator(); It; ++It)
 	{
-		if (IsValid(ThreatBox))
+		if (IsValid(*It))
 		{
-			ThreatBox->Destroy();
+			(*It)->Destroy();
 		}
 	}
 	ThreatBoxes.Empty();
@@ -97,6 +134,8 @@ void UThreatMap::DestroyMap()
 
 void UThreatMap::InitPieces()
 {
+	UE_LOG(LogTemp, Log, TEXT("InitPieces"));
+
 	PlayerPieces.Empty();
 	EnemyPieces.Empty();
 
@@ -105,34 +144,42 @@ void UThreatMap::InitPieces()
 	for (auto& Actor : Actors)
 	{
 		APiece* Piece = Cast<APiece>(Actor);
-		if (IsValid(Piece))
+		if (!IsValid(Piece))
+			continue;
+
+		if (Piece->GetPieceColor() == PlayerColor)
 		{
-			if (Piece->GetPieceColor() == PlayerColor)
+			PlayerPieces.Add(Piece);
+
+			if (Piece->GetPieceType() == EPieceType::King)
 			{
-				PlayerPieces.Add(Piece);
-			}
-			else
-			{
-				EnemyPieces.Add(Piece);
+				PlayerKing = Piece;	
 			}
 		}
+		else
+		{
+			EnemyPieces.Add(Piece);
+		}	
 	}
 }
 
 void UThreatMap::UpdatePieces()
 {
-	for (auto& Piece : PlayerPieces)
+	UE_LOG(LogTemp, Log, TEXT("UpdatePieces"));
+
+	for (auto It = PlayerPieces.CreateConstIterator(); It; ++It)
 	{
-		if (!IsValid(Piece))
+		if (!IsValid(*It))
 		{
-			PlayerPieces.Remove(Piece);
+			PlayerPieces.Remove(*It);
 		}
 	}
-	for (auto& Piece : EnemyPieces)
+
+	for (auto It = EnemyPieces.CreateConstIterator(); It; ++It)
 	{
-		if (!IsValid(Piece))
+		if (!IsValid(*It))
 		{
-			EnemyPieces.Remove(Piece);
+			EnemyPieces.Remove(*It);
 		}
 	}
 }

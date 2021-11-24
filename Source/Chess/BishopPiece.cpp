@@ -21,9 +21,9 @@ ABishopPiece::ABishopPiece()
 	PieceMesh->SetRelativeScale3D(PieceMeshSize);
 }
 
-void ABishopPiece::UpdateMoves()
+void ABishopPiece::UpdateBasicMoves()
 {
-	Super::UpdateMoves();
+	Super::UpdateBasicMoves();
 
 	/*
 	* 비숍의 행마법
