@@ -90,7 +90,7 @@ EPieceColor AChessPlayer::GetPlayerColor() const
 
 void AChessPlayer::SetPickBoxStart(FVector BoxStart)
 {
-	PrevMove = BoxStart;
+	CurMove = BoxStart;
 }
 
 FVector AChessPlayer::GetPickBoxLocation() const
@@ -125,7 +125,7 @@ void AChessPlayer::SpawnPickBox()
 		UE_LOG(LogTemp, Warning, TEXT("Destroy Previous PickBox"));
 		PickBox->Destroy();
 	}
-	PickBox = GetWorld()->SpawnActor<APaperSpriteActor>(PickBoxClass, PrevMove, FRotator::ZeroRotator);
+	PickBox = GetWorld()->SpawnActor<APaperSpriteActor>(PickBoxClass, CurMove, FRotator::ZeroRotator);
 	PickBox->SetActorLabel(TEXT("PickBox"));
 	PickBox->SetFolderPath("/Player");
 }
@@ -152,7 +152,6 @@ void AChessPlayer::MovePickBox(FVector Dest)
 		Dest.Z = PickBoxZ;
 		PickBox->SetActorLocation(Dest);
 		//UE_LOG(LogTemp, Warning, TEXT("Box Moved"));
-		PrevMove = Dest;
 		if (IsValid(PickedPiece))
 		{
 			Dest.Z = PickedPiece->GetActorLocation().Z;

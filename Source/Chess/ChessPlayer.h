@@ -65,7 +65,10 @@ private:
 	class UCameraComponent* Camera;
 
 	UPROPERTY(VisibleAnywhere)
-	FVector PrevMove; // 이전에 수를 놨던 위치. 박스 시작 위치 설정용
+	FVector PrevMove; // 이전에 수를 놨던 위치.
+
+	UPROPERTY(VisibleAnywhere)
+	FVector CurMove;
 
 	UPROPERTY(VisibleAnywhere)
 	class UThreatMap* ThreatMap;

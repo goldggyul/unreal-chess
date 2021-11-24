@@ -93,20 +93,17 @@ void AThreatBox::SetShapeAndColor(uint8 PlayerCount, uint8 EnemyCount)
 		PlayerColor = MorePlayer;
 	}
 
+	DynamicMaterial->SetVectorParameterValue(TEXT("TopColor"), EnemyColor);
+	DynamicMaterial->SetVectorParameterValue(TEXT("BottomColor"), PlayerColor);
+
 	// Color and Texture
 	if (PlayerCount == EnemyCount)
 	{
-		DynamicMaterial->SetVectorParameterValue(TEXT("TopColor"), EnemyColor);
-		DynamicMaterial->SetVectorParameterValue(TEXT("BottomColor"), PlayerColor);
 		DynamicMaterial->SetTextureParameterValue(TEXT("SquareTexture"), HalfSquare);
 	}
 	else if (PlayerCount == 0 || EnemyCount == 0)
 	{
-		if (PlayerCount == 0)
-		{
-			DynamicMaterial->SetVectorParameterValue(TEXT("TopColor"), EnemyColor);
-		}
-		else
+		if (EnemyCount == 0)
 		{
 			DynamicMaterial->SetVectorParameterValue(TEXT("TopColor"), PlayerColor);
 		}
@@ -114,15 +111,11 @@ void AThreatBox::SetShapeAndColor(uint8 PlayerCount, uint8 EnemyCount)
 	}
 	else
 	{
-		if (EnemyCount < PlayerCount)
-		{
-			DynamicMaterial->SetVectorParameterValue(TEXT("TopColor"), EnemyColor);
-			DynamicMaterial->SetVectorParameterValue(TEXT("BottomColor"), PlayerColor);
-		}
-		else
+		if (EnemyCount > PlayerCount)
 		{
 			DynamicMaterial->SetVectorParameterValue(TEXT("TopColor"), PlayerColor);
 			DynamicMaterial->SetVectorParameterValue(TEXT("BottomColor"), EnemyColor);
+			SetActorRotation(GetActorRotation() + FRotator(0.0f, 180.0f, 0.0f));
 		}
 		DynamicMaterial->SetTextureParameterValue(TEXT("SquareTexture"), QuarterSquare);
 	}
