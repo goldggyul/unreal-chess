@@ -251,6 +251,18 @@ void AChessPlayer::UpdateThreatMap()
 	{
 		ThreatMap->UpdateMap();
 		// if Checkmate.. Check.. Stalemate... : ShowMap UI
+		if (ThreatMap->IsCheckmate())
+		{
+			UE_LOG(LogTemp, Error, TEXT("CHECKMATE"));
+		}
+		else if (ThreatMap->IsStalemate())
+		{
+			UE_LOG(LogTemp, Error, TEXT("STALEMATE"));
+		}
+		else if (ThreatMap->IsCheck())
+		{
+			UE_LOG(LogTemp, Error, TEXT("CHECK"));
+		}
 	}
 }
 

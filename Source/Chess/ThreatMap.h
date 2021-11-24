@@ -63,8 +63,15 @@ public:
 	void ShowMap();
 	void DestroyMap();
 
+	bool IsCheck() const { return bIsCheck; }
+	bool IsCheckmate() const { return bIsCheckmate; }
+	bool IsStalemate() const { return bIsStalemate; }
+
 private:
 	void InitPieces();
+	void UpdatePieces();
+	void UpdateSquareStates();
+	void UpdatePlayState();
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = ThreatMap)

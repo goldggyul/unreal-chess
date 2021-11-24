@@ -74,6 +74,9 @@ private:
 	class UThreatMap* ThreatMap;
 
 	UPROPERTY(VisibleAnywhere)
+	EChessState ChessState;
+
+	UPROPERTY(VisibleAnywhere)
 	TSubclassOf<class APaperSpriteActor> PickBoxClass;
 
 	UPROPERTY(VisibleAnywhere)

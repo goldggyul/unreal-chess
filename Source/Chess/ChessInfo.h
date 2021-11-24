@@ -33,7 +33,7 @@ enum class EPieceType : uint8
 };
 
 UENUM(BlueprintType)
-enum class EPlayState : uint8
+enum class EChessState : uint8
 {
 	Check,
 	Checkmate,
