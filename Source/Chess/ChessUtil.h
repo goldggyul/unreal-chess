@@ -82,7 +82,7 @@ public:
 		// Board의 왼쪽 상단 부분이 (0.0f, 0.0f, 0.0f)
 		float LocationX = (BoardCenter.X - SquareSize * 4) + ((SquareSize / 2) * (2 * X - 1));
 		float LocationY = (BoardCenter.Y - SquareSize * 4) + ((SquareSize / 2) * (2 * Y - 1));
-		UE_LOG(LogTemp, Warning, TEXT("SquareCenter: %d,%d -> %f %f "), X, Y, LocationX, LocationY);
+		// UE_LOG(LogTemp, Warning, TEXT("SquareCenter: %d,%d -> %f %f "), X, Y, LocationX, LocationY);
 		return FVector(LocationX, LocationY, BoardCenter.Z);
 	}
 
@@ -90,7 +90,6 @@ public:
 	{
 		if (!UChessUtil::IsInBoard(Point))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("[LINE TRACE] OUT OF BOARD"));
 			return nullptr;
 		}
 
@@ -109,10 +108,6 @@ public:
 		if (World->LineTraceSingleByObjectType(OUT HitResult, Top, Bottom, Query))
 		{
 			return HitResult.GetActor();
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("[LINE TRACE] NO COLLISION"));
 		}
 		return nullptr;
 	}

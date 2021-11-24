@@ -132,7 +132,10 @@ void AChessPlayer::SpawnPickBox()
 
 void AChessPlayer::DestroyPickBox()
 {
-	PickBox->Destroy();
+	if (IsValid(PickBox))
+	{
+		PickBox->Destroy();
+	}
 }
 
 void AChessPlayer::MovePickBox(FVector Dest)
@@ -263,7 +266,6 @@ APiece* AChessPlayer::GetCurPiece()
 		// For debugging
 		FString PieceTypeName = UChessUtil::GetPieceTypeString(HitPiece->GetPieceType());
 		FString PieceColorName = UChessUtil::GetColorString(HitPiece->GetPieceColor());
-		UE_LOG(LogTemp, Warning, TEXT("[LINE TRACE] HITTED: %s %s"), *PieceColorName, *PieceTypeName);
 		return HitPiece;
 	}
 	else

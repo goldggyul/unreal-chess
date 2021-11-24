@@ -20,6 +20,7 @@ protected:
 	virtual void PlayerTick(float DeltaTime) override;
 	virtual void SetupInputComponent() override;
 
+	virtual void OnUnPossess() override;
 	virtual void OnPossess(APawn* InPawn) override;
 
 private:
