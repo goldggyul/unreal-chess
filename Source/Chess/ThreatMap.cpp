@@ -24,13 +24,14 @@ void UThreatMap::UpdateMap()
 	UE_LOG(LogTemp, Log, TEXT("UpdateMap"));
 
 	DestroyMap();
-	UpdatePieces();
 
 	UE_LOG(LogTemp, Log, TEXT("UpdatePlayerMoves"));
 
 	bool bCanMove = false;
 	for (auto& PlayerPiece : PlayerPieces)
 	{
+		if (!IsValid(PlayerPiece)) continue;
+
 		PlayerPiece->UpdateBasicMoves(); // 기본 움직임
 		PlayerPiece->RemoveMoveKingCheckedByEnemies(PlayerKing, EnemyPieces); // 체크 되는 상황의 움직임 제거
 
@@ -50,6 +51,8 @@ void UThreatMap::UpdateMap()
 
 	for (auto& EnemyPiece : EnemyPieces)
 	{
+		if (!IsValid(EnemyPiece)) continue;
+
 		EnemyPiece->UpdateBasicMoves(); // 기본 움직임
 
 		// threat map 업데이트
@@ -144,9 +147,6 @@ void UThreatMap::InitPieces()
 	for (auto& Actor : Actors)
 	{
 		APiece* Piece = Cast<APiece>(Actor);
-		if (!IsValid(Piece))
-			continue;
-
 		if (Piece->GetPieceColor() == PlayerColor)
 		{
 			PlayerPieces.Add(Piece);
@@ -160,26 +160,5 @@ void UThreatMap::InitPieces()
 		{
 			EnemyPieces.Add(Piece);
 		}	
-	}
-}
-
-void UThreatMap::UpdatePieces()
-{
-	UE_LOG(LogTemp, Log, TEXT("UpdatePieces"));
-
-	for (auto It = PlayerPieces.CreateConstIterator(); It; ++It)
-	{
-		if (!IsValid(*It))
-		{
-			PlayerPieces.Remove(*It);
-		}
-	}
-
-	for (auto It = EnemyPieces.CreateConstIterator(); It; ++It)
-	{
-		if (!IsValid(*It))
-		{
-			EnemyPieces.Remove(*It);
-		}
 	}
 }

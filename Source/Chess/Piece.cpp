@@ -89,19 +89,21 @@ void APiece::RemoveMoveKingCheckedByEnemies(APiece* MyKing, TSet<APiece*>& Enemy
 	if (!IsValid(MyKing))
 		return;
 
-	for (auto& Move : Moves)
+	for (auto It = Moves.CreateConstIterator(); It; ++It)
 	{
-		SetActorLocation(Move);
+		SetActorLocation(*It);
 
 		// 킹이 체크면 Remove
 		FVector MyKingLocation = MyKing->GetActorLocation();
 
 		for (auto& EnemyPiece : EnemyPieces)
 		{
+			if (!IsValid(EnemyPiece)) continue;
+
 			EnemyPiece->UpdateBasicMoves();
 			if (EnemyPiece->CanMoveTo(MyKingLocation))
 			{
-				Moves.Remove(Move);
+				Moves.Remove(*It);
 				break;
 			}
 		}

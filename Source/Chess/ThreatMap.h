@@ -65,7 +65,6 @@ public:
 
 private:
 	void InitPieces();
-	void UpdatePieces();
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = ThreatMap)
