@@ -14,6 +14,7 @@ UThreatMap::UThreatMap()
 void UThreatMap::SetPlayerColor(EPieceColor Color)
 {
 	PlayerColor = Color;
+	InitPieces();
 }
 
 void UThreatMap::UpdateMap()
@@ -90,10 +91,11 @@ void UThreatMap::DestroyMap()
 		}
 	}
 	ThreatBoxes.Empty();
+
 	SquareStates.Empty();
 }
 
-void UThreatMap::UpdatePieces()
+void UThreatMap::InitPieces()
 {
 	PlayerPieces.Empty();
 	EnemyPieces.Empty();
@@ -113,6 +115,24 @@ void UThreatMap::UpdatePieces()
 			{
 				EnemyPieces.Add(Piece);
 			}
+		}
+	}
+}
+
+void UThreatMap::UpdatePieces()
+{
+	for (auto& Piece : PlayerPieces)
+	{
+		if (!IsValid(Piece))
+		{
+			PlayerPieces.Remove(Piece);
+		}
+	}
+	for (auto& Piece : EnemyPieces)
+	{
+		if (!IsValid(Piece))
+		{
+			EnemyPieces.Remove(Piece);
 		}
 	}
 }

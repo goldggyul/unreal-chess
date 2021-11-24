@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
+#include "Components/ActorComponent.h"
 #include "ChessInfo.h"
 #include "ThreatMap.generated.h"
 
@@ -16,7 +16,10 @@ struct FPieceCount
 {
 	GENERATED_BODY()
 
+	UPROPERTY(VisibleAnywhere)
 	int WhiteCount = 0;
+
+	UPROPERTY(VisibleAnywhere)
 	int BlackCount = 0;
 
 	void AddCount(EPieceColor PieceColor)
@@ -33,7 +36,7 @@ struct FPieceCount
 };
 
 UCLASS()
-class CHESS_API UThreatMap : public UObject
+class CHESS_API UThreatMap : public UActorComponent
 {
 	GENERATED_BODY()
 	
@@ -48,6 +51,7 @@ public:
 	void DestroyMap();
 
 private:
+	void InitPieces();
 	void UpdatePieces();
 
 private:
