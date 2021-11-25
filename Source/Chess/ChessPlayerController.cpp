@@ -7,9 +7,17 @@
 #include "ChessUtil.h"
 #include "DrawDebugHelpers.h"
 #include "Engine/EngineTypes.h"
+#include "Blueprint/UserWidget.h"
+#include "Components/WidgetComponent.h"
+#include "PieceInfoWidget.h"
 
 AChessPlayerController::AChessPlayerController()
 {
+	static ConstructorHelpers::FClassFinder<UPieceInfoWidget> PW(TEXT("WidgetBlueprint'/Game/UI/Blueprints/WBP_PieceInfoWidget.WBP_PieceInfoWidget_C'"));
+	if (PW.Succeeded())
+	{
+		PieceInfoClass = PW.Class;
+	}
 }
 
 void AChessPlayerController::BeginPlay()
@@ -39,6 +47,11 @@ void AChessPlayerController::BeginPlay()
 	CurPlayer->SpawnPickBox();
 	CurPlayer->UpdateThreatMap();
 	CurPlayer->ShowThreatMap();
+
+	// À§Á¬
+	PieceInfoWidget = CreateWidget<UPieceInfoWidget>(this, PieceInfoClass);
+	PieceInfoWidget->AddToViewport();	
+	
 }
 
 void AChessPlayerController::PlayerTick(float DeltaTime)

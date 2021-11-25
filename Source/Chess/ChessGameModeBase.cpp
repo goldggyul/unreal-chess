@@ -25,8 +25,14 @@ void AChessGameModeBase::BeginPlay()
 	GameState->SetFolderPath("/GameInfo");
 	
 	//GetWorld()->SpawnActor<ABoard>(FVector::ZeroVector, FRotator::ZeroRotator);
+
+	CreateChessWidget();
 }
 
+void AChessGameModeBase::CreateChessWidget()
+{
+
+}
 
 //AActor* AChessGameModeBase::ChoosePlayerStart_Implementation(AController* Player)
 //{

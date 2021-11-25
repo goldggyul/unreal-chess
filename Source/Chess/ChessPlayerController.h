@@ -42,6 +42,12 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	class AChessPlayer* PrevPlayer;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
 	FVector MousePos;
+
+	UPROPERTY(VisibleAnywhere)
+	TSubclassOf<class UPieceInfoWidget> PieceInfoClass;
+
+	UPROPERTY(VisibleAnywhere, Category = UI)
+	class UPieceInfoWidget* PieceInfoWidget;
 };

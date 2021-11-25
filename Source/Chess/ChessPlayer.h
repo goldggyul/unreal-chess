@@ -7,6 +7,9 @@
 #include "ChessInfo.h"
 #include "ChessPlayer.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(FOnPickPiece);
+DECLARE_MULTICAST_DELEGATE(FOnPutPiece);
+
 UCLASS()
 class CHESS_API AChessPlayer : public APawn
 {
@@ -43,6 +46,8 @@ public:
 	void ShowThreatMap();
 	void DestroyThreatMap();
 
+	EPieceType GetCurPieceType() const;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -53,6 +58,9 @@ private:
 	void SpawnPickedPiece();
 	class APiece* GetCurPiece();
 
+public:
+	FOnPickPiece OnPickPiece;
+	FOnPutPiece OnPutPiece;
 
 private:
 	UPROPERTY(VisibleAnywhere)

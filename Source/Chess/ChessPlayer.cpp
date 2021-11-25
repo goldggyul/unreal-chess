@@ -176,6 +176,7 @@ void AChessPlayer::PickPiece()
 				UE_LOG(LogTemp, Warning, TEXT("Pick this piece!"));
 				SpawnPickedPiece();
 				SetPicking(true);
+				OnPickPiece.Broadcast(); // For UI
 			}
 		}
 		else
@@ -206,7 +207,8 @@ void AChessPlayer::SpawnPickedPiece()
 		PickedPiece->SetActorRelativeScale3D(PieceMeshSize);
 		PickedPiece->SetActorLabel(FString(TEXT("Picked Piece")));
 		PickedPiece->GetStaticMeshComponent()->SetCollisionProfileName(
-			CurPiece->GetStaticMeshComponent()->GetCollisionProfileName());
+			CurPiece->GetStaticMeshComponent()->GetCollisionProfileName()
+		);
 		PickedPiece->SetFolderPath("/Player");
 
 		UStaticMeshComponent* CurPieceMeshComp = CurPiece->GetStaticMeshComponent();
@@ -236,6 +238,7 @@ bool AChessPlayer::PutCurPiece()
 		SetMeshOpaque(true, CurPiece->GetStaticMeshComponent());
 		CurPiece = nullptr;
 		SetPicking(false);
+		OnPutPiece.Broadcast(); // For UI
 		return bIsOtherLocation;
 	}
 	else
@@ -333,4 +336,9 @@ void AChessPlayer::DestroyThreatMap()
 	{
 		ThreatMap->DestroyMap();
 	}
+}
+
+EPieceType AChessPlayer::GetCurPieceType() const
+{
+	return CurPiece->GetPieceType();
 }
