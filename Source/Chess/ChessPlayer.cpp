@@ -9,6 +9,8 @@
 #include "ChessUtil.h"
 #include "ThreatMap.h"
 #include "Engine/StaticMeshActor.h"
+#include "PieceInfoWidget.h"
+
 
 // Sets default values
 AChessPlayer::AChessPlayer()

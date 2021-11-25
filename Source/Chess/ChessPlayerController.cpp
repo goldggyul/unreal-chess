@@ -42,15 +42,30 @@ void AChessPlayerController::BeginPlay()
 
 	bShowMouseCursor = true;
 
+	// À§Á¬
+	CurPlayer->PieceInfoWidget = CreateWidget<UPieceInfoWidget>(this, PieceInfoClass);
+	CurPlayer->PieceInfoWidget->BindPlayer(CurPlayer);
+	CurPlayer->PieceInfoWidget->PlayerColor = EPieceColor::White;
+
+	PrevPlayer->PieceInfoWidget = CreateWidget<UPieceInfoWidget>(this, PieceInfoClass);
+	PrevPlayer->PieceInfoWidget->BindPlayer(PrevPlayer);
+	PrevPlayer->PieceInfoWidget->PlayerColor = EPieceColor::Black;
+
 	Possess(CurPlayer);
 
-	CurPlayer->SpawnPickBox();
-	CurPlayer->UpdateThreatMap();
-	CurPlayer->ShowThreatMap();
+	//CurPlayer->SpawnPickBox();
+	//CurPlayer->UpdateThreatMap();
+	//CurPlayer->ShowThreatMap();
 
-	// À§Á¬
-	PieceInfoWidget = CreateWidget<UPieceInfoWidget>(this, PieceInfoClass);
-	PieceInfoWidget->AddToViewport();	
+	
+
+
+	//PieceInfoWidget = CreateWidget<UPieceInfoWidget>(this, PieceInfoClass);
+	//PieceInfoWidget->AddToViewport();	
+
+	//PieceInfoWidget->BindPlayer(CurPlayer);
+
+
 	
 }
 
@@ -93,6 +108,11 @@ void AChessPlayerController::OnUnPossess()
 		UE_LOG(LogTemp, Warning, TEXT("UNPOSSESS! [%s]"), *(CurPlayer->GetActorLabel()));
 		CurPlayer->DestroyPickBox();
 		CurPlayer->DestroyThreatMap();
+
+		if (IsValid(CurPlayer->PieceInfoWidget))
+		{
+			CurPlayer->PieceInfoWidget->RemoveFromViewport();
+		}
 	}
 	else
 	{
@@ -110,6 +130,11 @@ void AChessPlayerController::OnPossess(APawn* InPawn)
 		CurPlayer->SpawnPickBox();
 		CurPlayer->UpdateThreatMap();
 		CurPlayer->ShowThreatMap();
+
+		if (IsValid(CurPlayer->PieceInfoWidget))
+		{
+			CurPlayer->PieceInfoWidget->AddToViewport();
+		}
 	}
 	else
 	{

@@ -62,7 +62,11 @@ public:
 	FOnPickPiece OnPickPiece;
 	FOnPutPiece OnPutPiece;
 
+	UPROPERTY(VisibleAnywhere)
+	class UPieceInfoWidget* PieceInfoWidget;
+
 private:
+
 	UPROPERTY(VisibleAnywhere)
 	EPieceColor PlayerColor;
 	

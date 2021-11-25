@@ -5,6 +5,9 @@
 #include "ChessPlayer.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
+#include "Components/Overlay.h"
+#include "Components/Button.h"
+#include "ChessUtil.h"
 
 UPieceInfoWidget::UPieceInfoWidget(const FObjectInitializer& ObjectInitializer) : UUserWidget(ObjectInitializer)
 {
@@ -55,6 +58,17 @@ UPieceInfoWidget::UPieceInfoWidget(const FObjectInitializer& ObjectInitializer) 
 		PieceNames.Add(EPieceType::Pawn, FText::FromString(PawnStr));
 		MoveImages.Add(EPieceType::Pawn, PawnTexture.Object);
 	}
+
+	static ConstructorHelpers::FObjectFinder<UTexture2D> WhiteTexture(TEXT("Texture2D'/Game/UI/Images/WhiteKing.WhiteKing'"));
+	if (WhiteTexture.Succeeded())
+	{
+		WhiteKingImage = WhiteTexture.Object;
+	}
+	static ConstructorHelpers::FObjectFinder<UTexture2D> BlackTexture(TEXT("Texture2D'/Game/UI/Images/BlackKing.BlackKing'"));
+	if (BlackTexture.Succeeded())
+	{
+		BlackKingImage = BlackTexture.Object;
+	}
 }
 
 void UPieceInfoWidget::BindPlayer(class AChessPlayer* Player)
@@ -63,13 +77,65 @@ void UPieceInfoWidget::BindPlayer(class AChessPlayer* Player)
 	CurrentPlayer->OnPickPiece.AddUObject(this, &UPieceInfoWidget::UpdateCurPiece);
 	CurrentPlayer->OnPutPiece.AddUObject(this, &UPieceInfoWidget::EraseCurPiece);
 
+	FString PlayerStr, EnemyStr;
+	UTexture2D* PlayerImg = nullptr;
+	UTexture2D* EnemyImg = nullptr;
+	FLinearColor PlayerTextColor, EnemyTextColor;
+
+	if (CurrentPlayer->GetPlayerColor() == EPieceColor::White)
+	{
+		PlayerStr = FString(TEXT("1P"));
+		EnemyStr = FString(TEXT("2P"));
+
+		PlayerImg = WhiteKingImage;
+		EnemyImg = BlackKingImage;
+
+		PlayerTextColor = FLinearColor::White;
+		EnemyTextColor = FLinearColor::Black;
+	}
+	else if(CurrentPlayer->GetPlayerColor() == EPieceColor::Black)
+	{
+		PlayerStr = FString(TEXT("2P"));
+		EnemyStr = FString(TEXT("1P"));
+
+		PlayerImg = BlackKingImage;
+		EnemyImg = WhiteKingImage;
+
+		PlayerTextColor = FLinearColor::Black;
+		EnemyTextColor = FLinearColor::White;
+	}
+
+	if (IsValid(Text_Player))
+	{
+		Text_Player->SetText(FText::FromString(PlayerStr));
+		Text_Player->SetColorAndOpacity(PlayerTextColor);
+		Text_Player->Font.OutlineSettings = FFontOutlineSettings(2, EnemyTextColor);
+	}
+	if (IsValid(Text_Enemy))
+	{
+		Text_Enemy->SetText(FText::FromString(EnemyStr));
+		Text_Enemy->SetColorAndOpacity(EnemyTextColor);
+		Text_Enemy->Font.OutlineSettings = FFontOutlineSettings(2, PlayerTextColor);
+	}
+	if (IsValid(Img_PlayerColor) && IsValid(PlayerImg))
+	{
+		Img_PlayerColor->SetBrushFromTexture(PlayerImg);
+	}
+	if (IsValid(Img_EnemyColor) && IsValid(EnemyImg))
+	{
+		Img_EnemyColor->SetBrushFromTexture(EnemyImg);
+	}
+
+	Overlay_PieceInfo->SetVisibility(ESlateVisibility::Hidden);
 
 }
 
 void UPieceInfoWidget::UpdateCurPiece()
 {
+
 	EPieceType CurPieceType = CurrentPlayer->GetCurPieceType();
 
+	FString PieceName = UChessUtil::GetPieceTypeString(CurPieceType);
 	if (IsValid(Img_PieceMove))
 	{
 		Img_PieceMove->SetBrushFromTexture(MoveImages[CurPieceType]);
@@ -79,10 +145,12 @@ void UPieceInfoWidget::UpdateCurPiece()
 	{
 		Text_PieceName->SetText(PieceNames[CurPieceType]);
 	}
-	SetVisibility(ESlateVisibility::Visible);
+	Overlay_PieceInfo->SetVisibility(ESlateVisibility::Visible);
 }
 
 void UPieceInfoWidget::EraseCurPiece()
 {
-	SetVisibility(ESlateVisibility::Hidden);
+	UE_LOG(LogTemp, Log, TEXT("Widget: EraseCurPiece"));
+
+	Overlay_PieceInfo->SetVisibility(ESlateVisibility::Hidden);
 }

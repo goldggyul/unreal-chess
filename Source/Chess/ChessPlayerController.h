@@ -47,7 +47,4 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	TSubclassOf<class UPieceInfoWidget> PieceInfoClass;
-
-	UPROPERTY(VisibleAnywhere, Category = UI)
-	class UPieceInfoWidget* PieceInfoWidget;
 };

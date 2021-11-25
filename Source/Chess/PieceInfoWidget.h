@@ -24,16 +24,28 @@ public:
 	void UpdateCurPiece();
 	void EraseCurPiece();
 
+public:
+	EPieceColor PlayerColor;
+
 private:
 	TWeakObjectPtr<class AChessPlayer> CurrentPlayer;
 
-	// LeftTop
-	// PieceInfo
 	UPROPERTY()
 	TMap<EPieceType, class UTexture2D*> MoveImages;
 
 	UPROPERTY()
 	TMap<EPieceType, FText> PieceNames;
+
+	UPROPERTY()
+	class UTexture2D* WhiteKingImage;
+
+	UPROPERTY()
+	class UTexture2D* BlackKingImage;
+
+	// LeftTop
+	// PieceInfo
+	UPROPERTY(meta = (BindWidget))
+	class UOverlay* Overlay_PieceInfo;
 
 	UPROPERTY(meta = (BindWidget))
 	class UImage* Img_PieceMove;
@@ -51,6 +63,9 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	class UImage* Img_PlayerColor;
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* Btn_Assist;
 
 	// RightTop
 	// EnemyInfo
