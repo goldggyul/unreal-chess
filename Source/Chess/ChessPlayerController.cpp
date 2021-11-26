@@ -24,8 +24,8 @@ void AChessPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	CurPlayer = GetWorld()->SpawnActor<AChessPlayer>(FVector(1200.0f, 2100.0f, 2200.0f), FRotator(-70.0f, -90.0f, 0.0f));
-	PrevPlayer = GetWorld()->SpawnActor<AChessPlayer>(FVector(1200.0f, 300.0f, 2200.0f), FRotator(-70.0f, 90.0f, 0.0f));
+	CurPlayer = GetWorld()->SpawnActor<AChessPlayer>(FVector(1200.0f, 1200.0f, 30.0f), FRotator(0.0f, -90.0f, 0.0f));
+	PrevPlayer = GetWorld()->SpawnActor<AChessPlayer>(FVector(1200.0f, 1200.0f, 30.0f), FRotator(0.0f, 90.0f, 0.0f));
 
 	CurPlayer->SetActorLabel(FString(TEXT("WhitePlayer")));
 	PrevPlayer->SetActorLabel(FString(TEXT("BlackPlayer")));
@@ -101,39 +101,43 @@ void AChessPlayerController::SetupInputComponent()
 
 void AChessPlayerController::OnUnPossess()
 {
-	Super::OnUnPossess();
+	AChessPlayer* CurrentPlayer = Cast<AChessPlayer>(GetPawn());
 
-	if (IsValid(CurPlayer))
+	if (IsValid(CurrentPlayer))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("UNPOSSESS! [%s]"), *(CurPlayer->GetActorLabel()));
-		CurPlayer->DestroyPickBox();
-		CurPlayer->DestroyThreatMap();
+		UE_LOG(LogTemp, Warning, TEXT("UNPOSSESS! [%s]"), *(CurrentPlayer->GetActorLabel()));
+		CurrentPlayer->DestroyPickBox();
+		CurrentPlayer->DestroyThreatMap();
 
-		if (IsValid(CurPlayer->PieceInfoWidget))
+		if (IsValid(CurrentPlayer->PieceInfoWidget))
 		{
-			CurPlayer->PieceInfoWidget->RemoveFromViewport();
+			CurrentPlayer->PieceInfoWidget->RemoveFromViewport();
 		}
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Cur Player is not valid!"));
 	}
+
+	Super::OnUnPossess();
 }
 
 void AChessPlayerController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 	
-	if (IsValid(CurPlayer))
-	{
-		UE_LOG(LogTemp, Warning, TEXT("POSSESS! [%s]"), *(CurPlayer->GetActorLabel()));
-		CurPlayer->SpawnPickBox();
-		CurPlayer->UpdateThreatMap();
-		CurPlayer->ShowThreatMap();
+	AChessPlayer* CurrentPlayer = Cast<AChessPlayer>(InPawn);
 
-		if (IsValid(CurPlayer->PieceInfoWidget))
+	if (IsValid(CurrentPlayer))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("POSSESS! [%s]"), *(CurrentPlayer->GetActorLabel()));
+		CurrentPlayer->SpawnPickBox();
+		CurrentPlayer->UpdateThreatMap();
+		CurrentPlayer->ShowThreatMap();
+
+		if (IsValid(CurrentPlayer->PieceInfoWidget))
 		{
-			CurPlayer->PieceInfoWidget->AddToViewport();
+			CurrentPlayer->PieceInfoWidget->AddToViewport();
 		}
 	}
 	else
@@ -175,15 +179,17 @@ void AChessPlayerController::Enter()
 	if (!IsValid(CurPlayer))
 		return;
 
-	if (CurPlayer->IsPicking())
+	AChessPlayer* CurrentPlayer = Cast<AChessPlayer>(GetPawn());
+
+	if (CurrentPlayer->IsPicking())
 	{
-		bool bIsPutSucceeded = CurPlayer->PutCurPiece();
+		bool bIsPutSucceeded = CurrentPlayer->PutCurPiece();
 		if (bIsPutSucceeded)
 			ChangePlayer();
 	}
 	else
 	{
-		CurPlayer->PickPiece();
+		CurrentPlayer->PickPiece();
 	}
 }
 
@@ -196,7 +202,9 @@ void AChessPlayerController::Click()
 
 bool AChessPlayerController::MoveBoxToMouse()
 {
-	if (!IsValid(CurPlayer))
+	AChessPlayer* CurrentPlayer = Cast<AChessPlayer>(GetPawn());
+
+	if (!IsValid(CurrentPlayer))
 		return false;
 
 	// Trace to see what is under the mouse cursor
@@ -221,7 +229,7 @@ bool AChessPlayerController::MoveBoxToMouse()
 		{
 			FString HitLabel = HitResult.Actor->GetActorLabel();
 			FVector ClickedSquareCenter = UChessUtil::GetSquareCenter(HitPoint);
-			CurPlayer->MovePickBox(ClickedSquareCenter);
+			CurrentPlayer->MovePickBox(ClickedSquareCenter);
 			return true;
 		}
 	}

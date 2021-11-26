@@ -19,11 +19,14 @@ void UThreatMap::SetPlayerColor(EPieceColor Color)
 
 void UThreatMap::UpdateMap()
 {
-	DestroyMap();
+	if (PlayerColor != EPieceColor::None)
+	{
+		DestroyMap();
 
-	UpdatePieces();
-	UpdateSquareStates();
-	UpdatePlayState();
+		UpdatePieces();
+		UpdateSquareStates();
+		UpdatePlayState();
+	}
 }
 
 void UThreatMap::ShowMap()

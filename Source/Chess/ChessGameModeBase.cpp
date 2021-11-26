@@ -11,7 +11,7 @@
 
 AChessGameModeBase::AChessGameModeBase()
 {
-	//DefaultPawnClass = AChessPlayer::StaticClass();
+	DefaultPawnClass = AChessPlayer::StaticClass();
 	GameStateClass = AChessGameStateBase::StaticClass();
 	PlayerControllerClass = AChessPlayerController::StaticClass();
 

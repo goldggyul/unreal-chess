@@ -3,6 +3,7 @@
 
 #include "ChessPlayer.h"
 #include "Camera/CameraComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "PaperSpriteActor.h"
 #include "Piece.h"
 #include "DrawDebugHelpers.h"
@@ -18,9 +19,15 @@ AChessPlayer::AChessPlayer()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SPRINGARM"));
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("CAMERA"));
-	//Camera->SetupAttachment(RootComponent);
-	SetRootComponent(Camera);
+
+	SetRootComponent(SpringArm);
+	Camera->SetupAttachment(RootComponent);
+
+	SpringArm->TargetArmLength = 2600.0f;
+	SpringArm->SetRelativeRotation(FRotator(-75.0f, 0.0f, 0.0f));
+	Camera->SetRelativeLocation(FVector(0.0f, 0.0f, -100.0f));
 
 	static ConstructorHelpers::FObjectFinder<UMaterial> DM(TEXT("Material'/Game/Materials/M_Dark.M_Dark'"));
 	if (DM.Succeeded())

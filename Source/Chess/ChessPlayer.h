@@ -66,6 +66,11 @@ public:
 	class UPieceInfoWidget* PieceInfoWidget;
 
 private:
+	UPROPERTY(VisibleAnywhere)
+	class UCameraComponent* Camera;
+
+	UPROPERTY(VisibleAnywhere)
+	class USpringArmComponent* SpringArm;
 
 	UPROPERTY(VisibleAnywhere)
 	EPieceColor PlayerColor;
@@ -73,8 +78,7 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	bool bIsPicking;
 
-	UPROPERTY(VisibleAnywhere)
-	class UCameraComponent* Camera;
+
 
 	UPROPERTY(VisibleAnywhere)
 	FVector PrevMove; // 이전에 수를 놨던 위치.
