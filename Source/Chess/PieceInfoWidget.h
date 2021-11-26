@@ -42,6 +42,12 @@ private:
 	UPROPERTY()
 	class UTexture2D* BlackKingImage;
 
+	UPROPERTY()
+	class UTexture2D* WhitePlayerImage;
+
+	UPROPERTY()
+	class UTexture2D* BlackPlayerImage;
+
 	// LeftTop
 	// PieceInfo
 	UPROPERTY(meta = (BindWidget))
@@ -59,10 +65,10 @@ private:
 	class UTextBlock* Text_Assist;
 	// PlayerInfo
 	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* Text_Player;
+	class UImage* Img_Player;
 
 	UPROPERTY(meta = (BindWidget))
-	class UImage* Img_PlayerColor;
+	class UImage* Img_PlayerKing;
 
 	UPROPERTY(meta = (BindWidget))
 	class UButton* Btn_Assist;
@@ -70,10 +76,10 @@ private:
 	// RightTop
 	// EnemyInfo
 	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* Text_Enemy;
+	class UImage* Img_Enemy;
 
 	UPROPERTY(meta = (BindWidget))
-	class UImage* Img_EnemyColor;
+	class UImage* Img_EnemyKing;
 
 	
 };

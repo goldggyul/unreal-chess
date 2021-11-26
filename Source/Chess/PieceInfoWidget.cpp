@@ -59,15 +59,26 @@ UPieceInfoWidget::UPieceInfoWidget(const FObjectInitializer& ObjectInitializer) 
 		MoveImages.Add(EPieceType::Pawn, PawnTexture.Object);
 	}
 
-	static ConstructorHelpers::FObjectFinder<UTexture2D> WhiteTexture(TEXT("Texture2D'/Game/UI/Images/WhiteKing.WhiteKing'"));
-	if (WhiteTexture.Succeeded())
+	static ConstructorHelpers::FObjectFinder<UTexture2D> WhiteKingTexture(TEXT("Texture2D'/Game/UI/Images/WhiteKing.WhiteKing'"));
+	if (WhiteKingTexture.Succeeded())
 	{
-		WhiteKingImage = WhiteTexture.Object;
+		WhiteKingImage = WhiteKingTexture.Object;
 	}
-	static ConstructorHelpers::FObjectFinder<UTexture2D> BlackTexture(TEXT("Texture2D'/Game/UI/Images/BlackKing.BlackKing'"));
-	if (BlackTexture.Succeeded())
+	static ConstructorHelpers::FObjectFinder<UTexture2D> BlackKingTexture(TEXT("Texture2D'/Game/UI/Images/BlackKing.BlackKing'"));
+	if (BlackKingTexture.Succeeded())
 	{
-		BlackKingImage = BlackTexture.Object;
+		BlackKingImage = BlackKingTexture.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UTexture2D> WhitePlayerTexture(TEXT("Texture2D'/Game/UI/Images/WhiteCat.WhiteCat'"));
+	if (WhitePlayerTexture.Succeeded())
+	{
+		WhitePlayerImage = WhitePlayerTexture.Object;
+	}
+	static ConstructorHelpers::FObjectFinder<UTexture2D> BlackPlayerTexture(TEXT("Texture2D'/Game/UI/Images/GrayCat.GrayCat'"));
+	if (BlackPlayerTexture.Succeeded())
+	{
+		BlackPlayerImage = BlackPlayerTexture.Object;
 	}
 }
 
@@ -77,53 +88,44 @@ void UPieceInfoWidget::BindPlayer(class AChessPlayer* Player)
 	CurrentPlayer->OnPickPiece.AddUObject(this, &UPieceInfoWidget::UpdateCurPiece);
 	CurrentPlayer->OnPutPiece.AddUObject(this, &UPieceInfoWidget::EraseCurPiece);
 
-	FString PlayerStr, EnemyStr;
+	UTexture2D* PlayerKingImg = nullptr;
+	UTexture2D* EnemyKingImg = nullptr;
 	UTexture2D* PlayerImg = nullptr;
 	UTexture2D* EnemyImg = nullptr;
-	FLinearColor PlayerTextColor, EnemyTextColor;
 
 	if (CurrentPlayer->GetPlayerColor() == EPieceColor::White)
 	{
-		PlayerStr = FString(TEXT("1P"));
-		EnemyStr = FString(TEXT("2P"));
+		PlayerKingImg = WhiteKingImage;
+		EnemyKingImg = BlackKingImage;
 
-		PlayerImg = WhiteKingImage;
-		EnemyImg = BlackKingImage;
-
-		PlayerTextColor = FLinearColor::White;
-		EnemyTextColor = FLinearColor::Black;
+		PlayerImg = WhitePlayerImage;
+		EnemyImg = BlackPlayerImage;
 	}
 	else if(CurrentPlayer->GetPlayerColor() == EPieceColor::Black)
 	{
-		PlayerStr = FString(TEXT("2P"));
-		EnemyStr = FString(TEXT("1P"));
+		PlayerKingImg = BlackKingImage;
+		EnemyKingImg = WhiteKingImage;
 
-		PlayerImg = BlackKingImage;
-		EnemyImg = WhiteKingImage;
-
-		PlayerTextColor = FLinearColor::Black;
-		EnemyTextColor = FLinearColor::White;
+		PlayerImg = BlackPlayerImage;
+		EnemyImg = WhitePlayerImage;
 	}
 
-	if (IsValid(Text_Player))
+	if (IsValid(Img_PlayerKing) && IsValid(PlayerKingImg))
 	{
-		Text_Player->SetText(FText::FromString(PlayerStr));
-		Text_Player->SetColorAndOpacity(PlayerTextColor);
-		Text_Player->Font.OutlineSettings = FFontOutlineSettings(2, EnemyTextColor);
+		Img_PlayerKing->SetBrushFromTexture(PlayerKingImg);
 	}
-	if (IsValid(Text_Enemy))
+	if (IsValid(Img_EnemyKing) && IsValid(EnemyKingImg))
 	{
-		Text_Enemy->SetText(FText::FromString(EnemyStr));
-		Text_Enemy->SetColorAndOpacity(EnemyTextColor);
-		Text_Enemy->Font.OutlineSettings = FFontOutlineSettings(2, PlayerTextColor);
+		Img_EnemyKing->SetBrushFromTexture(EnemyKingImg);
 	}
-	if (IsValid(Img_PlayerColor) && IsValid(PlayerImg))
+
+	if (IsValid(Img_Player) && IsValid(PlayerImg))
 	{
-		Img_PlayerColor->SetBrushFromTexture(PlayerImg);
+		Img_Player->SetBrushFromTexture(PlayerImg);
 	}
-	if (IsValid(Img_EnemyColor) && IsValid(EnemyImg))
+	if (IsValid(Img_Enemy) && IsValid(EnemyImg))
 	{
-		Img_EnemyColor->SetBrushFromTexture(EnemyImg);
+		Img_Enemy->SetBrushFromTexture(EnemyImg);
 	}
 
 	Overlay_PieceInfo->SetVisibility(ESlateVisibility::Hidden);
