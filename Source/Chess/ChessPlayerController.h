@@ -15,6 +15,13 @@ class CHESS_API AChessPlayerController : public APlayerController
 public:
 	AChessPlayerController();
 
+public:
+	UFUNCTION(BlueprintCallable)
+	void ShowStartWidget();
+
+	UFUNCTION(BlueprintCallable)
+	void StartGame();
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void PlayerTick(float DeltaTime) override;
@@ -22,6 +29,8 @@ protected:
 
 	virtual void OnUnPossess() override;
 	virtual void OnPossess(APawn* InPawn) override;
+
+
 
 private:
 	void Up();
@@ -47,4 +56,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	TSubclassOf<class UPieceInfoWidget> PieceInfoClass;
+
+	UPROPERTY(VisibleAnywhere)
+	UPieceInfoWidget* PieceInfoWidget;
 };

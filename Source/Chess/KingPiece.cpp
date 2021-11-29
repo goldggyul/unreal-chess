@@ -69,7 +69,7 @@ void AKingPiece::UpdateBasicMoves()
 		Differs.Add(-RightVector);
 		for (auto& Differ : Differs)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Checking castling..."));
+			//UE_LOG(LogTemp, Warning, TEXT("Checking castling..."));
 
 			FVector Start = GetActorLocation();
 			FVector End = Start + Differ * 4; // ·èÀÌ 3Ä­ È¤Àº 4Ä­ ¶³¾îÁ®ÀÖÀ½

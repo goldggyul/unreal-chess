@@ -96,6 +96,8 @@ void UPieceInfoWidget::BindPlayer(class AChessPlayer* Player)
 
 	if (CurrentPlayer->GetPlayerColor() == EPieceColor::White)
 	{
+		PlayerColor = EPieceColor::White;
+
 		PlayerKingImg = WhiteKingImage;
 		EnemyKingImg = BlackKingImage;
 
@@ -104,6 +106,8 @@ void UPieceInfoWidget::BindPlayer(class AChessPlayer* Player)
 	}
 	else if(CurrentPlayer->GetPlayerColor() == EPieceColor::Black)
 	{
+		PlayerColor = EPieceColor::Black;
+
 		PlayerKingImg = BlackKingImage;
 		EnemyKingImg = WhiteKingImage;
 

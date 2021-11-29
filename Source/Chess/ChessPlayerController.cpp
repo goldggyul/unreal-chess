@@ -20,10 +20,13 @@ AChessPlayerController::AChessPlayerController()
 	}
 }
 
-void AChessPlayerController::BeginPlay()
+void AChessPlayerController::ShowStartWidget()
 {
-	Super::BeginPlay();
 
+}
+
+void AChessPlayerController::StartGame()
+{
 	CurPlayer = GetWorld()->SpawnActor<AChessPlayer>(FVector(1200.0f, 1200.0f, 30.0f), FRotator(0.0f, -90.0f, 0.0f));
 	PrevPlayer = GetWorld()->SpawnActor<AChessPlayer>(FVector(1200.0f, 1200.0f, 30.0f), FRotator(0.0f, 90.0f, 0.0f));
 
@@ -37,10 +40,8 @@ void AChessPlayerController::BeginPlay()
 	PrevPlayer->SetFolderPath("/Player");
 	SetFolderPath("/Player");
 
-	CurPlayer->SetPickBoxStart(FVector(1350.0f,1950.0f,PickBoxZ));
-	PrevPlayer->SetPickBoxStart(FVector(1050.0f,450.0f, PickBoxZ));
-
-	bShowMouseCursor = true;
+	CurPlayer->SetPickBoxStart(FVector(1350.0f, 1950.0f, PickBoxZ));
+	PrevPlayer->SetPickBoxStart(FVector(1050.0f, 450.0f, PickBoxZ));
 
 	// À§Á¬
 	CurPlayer->PieceInfoWidget = CreateWidget<UPieceInfoWidget>(this, PieceInfoClass);
@@ -50,8 +51,18 @@ void AChessPlayerController::BeginPlay()
 	PrevPlayer->PieceInfoWidget = CreateWidget<UPieceInfoWidget>(this, PieceInfoClass);
 	PrevPlayer->PieceInfoWidget->BindPlayer(PrevPlayer);
 	PrevPlayer->PieceInfoWidget->PlayerColor = EPieceColor::Black;
-	
+
 	Possess(CurPlayer);
+
+}
+
+void AChessPlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+
+	bShowMouseCursor = true;
+
+	//StartGame();
 }
 
 void AChessPlayerController::PlayerTick(float DeltaTime)
