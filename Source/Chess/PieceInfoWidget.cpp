@@ -7,6 +7,7 @@
 #include "Components/TextBlock.h"
 #include "Components/Overlay.h"
 #include "Components/Button.h"
+#include "Components/CanvasPanel.h"
 #include "ChessUtil.h"
 
 UPieceInfoWidget::UPieceInfoWidget(const FObjectInitializer& ObjectInitializer) : UUserWidget(ObjectInitializer)
@@ -129,6 +130,7 @@ void UPieceInfoWidget::BindPlayer(class AChessPlayer* Player)
 	}
 
 	Overlay_PieceInfo->SetVisibility(ESlateVisibility::Hidden);
+	Text_Result->SetVisibility(ESlateVisibility::Hidden);
 
 }
 
@@ -155,4 +157,10 @@ void UPieceInfoWidget::EraseCurPiece()
 	UE_LOG(LogTemp, Log, TEXT("Widget: EraseCurPiece"));
 
 	Overlay_PieceInfo->SetVisibility(ESlateVisibility::Hidden);
+}
+
+void UPieceInfoWidget::ShowResult(FString Result)
+{
+	Text_Result->SetText(FText::FromString(Result));
+	Text_Result->SetVisibility(ESlateVisibility::Visible);
 }

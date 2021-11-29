@@ -24,6 +24,8 @@ public:
 	void UpdateCurPiece();
 	void EraseCurPiece();
 
+	void ShowResult(FString Result);
+
 public:
 	EPieceColor PlayerColor;
 
@@ -80,6 +82,10 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 	class UImage* Img_EnemyKing;
+
+	// Result
+	UPROPERTY(meta = (BindWidget))
+	class UTextBlock* Text_Result;
 
 	
 };

@@ -266,14 +266,17 @@ void AChessPlayer::UpdateThreatMap()
 		if (ThreatMap->IsCheckmate())
 		{
 			UE_LOG(LogTemp, Error, TEXT("CHECKMATE"));
+			PieceInfoWidget->ShowResult(FString(TEXT("Checkmate")));
 		}
 		else if (ThreatMap->IsStalemate())
 		{
 			UE_LOG(LogTemp, Error, TEXT("STALEMATE"));
+			PieceInfoWidget->ShowResult(FString(TEXT("Stalemate")));
 		}
 		else if (ThreatMap->IsCheck())
 		{
 			UE_LOG(LogTemp, Error, TEXT("CHECK"));
+			PieceInfoWidget->ShowResult(FString(TEXT("Check")));
 		}
 	}
 }

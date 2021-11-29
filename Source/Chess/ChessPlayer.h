@@ -78,8 +78,6 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	bool bIsPicking;
 
-
-
 	UPROPERTY(VisibleAnywhere)
 	FVector PrevMove; // 이전에 수를 놨던 위치.
 

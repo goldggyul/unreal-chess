@@ -50,23 +50,8 @@ void AChessPlayerController::BeginPlay()
 	PrevPlayer->PieceInfoWidget = CreateWidget<UPieceInfoWidget>(this, PieceInfoClass);
 	PrevPlayer->PieceInfoWidget->BindPlayer(PrevPlayer);
 	PrevPlayer->PieceInfoWidget->PlayerColor = EPieceColor::Black;
-
+	
 	Possess(CurPlayer);
-
-	//CurPlayer->SpawnPickBox();
-	//CurPlayer->UpdateThreatMap();
-	//CurPlayer->ShowThreatMap();
-
-	
-
-
-	//PieceInfoWidget = CreateWidget<UPieceInfoWidget>(this, PieceInfoClass);
-	//PieceInfoWidget->AddToViewport();	
-
-	//PieceInfoWidget->BindPlayer(CurPlayer);
-
-
-	
 }
 
 void AChessPlayerController::PlayerTick(float DeltaTime)
@@ -244,8 +229,6 @@ void AChessPlayerController::ChangePlayer()
 	UnPossess();
 	Swap(CurPlayer, PrevPlayer);
 	Possess(CurPlayer);
-
-
 
 	// if Checkmate.. Check.. Stalemate... : ShowMap UI
 }
