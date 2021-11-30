@@ -8,13 +8,13 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/PlayerStart.h"
 #include "ChessPlayerController.h"
+#include "Sound/SoundCue.h"
 
 AChessGameModeBase::AChessGameModeBase()
 {
 	DefaultPawnClass = AChessPlayer::StaticClass();
 	GameStateClass = AChessGameStateBase::StaticClass();
 	PlayerControllerClass = AChessPlayerController::StaticClass();
-
 }
 
 void AChessGameModeBase::BeginPlay()

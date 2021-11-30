@@ -31,6 +31,9 @@ public:
 public:
 	EPieceColor PlayerColor;
 
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
+	class UButton* Btn_ThreatMap;
+
 private:
 	UPROPERTY()
 	TMap<EPieceType, class UTexture2D*> MoveImages;
@@ -62,9 +65,6 @@ private:
 	class UTextBlock* Text_PieceName;
 
 	// LeftBottom
-	// PlayerBtn
-	UPROPERTY(meta = (BindWidget))
-	class UTextBlock* Text_Assist;
 	// PlayerInfo
 	UPROPERTY(meta = (BindWidget))
 	class UImage* Img_Player;
@@ -72,8 +72,6 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	class UImage* Img_PlayerKing;
 
-	UPROPERTY(meta = (BindWidget))
-	class UButton* Btn_Assist;
 
 	// RightTop
 	// EnemyInfo

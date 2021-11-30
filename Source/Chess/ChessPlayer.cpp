@@ -11,6 +11,8 @@
 #include "ThreatMap.h"
 #include "Engine/StaticMeshActor.h"
 #include "PieceInfoWidget.h"
+#include "Sound/SoundWave.h"
+#include "Kismet/GameplayStatics.h"
 
 
 // Sets default values
@@ -58,6 +60,18 @@ AChessPlayer::AChessPlayer()
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Cannot load PickBox class"));
+	}
+
+	static ConstructorHelpers::FObjectFinder<USoundWave> Pick(TEXT("SoundWave'/Game/Sounds/ChessPickSound.ChessPickSound'"));
+	if (Pick.Succeeded())
+	{
+		PickSound = Pick.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<USoundWave> Put(TEXT("SoundWave'/Game/Sounds/ChessPutSound.ChessPutSound'"));
+	if (Put.Succeeded())
+	{
+		PutSound = Put.Object;
 	}
 
 	SetPicking(false);
@@ -188,6 +202,7 @@ void AChessPlayer::PickPiece()
 				SpawnPickedPiece();
 				SetPicking(true);
 				OnPickPiece.Broadcast(CurPiece->GetPieceType()); // For UI
+				UGameplayStatics::PlaySound2D(this, PickSound, 5.0f);
 			}
 		}
 		else
@@ -250,6 +265,7 @@ bool AChessPlayer::PutCurPiece()
 		CurPiece = nullptr;
 		SetPicking(false);
 		OnPutPiece.Broadcast(); // For UI
+		UGameplayStatics::PlaySound2D(this, PutSound, 5.0f);
 		return bIsOtherLocation;
 	}
 	else
@@ -372,7 +388,7 @@ bool AChessPlayer::IsCheck() const
 	return ThreatMap->IsCheck();
 }
 
-void AChessPlayer::AssistPressed()
+void AChessPlayer::ThreatBtnPressed()
 {
 	if (IsPlayerControlled())
 	{

@@ -25,6 +25,7 @@ AChessPlayerController::AChessPlayerController()
 	{
 		EndWidgetClass = EW.Class;
 	}
+
 }
 
 void AChessPlayerController::StartGame()
@@ -188,6 +189,7 @@ void AChessPlayerController::Enter()
 	if (CurrentPlayer->IsPicking())
 	{
 		bool bIsPutSucceeded = CurrentPlayer->PutCurPiece();
+
 		if (bIsPutSucceeded)
 			ChangePlayer();
 	}
@@ -292,6 +294,8 @@ void AChessPlayerController::ChangePlayer()
 				Swap(CurPlayer, PrevPlayer);
 				Possess(CurPlayer);
 			}, PauseTime, false);
+
+
 	}
 	/*else
 	{
@@ -300,6 +304,4 @@ void AChessPlayerController::ChangePlayer()
 		Possess(CurPlayer);
 		return;
 	}*/
-
-
 }

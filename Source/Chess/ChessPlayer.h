@@ -53,7 +53,7 @@ public:
 	bool IsCheck() const;
 
 	UFUNCTION()
-	void AssistPressed();
+	void ThreatBtnPressed();
 
 
 protected:
@@ -110,6 +110,12 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	class APiece* CurPiece;
+
+	UPROPERTY(VisibleAnywhere)
+	class USoundWave* PickSound;
+
+	UPROPERTY(VisibleAnywhere)
+	class USoundWave* PutSound;
 
 	// 피스들 불투명 <-> 투명하게 바꾸기 위해 머티리얼 저장
 	UPROPERTY(VisibleAnywhere, Category = PieceMaterials)

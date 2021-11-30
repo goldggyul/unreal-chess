@@ -62,6 +62,4 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	TSubclassOf<class UEndWidget> EndWidgetClass;
 
-	//UPROPERTY(VisibleAnywhere)
-	//UEndWidget* EndWidget;
 };

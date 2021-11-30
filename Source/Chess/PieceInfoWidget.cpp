@@ -87,7 +87,7 @@ void UPieceInfoWidget::BindPlayer(class AChessPlayer* CurrentPlayer)
 {
 	CurrentPlayer->OnPickPiece.AddUObject(this, &UPieceInfoWidget::UpdateCurPiece);
 	CurrentPlayer->OnPutPiece.AddUObject(this, &UPieceInfoWidget::EraseCurPiece);
-	Btn_Assist->OnClicked.AddDynamic(CurrentPlayer, &AChessPlayer::AssistPressed);
+	Btn_ThreatMap->OnClicked.AddDynamic(CurrentPlayer, &AChessPlayer::ThreatBtnPressed);
 }
 
 void UPieceInfoWidget::SetPlayerColor(EPieceColor CurPlayerColor)
