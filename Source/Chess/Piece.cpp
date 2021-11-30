@@ -99,7 +99,7 @@ void APiece::RemoveMoveKingCheckedByEnemies(APiece* MyKing, TSet<APiece*>& Enemy
 		for (auto& EnemyPiece : EnemyPieces)
 		{
 			if (!IsValid(EnemyPiece)) continue;
-
+			if (EnemyPiece->GetActorLocation() == *It) continue;
 			EnemyPiece->UpdateBasicMoves();
 			if (EnemyPiece->CanMoveTo(MyKingLocation))
 			{

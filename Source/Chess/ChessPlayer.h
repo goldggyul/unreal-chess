@@ -7,7 +7,7 @@
 #include "ChessInfo.h"
 #include "ChessPlayer.generated.h"
 
-DECLARE_MULTICAST_DELEGATE(FOnPickPiece);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnPickPiece, EPieceType);
 DECLARE_MULTICAST_DELEGATE(FOnPutPiece);
 
 UCLASS()
@@ -48,6 +48,14 @@ public:
 
 	EPieceType GetCurPieceType() const;
 
+	bool IsCheckmate() const;
+	bool IsStalemate() const;
+	bool IsCheck() const;
+
+	UFUNCTION()
+	void AssistPressed();
+
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -61,9 +69,6 @@ private:
 public:
 	FOnPickPiece OnPickPiece;
 	FOnPutPiece OnPutPiece;
-
-	UPROPERTY(VisibleAnywhere)
-	class UPieceInfoWidget* PieceInfoWidget;
 
 private:
 	UPROPERTY(VisibleAnywhere)
@@ -86,6 +91,10 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	class UThreatMap* ThreatMap;
+
+	// Assist On, ThreatMap On
+	UPROPERTY()
+	bool bIsThreatMapVisible;
 
 	UPROPERTY(VisibleAnywhere)
 	EChessState ChessState;

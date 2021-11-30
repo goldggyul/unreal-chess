@@ -83,31 +83,30 @@ UPieceInfoWidget::UPieceInfoWidget(const FObjectInitializer& ObjectInitializer) 
 	}
 }
 
-void UPieceInfoWidget::BindPlayer(class AChessPlayer* Player)
+void UPieceInfoWidget::BindPlayer(class AChessPlayer* CurrentPlayer)
 {
-	CurrentPlayer = Player;
 	CurrentPlayer->OnPickPiece.AddUObject(this, &UPieceInfoWidget::UpdateCurPiece);
 	CurrentPlayer->OnPutPiece.AddUObject(this, &UPieceInfoWidget::EraseCurPiece);
+	Btn_Assist->OnClicked.AddDynamic(CurrentPlayer, &AChessPlayer::AssistPressed);
+}
 
+void UPieceInfoWidget::SetPlayerColor(EPieceColor CurPlayerColor)
+{
 	UTexture2D* PlayerKingImg = nullptr;
 	UTexture2D* EnemyKingImg = nullptr;
 	UTexture2D* PlayerImg = nullptr;
 	UTexture2D* EnemyImg = nullptr;
 
-	if (CurrentPlayer->GetPlayerColor() == EPieceColor::White)
+	if (CurPlayerColor == EPieceColor::White)
 	{
-		PlayerColor = EPieceColor::White;
-
 		PlayerKingImg = WhiteKingImage;
 		EnemyKingImg = BlackKingImage;
 
 		PlayerImg = WhitePlayerImage;
 		EnemyImg = BlackPlayerImage;
 	}
-	else if(CurrentPlayer->GetPlayerColor() == EPieceColor::Black)
+	else if (CurPlayerColor == EPieceColor::Black)
 	{
-		PlayerColor = EPieceColor::Black;
-
 		PlayerKingImg = BlackKingImage;
 		EnemyKingImg = WhiteKingImage;
 
@@ -123,7 +122,6 @@ void UPieceInfoWidget::BindPlayer(class AChessPlayer* Player)
 	{
 		Img_EnemyKing->SetBrushFromTexture(EnemyKingImg);
 	}
-
 	if (IsValid(Img_Player) && IsValid(PlayerImg))
 	{
 		Img_Player->SetBrushFromTexture(PlayerImg);
@@ -132,17 +130,16 @@ void UPieceInfoWidget::BindPlayer(class AChessPlayer* Player)
 	{
 		Img_Enemy->SetBrushFromTexture(EnemyImg);
 	}
-
-	Overlay_PieceInfo->SetVisibility(ESlateVisibility::Hidden);
-	Text_Result->SetVisibility(ESlateVisibility::Hidden);
-
 }
 
-void UPieceInfoWidget::UpdateCurPiece()
+void UPieceInfoWidget::HidePieceNameAndResult()
 {
+	Overlay_PieceInfo->SetVisibility(ESlateVisibility::Hidden);
+	Text_Result->SetVisibility(ESlateVisibility::Hidden);
+}
 
-	EPieceType CurPieceType = CurrentPlayer->GetCurPieceType();
-
+void UPieceInfoWidget::UpdateCurPiece(EPieceType CurPieceType)
+{
 	FString PieceName = UChessUtil::GetPieceTypeString(CurPieceType);
 	if (IsValid(Img_PieceMove))
 	{

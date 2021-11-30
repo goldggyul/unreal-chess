@@ -19,18 +19,26 @@ void UThreatMap::SetPlayerColor(EPieceColor Color)
 
 void UThreatMap::UpdateMap()
 {
+	bIsCheckmate = false;
+	bIsStalemate = false;
+	bIsCheck = false;
+
 	if (PlayerColor != EPieceColor::None)
 	{
-		DestroyMap();
-
-		UpdatePieces();
+		UpdatePiecesMove();
 		UpdateSquareStates();
-		UpdatePlayState();
+		UpdateGameResult();
 	}
 }
 
 void UThreatMap::ShowMap()
 {
+	if (SquareStates.Num() == 0) return;
+	if (ThreatBoxes.Num() != 0)
+	{
+		DestroyThreatBoxes();
+	}
+
 	FRotator BoxRotation = UChessUtil::GetPlayerDirection(PlayerColor);
 
 	for (auto& SquareState : SquareStates)
@@ -58,7 +66,7 @@ void UThreatMap::ShowMap()
 	}
 }
 
-void UThreatMap::DestroyMap()
+void UThreatMap::DestroyThreatBoxes()
 {
 	for (auto It = ThreatBoxes.CreateConstIterator(); It; ++It)
 	{
@@ -68,8 +76,6 @@ void UThreatMap::DestroyMap()
 		}
 	}
 	ThreatBoxes.Empty();
-
-	SquareStates.Empty();
 }
 
 void UThreatMap::InitPieces()
@@ -98,7 +104,7 @@ void UThreatMap::InitPieces()
 	}
 }
 
-void UThreatMap::UpdatePieces()
+void UThreatMap::UpdatePiecesMove()
 {
 	for (auto& PlayerPiece : PlayerPieces)
 	{
@@ -120,6 +126,8 @@ void UThreatMap::UpdatePieces()
 
 void UThreatMap::UpdateSquareStates()
 {
+	SquareStates.Empty();
+
 	for (auto& PlayerPiece : PlayerPieces)
 	{
 		if (!IsValid(PlayerPiece)) continue;
@@ -143,7 +151,7 @@ void UThreatMap::UpdateSquareStates()
 	}
 }
 
-void UThreatMap::UpdatePlayState()
+void UThreatMap::UpdateGameResult()
 {
 	bool bCanMove = false;
 	for (auto& PlayerPiece : PlayerPieces)

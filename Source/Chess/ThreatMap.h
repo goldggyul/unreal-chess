@@ -61,7 +61,7 @@ public:
 
 	void UpdateMap();
 	void ShowMap();
-	void DestroyMap();
+	void DestroyThreatBoxes();
 
 	bool IsCheck() const { return bIsCheck; }
 	bool IsCheckmate() const { return bIsCheckmate; }
@@ -69,9 +69,9 @@ public:
 
 private:
 	void InitPieces();
-	void UpdatePieces();
+	void UpdatePiecesMove();
 	void UpdateSquareStates();
-	void UpdatePlayState();
+	void UpdateGameResult();
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = ThreatMap)

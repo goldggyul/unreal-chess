@@ -16,11 +16,12 @@ public:
 	AChessPlayerController();
 
 public:
-	UFUNCTION(BlueprintCallable)
-	void ShowStartWidget();
 
 	UFUNCTION(BlueprintCallable)
 	void StartGame();
+
+	UFUNCTION(BlueprintCallable)
+	void ResignPressed();
 
 protected:
 	virtual void BeginPlay() override;
@@ -29,8 +30,6 @@ protected:
 
 	virtual void OnUnPossess() override;
 	virtual void OnPossess(APawn* InPawn) override;
-
-
 
 private:
 	void Up();
@@ -59,4 +58,10 @@ private:
 
 	UPROPERTY(VisibleAnywhere)
 	UPieceInfoWidget* PieceInfoWidget;
+
+	UPROPERTY(VisibleAnywhere)
+	TSubclassOf<class UEndWidget> EndWidgetClass;
+
+	//UPROPERTY(VisibleAnywhere)
+	//UEndWidget* EndWidget;
 };

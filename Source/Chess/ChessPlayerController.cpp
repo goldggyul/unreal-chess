@@ -10,6 +10,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/WidgetComponent.h"
 #include "PieceInfoWidget.h"
+#include "EndWidget.h"
 
 AChessPlayerController::AChessPlayerController()
 {
@@ -18,11 +19,12 @@ AChessPlayerController::AChessPlayerController()
 	{
 		PieceInfoClass = PW.Class;
 	}
-}
 
-void AChessPlayerController::ShowStartWidget()
-{
-
+	static ConstructorHelpers::FClassFinder<UEndWidget> EW(TEXT("WidgetBlueprint'/Game/UI/Blueprints/WBP_End.WBP_End_C'"));
+	if (EW.Succeeded())
+	{
+		EndWidgetClass = EW.Class;
+	}
 }
 
 void AChessPlayerController::StartGame()
@@ -44,16 +46,31 @@ void AChessPlayerController::StartGame()
 	PrevPlayer->SetPickBoxStart(FVector(1050.0f, 450.0f, PickBoxZ));
 
 	// À§Á¬
-	CurPlayer->PieceInfoWidget = CreateWidget<UPieceInfoWidget>(this, PieceInfoClass);
-	CurPlayer->PieceInfoWidget->BindPlayer(CurPlayer);
-	CurPlayer->PieceInfoWidget->PlayerColor = EPieceColor::White;
+	PieceInfoWidget = CreateWidget<UPieceInfoWidget>(this, PieceInfoClass);
+	PieceInfoWidget->BindPlayer(CurPlayer);
+	PieceInfoWidget->BindPlayer(PrevPlayer);
+	PieceInfoWidget->HidePieceNameAndResult();
+	PieceInfoWidget->AddToViewport();
 
-	PrevPlayer->PieceInfoWidget = CreateWidget<UPieceInfoWidget>(this, PieceInfoClass);
-	PrevPlayer->PieceInfoWidget->BindPlayer(PrevPlayer);
-	PrevPlayer->PieceInfoWidget->PlayerColor = EPieceColor::Black;
-
+	CurPlayer->UpdateThreatMap();
 	Possess(CurPlayer);
 
+}
+
+void AChessPlayerController::ResignPressed()
+{
+	UE_LOG(LogTemp, Error, TEXT("CHECKMATE"));
+	FString PlayerName = UChessUtil::GetColorString(CurPlayer->GetPlayerColor());
+	PieceInfoWidget->ShowResult(PlayerName + FString(TEXT(" Player Resigned")));
+
+	FTimerHandle TimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, [&]()
+		{
+			PieceInfoWidget->RemoveFromViewport();
+			UEndWidget* EndWidget = CreateWidget<UEndWidget>(this, EndWidgetClass);
+			EndWidget->SetWinner(PrevPlayer->GetPlayerColor());
+			EndWidget->AddToViewport();
+		}, 1.5f, false);
 }
 
 void AChessPlayerController::BeginPlay()
@@ -104,11 +121,6 @@ void AChessPlayerController::OnUnPossess()
 		UE_LOG(LogTemp, Warning, TEXT("UNPOSSESS! [%s]"), *(CurrentPlayer->GetActorLabel()));
 		CurrentPlayer->DestroyPickBox();
 		CurrentPlayer->DestroyThreatMap();
-
-		if (IsValid(CurrentPlayer->PieceInfoWidget))
-		{
-			CurrentPlayer->PieceInfoWidget->RemoveFromViewport();
-		}
 	}
 	else
 	{
@@ -128,13 +140,9 @@ void AChessPlayerController::OnPossess(APawn* InPawn)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("POSSESS! [%s]"), *(CurrentPlayer->GetActorLabel()));
 		CurrentPlayer->SpawnPickBox();
-		CurrentPlayer->UpdateThreatMap();
+		//CurrentPlayer->UpdateThreatMap();
 		CurrentPlayer->ShowThreatMap();
-
-		if (IsValid(CurrentPlayer->PieceInfoWidget))
-		{
-			CurrentPlayer->PieceInfoWidget->AddToViewport();
-		}
+		PieceInfoWidget->SetPlayerColor(CurrentPlayer->GetPlayerColor());
 	}
 	else
 	{
@@ -237,9 +245,61 @@ void AChessPlayerController::ChangePlayer()
 {
 	UE_LOG(LogTemp, Warning, TEXT("NEXT TURN"));
 
-	UnPossess();
-	Swap(CurPlayer, PrevPlayer);
-	Possess(CurPlayer);
+	FTimerHandle TimerHandle;
+	float PauseTime = 0.3f;
 
-	// if Checkmate.. Check.. Stalemate... : ShowMap UI
+	PrevPlayer->UpdateThreatMap();
+	if (PrevPlayer->IsCheckmate() || PrevPlayer->IsStalemate())
+	{
+		if (PrevPlayer->IsCheckmate())
+		{
+			UE_LOG(LogTemp, Error, TEXT("CHECKMATE"));
+			PieceInfoWidget->ShowResult(FString(TEXT("Checkmate")));
+		}
+		else if (PrevPlayer->IsStalemate())
+		{
+			UE_LOG(LogTemp, Error, TEXT("STALEMATE"));
+			PieceInfoWidget->ShowResult(FString(TEXT("Stalemate")));
+		}
+		PauseTime = 1.0f;
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle, [&]()
+			{
+				PieceInfoWidget->RemoveFromViewport();
+				UEndWidget* EndWidget = CreateWidget<UEndWidget>(this, EndWidgetClass);
+				if (PrevPlayer->IsCheckmate())
+				{
+					EndWidget->SetWinner(CurPlayer->GetPlayerColor());
+				}
+				else if (PrevPlayer->IsStalemate())
+				{
+					EndWidget->SetResultToDraw();
+				}
+				EndWidget->AddToViewport();
+			}, PauseTime, false);
+	}
+	else
+	{
+		if (PrevPlayer->IsCheck())
+		{
+			UE_LOG(LogTemp, Error, TEXT("CHECK"));
+			PieceInfoWidget->ShowResult(FString(TEXT("Check")));
+			PauseTime = 1.0f;
+		}
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle, [&]()
+			{
+				PieceInfoWidget->HidePieceNameAndResult();
+				UnPossess();
+				Swap(CurPlayer, PrevPlayer);
+				Possess(CurPlayer);
+			}, PauseTime, false);
+	}
+	/*else
+	{
+		UnPossess();
+		Swap(CurPlayer, PrevPlayer);
+		Possess(CurPlayer);
+		return;
+	}*/
+
+
 }

@@ -20,8 +20,10 @@ public:
 	
 public:
 	void BindPlayer(class AChessPlayer* Player);
+	void SetPlayerColor(EPieceColor CurPlayerColor);
+	void HidePieceNameAndResult();
 
-	void UpdateCurPiece();
+	void UpdateCurPiece(EPieceType CurPieceType);
 	void EraseCurPiece();
 
 	void ShowResult(FString Result);
@@ -30,8 +32,6 @@ public:
 	EPieceColor PlayerColor;
 
 private:
-	TWeakObjectPtr<class AChessPlayer> CurrentPlayer;
-
 	UPROPERTY()
 	TMap<EPieceType, class UTexture2D*> MoveImages;
 

@@ -62,6 +62,8 @@ AChessPlayer::AChessPlayer()
 
 	SetPicking(false);
 
+	bIsThreatMapVisible = false;
+
 	ThreatMap = CreateDefaultSubobject<UThreatMap>(TEXT("THREAT MAP"));
 }
 
@@ -185,7 +187,7 @@ void AChessPlayer::PickPiece()
 				UE_LOG(LogTemp, Warning, TEXT("Pick this piece!"));
 				SpawnPickedPiece();
 				SetPicking(true);
-				OnPickPiece.Broadcast(); // For UI
+				OnPickPiece.Broadcast(CurPiece->GetPieceType()); // For UI
 			}
 		}
 		else
@@ -266,17 +268,17 @@ void AChessPlayer::UpdateThreatMap()
 		if (ThreatMap->IsCheckmate())
 		{
 			UE_LOG(LogTemp, Error, TEXT("CHECKMATE"));
-			PieceInfoWidget->ShowResult(FString(TEXT("Checkmate")));
+			//PieceInfoWidget->ShowResult(FString(TEXT("Checkmate")));
 		}
 		else if (ThreatMap->IsStalemate())
 		{
 			UE_LOG(LogTemp, Error, TEXT("STALEMATE"));
-			PieceInfoWidget->ShowResult(FString(TEXT("Stalemate")));
+			//PieceInfoWidget->ShowResult(FString(TEXT("Stalemate")));
 		}
 		else if (ThreatMap->IsCheck())
 		{
 			UE_LOG(LogTemp, Error, TEXT("CHECK"));
-			PieceInfoWidget->ShowResult(FString(TEXT("Check")));
+			//PieceInfoWidget->ShowResult(FString(TEXT("Check")));
 		}
 	}
 }
@@ -336,7 +338,7 @@ void AChessPlayer::SetMeshOpaque(bool bIsOpaque, class UStaticMeshComponent* Mes
 
 void AChessPlayer::ShowThreatMap()
 {
-	if (IsValid(ThreatMap))
+	if (IsValid(ThreatMap) && bIsThreatMapVisible)
 	{
 		ThreatMap->ShowMap();
 	}
@@ -346,11 +348,43 @@ void AChessPlayer::DestroyThreatMap()
 {
 	if (IsValid(ThreatMap))
 	{
-		ThreatMap->DestroyMap();
+		ThreatMap->DestroyThreatBoxes();
 	}
 }
 
 EPieceType AChessPlayer::GetCurPieceType() const
 {
 	return CurPiece->GetPieceType();
+}
+
+bool AChessPlayer::IsCheckmate() const
+{
+	return ThreatMap->IsCheckmate();
+}
+
+bool AChessPlayer::IsStalemate() const
+{
+	return ThreatMap->IsStalemate();
+}
+
+bool AChessPlayer::IsCheck() const
+{
+	return ThreatMap->IsCheck();
+}
+
+void AChessPlayer::AssistPressed()
+{
+	if (IsPlayerControlled())
+	{
+		bIsThreatMapVisible = !bIsThreatMapVisible;
+
+		if (bIsThreatMapVisible)
+		{
+			ShowThreatMap();
+		}
+		else
+		{
+			DestroyThreatMap();
+		}
+	}
 }
