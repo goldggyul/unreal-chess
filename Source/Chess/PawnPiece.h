@@ -18,5 +18,9 @@ public:
 	APawnPiece();
 
 protected:
-	virtual void UpdateBasicMoves() override;
+	virtual TSet<FVector> GetBasicMovesInCurBoard() override;
+
+	virtual void UpdateSpecialMoves(TSet<APiece*>& EnemyPieces) override;
+
+
 };

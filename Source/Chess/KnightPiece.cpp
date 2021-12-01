@@ -21,16 +21,16 @@ AKnightPiece::AKnightPiece()
 	PieceMesh->SetRelativeScale3D(FVector(2.f, 2.f, 2.f));
 }
 
-void AKnightPiece::UpdateBasicMoves()
+TSet<FVector> AKnightPiece::GetBasicMovesInCurBoard()
 {
-	Super::UpdateBasicMoves();
-
-	FVector FowardVector = UChessUtil::GetPlayerForwardVector(GetPieceColor());
-	FVector RightVector = UChessUtil::GetPlayerRightVector(GetPieceColor());
+	TSet<FVector> CurMoves;
 
 	/*
 	* 나이트의 행마법 : L자 모양. 수평 두칸 후 수직 한칸 혹은 수직 두칸 후 수평 한칸
 	*/
+
+	FVector FowardVector = UChessUtil::GetPlayerForwardVector(GetPieceColor());
+	FVector RightVector = UChessUtil::GetPlayerRightVector(GetPieceColor());
 
 	TSet<FVector> Differs;
 	// 수평 두칸 후 수직 한칸
@@ -46,17 +46,22 @@ void AKnightPiece::UpdateBasicMoves()
 
 	for (auto& Differ : Differs)
 	{
-		FVector Location = GetActorLocation();
-		Location += Differ;
-		AActor* HitActor = UChessUtil::GetCollidedPiece(GetWorld(), Location);
-		APiece* HitPiece = Cast<APiece>(HitActor);
-		if (!IsValid(HitPiece))
+		FVector Cur = GetActorLocation();
+		Cur += Differ;
+		if (UChessUtil::IsInBoard(Cur))
 		{
-			AddToMoves(Location);
+			AActor* HitActor = UChessUtil::GetCollidedPiece(GetWorld(), Cur);
+			APiece* HitPiece = Cast<APiece>(HitActor);
+			if (!IsValid(HitPiece))
+			{
+				CurMoves.Add(Cur);
+			}
+			else if (HitPiece->GetPieceColor() != GetPieceColor())
+			{
+				CurMoves.Add(Cur);
+			}
 		}
-		else if (HitPiece->GetPieceColor() != GetPieceColor())
-		{
-			AddToMoves(Location);
-		}
+		
 	}
+	return CurMoves;
 }

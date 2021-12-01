@@ -21,9 +21,9 @@ AQueenPiece::AQueenPiece()
 	PieceMesh->SetRelativeScale3D(FVector(2.f, 2.f, 2.f));
 }
 
-void AQueenPiece::UpdateBasicMoves()
+TSet<FVector> AQueenPiece::GetBasicMovesInCurBoard()
 {
-	Super::UpdateBasicMoves();
+	TSet<FVector> CurMoves;
 
 	/*
 	* 퀸의 행마법 : 상하좌우+대각방향 직진
@@ -33,7 +33,6 @@ void AQueenPiece::UpdateBasicMoves()
 	FVector RightVector = UChessUtil::GetPlayerRightVector(GetPieceColor());
 
 	TSet<FVector> Differs;
-
 	Differs.Add(FowardVector); // 상
 	Differs.Add(-FowardVector); // 하
 	Differs.Add(-RightVector); // 좌
@@ -46,23 +45,23 @@ void AQueenPiece::UpdateBasicMoves()
 	for (auto Differ : Differs)
 	{
 		FVector Location = GetActorLocation();
-		for (int i = 0; i < 7; i++) // 한번에 최대 7칸
+		for (FVector Cur = GetActorLocation() + Differ; UChessUtil::IsInBoard(Cur); Cur += Differ)
 		{
-			Location += Differ;
-			AActor* HitActor = UChessUtil::GetCollidedPiece(GetWorld(), Location);
+			AActor* HitActor = UChessUtil::GetCollidedPiece(GetWorld(), Cur);
 			APiece* HitPiece = Cast<APiece>(HitActor);
 			if (!IsValid(HitPiece))
 			{
-				AddToMoves(Location);
+				CurMoves.Add(Cur);
 			}
 			else
 			{
 				if (HitPiece->GetPieceColor() != GetPieceColor())
 				{
-					AddToMoves(Location);
+					CurMoves.Add(Cur);
 				}
 				break;
 			}
 		}
 	}
+	return CurMoves;
 }

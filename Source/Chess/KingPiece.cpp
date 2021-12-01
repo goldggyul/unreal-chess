@@ -2,6 +2,7 @@
 
 
 #include "KingPiece.h"
+#include "Kismet/GameplayStatics.h"
 
 AKingPiece::AKingPiece()
 {
@@ -22,10 +23,9 @@ AKingPiece::AKingPiece()
 
 }
 
-void AKingPiece::UpdateBasicMoves()
+TSet<FVector> AKingPiece::GetBasicMovesInCurBoard()
 {
-	Super::UpdateBasicMoves();
-
+	TSet<FVector> CurMoves;
 	/*
 	* 킹의 행마법 : 상하좌우+대각방향 한 칸만
 	*/
@@ -47,55 +47,64 @@ void AKingPiece::UpdateBasicMoves()
 	{
 		FVector Location = GetActorLocation();
 		Location += Differ;
-		AActor* HitActor = UChessUtil::GetCollidedPiece(GetWorld(), Location);
-		APiece* HitPiece = Cast<APiece>(HitActor);
-		if (!IsValid(HitPiece))
+		if (UChessUtil::IsInBoard(Location))
 		{
-			AddToMoves(Location);
-		}
-		else if (HitPiece->GetPieceColor() != GetPieceColor())
-		{
-			AddToMoves(Location);
-		}
-	}
-
-	// 캐슬링
-	// 왼쪽과 오른쪽을 쭉 보고 콜리전이 일어난 Piece가 Rook이며 아직 안움직였을때
-	// TODO: 킹이 체크가 아닐 때
-	if (IsFirstMove())
-	{
-		Differs.Empty();
-		Differs.Add(RightVector);
-		Differs.Add(-RightVector);
-		for (auto& Differ : Differs)
-		{
-			//UE_LOG(LogTemp, Warning, TEXT("Checking castling..."));
-
-			FVector Start = GetActorLocation();
-			FVector End = Start + Differ * 4; // 룩이 3칸 혹은 4칸 떨어져있음
-
-			DrawDebugLine(
-				GetWorld(), Start, End,
-				FColor::Orange, false, 1.f, 0.f, 20.f
-			);
-
-			// Line Trace
-			FHitResult HitResult;
-			FCollisionObjectQueryParams ObjectQuery;
-			ObjectQuery.AddObjectTypesToQuery(ECollisionChannel::ECC_GameTraceChannel1);
-			FCollisionQueryParams Query = FCollisionQueryParams::DefaultQueryParam;
-			Query.AddIgnoredActor(GetOwner());
-
-			GetWorld()->LineTraceSingleByObjectType(OUT HitResult, Start, End, ObjectQuery, Query);
-
-			APiece* HitPiece = Cast<APiece>(HitResult.GetActor());
-			if (IsValid(HitPiece)
-				&& HitPiece->GetPieceType() == EPieceType::Rook
-				&& HitPiece->IsFirstMove())
+			AActor* HitActor = UChessUtil::GetCollidedPiece(GetWorld(), Location);
+			APiece* HitPiece = Cast<APiece>(HitActor);
+			if (!IsValid(HitPiece))
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Able to castling!"));
-				AddToMoves(HitPiece->GetActorLocation() - Differ);
+				CurMoves.Add(Location);
+			}
+			else if (HitPiece->GetPieceColor() != GetPieceColor())
+			{
+				CurMoves.Add(Location);
 			}
 		}
 	}
+	return CurMoves;
+}
+
+void AKingPiece::UpdateSpecialMoves(TSet<APiece*>& EnemyPieces)
+{
+	// 캐슬링
+	if (!IsFirstMove()) return;
+
+	FVector RightVector = UChessUtil::GetPlayerRightVector(GetPieceColor());
+
+	TSet<FVector> Differs;
+	Differs.Add(RightVector);
+	Differs.Add(-RightVector);
+	for (auto& Differ : Differs)
+	{
+		for (FVector Cur = GetActorLocation() + Differ; UChessUtil::IsInBoard(Cur); Cur += Differ)
+		{
+			if (IsDestInThreatByEnemy(Cur, EnemyPieces)) break;
+
+			AActor* HitActor = UChessUtil::GetCollidedPiece(GetWorld(), Cur);
+			APiece* HitPiece = Cast<APiece>(HitActor);
+			if (IsValid(HitPiece))
+			{
+				if (HitPiece->GetPieceColor() == GetPieceColor()
+					&& HitPiece->GetPieceType() == EPieceType::Rook
+					&& HitPiece->IsFirstMove()) // Only here, Add to moves
+				{
+					UE_LOG(LogTemp, Warning, TEXT("%s Able to castling!"), *UChessUtil::GetColorString(GetPieceColor()));
+					AddToMoves(Cur - Differ);
+				}
+				break;
+			}
+		}
+	}
+}
+
+bool AKingPiece::IsDestInThreatByEnemy(FVector Dest, TSet<APiece*>& EnemyPieces) const
+{
+	for (auto& EnemyPiece : EnemyPieces)
+	{
+		if (IsValid(EnemyPiece) && EnemyPiece->CanMoveTo(Dest))
+		{
+			return true;
+		}
+	}
+	return false;
 }

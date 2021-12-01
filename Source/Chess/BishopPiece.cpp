@@ -21,10 +21,9 @@ ABishopPiece::ABishopPiece()
 	PieceMesh->SetRelativeScale3D(PieceMeshSize);
 }
 
-void ABishopPiece::UpdateBasicMoves()
+TSet<FVector> ABishopPiece::GetBasicMovesInCurBoard()
 {
-	Super::UpdateBasicMoves();
-
+	TSet<FVector> CurMoves;
 	/*
 	* 비숍의 행마법
 	* 대각선 방향 직진
@@ -41,24 +40,23 @@ void ABishopPiece::UpdateBasicMoves()
 
 	for (auto& Differ : Differs)
 	{
-		FVector Location = GetActorLocation();
-		for (int i = 0; i < 7; i++) // 한번에 최대 7칸
+		for (FVector Cur = GetActorLocation() + Differ; UChessUtil::IsInBoard(Cur); Cur += Differ)
 		{
-			Location += Differ;
-			AActor* HitActor = UChessUtil::GetCollidedPiece(GetWorld(), Location);
+			AActor* HitActor = UChessUtil::GetCollidedPiece(GetWorld(), Cur);
 			APiece* HitPiece = Cast<APiece>(HitActor);
 			if (!IsValid(HitPiece))
 			{
-				AddToMoves(Location);
+				CurMoves.Add(Cur);
 			}
 			else
 			{
 				if (HitPiece->GetPieceColor() != GetPieceColor())
 				{
-					AddToMoves(Location);
+					CurMoves.Add(Cur);
 				}
 				break;
 			}
 		}
 	}
+	return CurMoves;
 }

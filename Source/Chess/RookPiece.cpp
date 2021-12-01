@@ -21,15 +21,15 @@ ARookPiece::ARookPiece()
 	PieceMesh->SetRelativeScale3D(FVector(2.f, 2.f, 2.f));
 }
 
-void ARookPiece::UpdateBasicMoves()
+TSet<FVector> ARookPiece::GetBasicMovesInCurBoard()
 {
-	Super::UpdateBasicMoves();
+	TSet<FVector> CurMoves;
 
 	/*
 	* 룩의 행마법 : 상하좌우 직진
 	* ※ 캐슬링 시 같이 움직여야함: 킹에서 움직이게 할 예정
 	*/
-	
+
 	FVector FowardVector = UChessUtil::GetPlayerForwardVector(GetPieceColor());
 	FVector RightVector = UChessUtil::GetPlayerRightVector(GetPieceColor());
 
@@ -41,24 +41,23 @@ void ARookPiece::UpdateBasicMoves()
 
 	for (auto& Differ : Differs)
 	{
-		FVector Location = GetActorLocation();
-		for (int i = 0; i < 7; i++) // 한번에 최대 7칸
+		for (FVector Cur = GetActorLocation() + Differ; UChessUtil::IsInBoard(Cur); Cur += Differ)
 		{
-			Location += Differ;
-			AActor* HitActor = UChessUtil::GetCollidedPiece(GetWorld(), Location);
+			AActor* HitActor = UChessUtil::GetCollidedPiece(GetWorld(), Cur);
 			APiece* HitPiece = Cast<APiece>(HitActor);
 			if (!IsValid(HitPiece))
 			{
-				AddToMoves(Location);
+				CurMoves.Add(Cur);
 			}
 			else
 			{
 				if (HitPiece->GetPieceColor() != GetPieceColor())
 				{
-					AddToMoves(Location);
+					CurMoves.Add(Cur);
 				}
 				break;
 			}
 		}
 	}
+	return CurMoves;
 }

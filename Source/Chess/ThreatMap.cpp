@@ -84,7 +84,7 @@ void UThreatMap::InitPieces()
 	EnemyPieces.Empty();
 
 	TArray<AActor*> Actors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APiece::StaticClass(), Actors);
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), APiece::StaticClass(), OUT Actors);
 	for (auto& Actor : Actors)
 	{
 		APiece* Piece = Cast<APiece>(Actor);
@@ -109,18 +109,16 @@ void UThreatMap::UpdatePiecesMove()
 	for (auto& PlayerPiece : PlayerPieces)
 	{
 		if (!IsValid(PlayerPiece)) continue;
-
 		PlayerPiece->UpdateBasicMoves(); // 기본 움직임
+		PlayerPiece->UpdateSpecialMoves(EnemyPieces); // 특별 행마법: 캐슬링, 앙파상
 		PlayerPiece->RemoveMoveKingCheckedByEnemies(PlayerKing, EnemyPieces); // 체크 되는 상황의 움직임 제거
 	}
-
-	UE_LOG(LogTemp, Log, TEXT("UpdateEnemyMoves"));
 
 	for (auto& EnemyPiece : EnemyPieces)
 	{
 		if (!IsValid(EnemyPiece)) continue;
-
 		EnemyPiece->UpdateBasicMoves(); // 기본 움직임
+		EnemyPiece->UpdateSpecialMoves(PlayerPieces); // 특별 행마법: 캐슬링, 앙파상
 	}
 }
 

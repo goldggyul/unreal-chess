@@ -79,6 +79,22 @@ UStaticMeshComponent* APiece::GetStaticMeshComponent()
 void APiece::UpdateBasicMoves()
 {
 	Moves.Empty();
+
+	TSet<FVector> CurMoves = GetBasicMovesInCurBoard();
+	for (const auto& Move : CurMoves)
+	{
+		AddToMoves(Move);
+	}
+}
+
+TSet<FVector> APiece::GetBasicMovesInCurBoard()
+{
+	return TSet<FVector>();
+}
+
+void APiece::UpdateSpecialMoves(TSet<APiece*>& EnemyPieces)
+{
+
 }
 
 void APiece::RemoveMoveKingCheckedByEnemies(APiece* MyKing, TSet<APiece*>& EnemyPieces)
@@ -86,9 +102,8 @@ void APiece::RemoveMoveKingCheckedByEnemies(APiece* MyKing, TSet<APiece*>& Enemy
 	FVector OriginalLocation = GetActorLocation();
 
 	// 임시로 둬보면서 킹이 체크인지 확인
-	if (!IsValid(MyKing))
-		return;
-
+	if (!IsValid(MyKing)) return;
+		
 	for (auto It = Moves.CreateConstIterator(); It; ++It)
 	{
 		SetActorLocation(*It);
@@ -99,16 +114,16 @@ void APiece::RemoveMoveKingCheckedByEnemies(APiece* MyKing, TSet<APiece*>& Enemy
 		for (auto& EnemyPiece : EnemyPieces)
 		{
 			if (!IsValid(EnemyPiece)) continue;
-			if (EnemyPiece->GetActorLocation() == *It) continue;
-			EnemyPiece->UpdateBasicMoves();
-			if (EnemyPiece->CanMoveTo(MyKingLocation))
+			if (EnemyPiece->GetActorLocation() == *It) continue; // 현재 피스가 적 피스 잡는 경우
+			TSet<FVector> CurEnemyMoves = EnemyPiece->GetBasicMovesInCurBoard();
+			if (CurEnemyMoves.Contains(MyKingLocation))
 			{
 				Moves.Remove(*It);
 				break;
 			}
 		}
 	}
-	
+	// Original moves
 	SetActorLocation(OriginalLocation);
 }
 

@@ -18,5 +18,6 @@ public:
 	AQueenPiece();
 
 protected:
-	virtual void UpdateBasicMoves() override;
+	virtual TSet<FVector> GetBasicMovesInCurBoard() override;
+
 };
