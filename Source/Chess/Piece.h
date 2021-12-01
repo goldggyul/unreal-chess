@@ -35,6 +35,8 @@ public:
 	bool IsAbleToPick();
 	bool IsAbleToPutAt(FVector Dest) const;
 	virtual void PutAt(FVector Dest);
+	bool IsSpecialMove(FVector Move) const;
+	virtual void DoSpecialMove();
 
 	bool IsFirstMove() const { return bIsFirstMove; }
 	
@@ -50,6 +52,7 @@ protected:
 
 	void SetType(EPieceType PT) { PieceType = PT; }
 	void AddToMoves(const FVector Location);
+	void AddToSpecialMoves(const FVector Location);
 
 protected:
 	UPROPERTY(VisibleAnywhere)
@@ -57,6 +60,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	TSet<FVector> Moves;
+
+	UPROPERTY(VisibleAnywhere)
+	TSet<FVector> SpecialMoves;
 
 private:
 	UPROPERTY(EditAnywhere, Category = PieceState)

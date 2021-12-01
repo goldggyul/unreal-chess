@@ -101,3 +101,8 @@ void APawnPiece::UpdateSpecialMoves(TSet<APiece*>& EnemyPieces)
 {
 
 }
+
+void APawnPiece::DoSpecialMove()
+{
+
+}

@@ -22,6 +22,8 @@ protected:
 
 	virtual void UpdateSpecialMoves(TSet<APiece*>& EnemyPieces) override;
 
+	virtual void DoSpecialMove() override;
+
 private:
 	bool IsDestInThreatByEnemy(FVector CheckLocation, TSet<APiece*>& EnemyPieces) const;
 };

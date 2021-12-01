@@ -26,9 +26,9 @@ void APiece::ShowMoves()
 		return;
 	DestroyMoveBoxes();
 
-	for (auto& Location : Moves)
+	for (auto& Move : Moves)
 	{
-		FVector MoveBoxLocation = Location;
+		FVector MoveBoxLocation = Move;
 		MoveBoxLocation.Z = MoveBoxZ;
 		APaperSpriteActor* MoveBox = GetWorld()->SpawnActor<APaperSpriteActor>(
 			MoveBoxClass, MoveBoxLocation, FRotator::ZeroRotator);
@@ -42,6 +42,14 @@ void APiece::AddToMoves(const FVector Location)
 	if (UChessUtil::IsInBoard(Location))
 	{
 		Moves.Add(Location);
+	}
+}
+
+void APiece::AddToSpecialMoves(const FVector Location)
+{
+	if (UChessUtil::IsInBoard(Location))
+	{
+		SpecialMoves.Add(Location);
 	}
 }
 
@@ -178,6 +186,16 @@ void APiece::PutAt(FVector Dest)
 	}
 	SetActorLocation(Dest);
 	DestroyMoveBoxes();
+}
+
+bool APiece::IsSpecialMove(FVector Move) const
+{
+	return SpecialMoves.Contains(Move);
+}
+
+void APiece::DoSpecialMove()
+{
+
 }
 
 void APiece::DestroyMoveBoxes()

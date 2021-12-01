@@ -277,10 +277,31 @@ bool AChessPlayer::PutCurPiece()
 		PickedMesh->Destroy();
 		CurPickedPiece->PutAt(CurPickLocation);
 		SetMeshOpaque(true, CurPickedPiece->GetStaticMeshComponent());
-		CurPickedPiece = nullptr;
 		SetPicking(false);
 		OnPutPiece.Broadcast(); // For UI
 		UGameplayStatics::PlaySound2D(this, PutSound, 5.0f);
+
+		// If Special Move
+		if (CurPickedPiece->IsSpecialMove(CurPickLocation))
+		{
+			CurPickedPiece->DoSpecialMove();
+
+			if (CurPickedPiece->GetPieceType() == EPieceType::King)
+			{
+				// Castling
+				UGameplayStatics::PlaySound2D(this, PutSound, 5.0f);
+			}
+			else if (CurPickedPiece->GetPieceType() == EPieceType::Pawn)
+			{
+				// En passant
+
+				// Promotion
+			}
+			
+		}
+		
+		CurPickedPiece = nullptr;
+
 		return bIsOtherLocation;
 	}
 	else

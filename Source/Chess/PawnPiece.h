@@ -22,5 +22,6 @@ protected:
 
 	virtual void UpdateSpecialMoves(TSet<APiece*>& EnemyPieces) override;
 
+	virtual void DoSpecialMove() override;
 
 };

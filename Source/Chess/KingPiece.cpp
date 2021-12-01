@@ -66,6 +66,8 @@ TSet<FVector> AKingPiece::GetBasicMovesInCurBoard()
 
 void AKingPiece::UpdateSpecialMoves(TSet<APiece*>& EnemyPieces)
 {
+	SpecialMoves.Empty();
+
 	// 캐슬링
 	if (!IsFirstMove()) return;
 
@@ -90,11 +92,33 @@ void AKingPiece::UpdateSpecialMoves(TSet<APiece*>& EnemyPieces)
 				{
 					UE_LOG(LogTemp, Warning, TEXT("%s Able to castling!"), *UChessUtil::GetColorString(GetPieceColor()));
 					AddToMoves(Cur - Differ);
+					AddToSpecialMoves(Cur - Differ);
 				}
 				break;
 			}
 		}
 	}
+}
+
+void AKingPiece::DoSpecialMove()
+{
+	// castling -> 내 좌/우 룩을 찾음
+	FVector Differ = UChessUtil::GetPlayerRightVector(GetPieceColor());
+	FVector Cur = GetActorLocation() + Differ;
+	AActor* HitActor = UChessUtil::GetCollidedPiece(GetWorld(), Cur);
+	APiece* HitPiece = Cast<APiece>(HitActor);
+	if (!IsValid(HitPiece) || HitPiece->GetPieceType() != EPieceType::Rook)
+	{
+		Differ = -Differ;
+		Cur = GetActorLocation() + Differ;
+		HitActor = UChessUtil::GetCollidedPiece(GetWorld(), Cur);
+		HitPiece = Cast<APiece>(HitActor);
+	}
+	check(IsValid(HitPiece) && HitPiece->GetPieceType() == EPieceType::Rook);
+
+	// 룩을 킹이 이동한 방향의 반대 방향으로 이동
+	FVector RookDest = GetActorLocation() - Differ;
+	HitPiece->SetActorLocation(RookDest);
 }
 
 bool AKingPiece::IsDestInThreatByEnemy(FVector Dest, TSet<APiece*>& EnemyPieces) const
