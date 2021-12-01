@@ -64,7 +64,7 @@ private:
 	void SetMeshOpaque(bool bIsOpaque, class UStaticMeshComponent* MeshComponent = nullptr) const;
 
 	void SpawnPickedPiece();
-	class APiece* GetCurPiece();
+	class APiece* GetPieceAtPickBox();
 
 public:
 	FOnPickPiece OnPickPiece;
@@ -106,10 +106,10 @@ private:
 	class APaperSpriteActor* PickBox;
 
 	UPROPERTY(VisibleAnywhere)
-	class AStaticMeshActor* PickedPiece;
+	class AStaticMeshActor* PickedMesh;
 
 	UPROPERTY(VisibleAnywhere)
-	class APiece* CurPiece;
+	class APiece* CurPickedPiece;
 
 	UPROPERTY(VisibleAnywhere)
 	class USoundWave* PickSound;

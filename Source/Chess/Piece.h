@@ -38,6 +38,9 @@ public:
 	
 	TSet<FVector> GetMoves() { return Moves; };
 
+	void ShowMoves();
+	void DestroyMoveBoxes();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -45,10 +48,6 @@ protected:
 
 	void SetType(EPieceType PT) { PieceType = PT; }
 	void AddToMoves(const FVector Location);
-
-private:
-	void ShowMoves();
-	void DestroyMoveBoxes();
 
 protected:
 	UPROPERTY(VisibleAnywhere)

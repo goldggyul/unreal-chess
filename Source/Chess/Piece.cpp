@@ -120,7 +120,7 @@ bool APiece::CanMoveTo(FVector Location)
 bool APiece::IsAbleToPick()
 {
 	// if Legal Moves Exists
-	ShowMoves();
+	//ShowMoves();
 
 	if (Moves.Num() > 0)
 		return true;

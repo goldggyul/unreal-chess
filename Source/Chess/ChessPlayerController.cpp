@@ -25,7 +25,6 @@ AChessPlayerController::AChessPlayerController()
 	{
 		EndWidgetClass = EW.Class;
 	}
-
 }
 
 void AChessPlayerController::StartGame()
@@ -65,6 +64,7 @@ void AChessPlayerController::ResignPressed()
 	PieceInfoWidget->ShowResult(PlayerName + FString(TEXT(" Player Resigned")));
 
 	FTimerHandle TimerHandle;
+	DisableInput(this);
 	GetWorld()->GetTimerManager().SetTimer(TimerHandle, [&]()
 		{
 			PieceInfoWidget->RemoveFromViewport();
@@ -153,30 +153,30 @@ void AChessPlayerController::OnPossess(APawn* InPawn)
 
 void AChessPlayerController::Up()
 {
-	FVector CurBoxLocation = CurPlayer->GetPickBoxLocation();
+	FVector PickBoxLocation = CurPlayer->GetPickBoxLocation();
 	FVector Differ = UChessUtil::GetPlayerForwardVector(CurPlayer->GetPlayerColor());
-	CurPlayer->MovePickBox(CurBoxLocation + Differ);
+	CurPlayer->MovePickBox(PickBoxLocation + Differ);
 }
 
 void AChessPlayerController::Down()
 {
-	FVector CurBoxLocation = CurPlayer->GetPickBoxLocation();
+	FVector PickBoxLocation = CurPlayer->GetPickBoxLocation();
 	FVector Differ = UChessUtil::GetPlayerForwardVector(CurPlayer->GetPlayerColor());
-	CurPlayer->MovePickBox(CurBoxLocation - Differ);
+	CurPlayer->MovePickBox(PickBoxLocation - Differ);
 }
 
 void AChessPlayerController::Right()
 {
-	FVector CurBoxLocation = CurPlayer->GetPickBoxLocation();
+	FVector PickBoxLocation = CurPlayer->GetPickBoxLocation();
 	FVector Differ = UChessUtil::GetPlayerRightVector(CurPlayer->GetPlayerColor());
-	CurPlayer->MovePickBox(CurBoxLocation + Differ);
+	CurPlayer->MovePickBox(PickBoxLocation + Differ);
 }
 
 void AChessPlayerController::Left()
 {
-	FVector CurBoxLocation = CurPlayer->GetPickBoxLocation();
+	FVector PickBoxLocation = CurPlayer->GetPickBoxLocation();
 	FVector Differ = UChessUtil::GetPlayerRightVector(CurPlayer->GetPlayerColor());
-	CurPlayer->MovePickBox(CurBoxLocation - Differ);
+	CurPlayer->MovePickBox(PickBoxLocation - Differ);
 }
 
 void AChessPlayerController::Enter()
@@ -264,6 +264,8 @@ void AChessPlayerController::ChangePlayer()
 			PieceInfoWidget->ShowResult(FString(TEXT("Stalemate")));
 		}
 		PauseTime = 1.0f;
+
+		DisableInput(this);
 		GetWorld()->GetTimerManager().SetTimer(TimerHandle, [&]()
 			{
 				PieceInfoWidget->RemoveFromViewport();
@@ -287,12 +289,14 @@ void AChessPlayerController::ChangePlayer()
 			PieceInfoWidget->ShowResult(FString(TEXT("Check")));
 			PauseTime = 1.0f;
 		}
+		DisableInput(this);
 		GetWorld()->GetTimerManager().SetTimer(TimerHandle, [&]()
 			{
 				PieceInfoWidget->HidePieceNameAndResult();
 				UnPossess();
 				Swap(CurPlayer, PrevPlayer);
 				Possess(CurPlayer);
+				EnableInput(this);
 			}, PauseTime, false);
 
 
