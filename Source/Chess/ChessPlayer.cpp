@@ -215,6 +215,7 @@ void AChessPlayer::PickPiece()
 				UE_LOG(LogTemp, Warning, TEXT("Pick this piece!"));
 				SpawnPickedPiece();
 				SetPicking(true);
+				CurPickedPiece->ShowMoves();
 				OnPickPiece.Broadcast(CurPickedPiece->GetPieceType()); // For UI
 				UGameplayStatics::PlaySound2D(this, PickSound, 5.0f);
 			}
@@ -254,6 +255,7 @@ void AChessPlayer::SpawnPickedPiece()
 		UStaticMeshComponent* CurPieceMeshComp = CurPickedPiece->GetStaticMeshComponent();
 		UStaticMeshComponent* PickedPieceMeshComp = PickedMesh->GetStaticMeshComponent();
 		PickedPieceMeshComp->SetStaticMesh(CurPieceMeshComp->GetStaticMesh());
+		PickedPieceMeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		SetMeshOpaque(false, CurPieceMeshComp);
 		SetMeshOpaque(true, PickedPieceMeshComp);
 	}
@@ -285,6 +287,18 @@ bool AChessPlayer::PutCurPiece()
 	}
 	else
 	{
+		APiece* CurLocatedPiece = GetPieceAtPickBox();
+		if (IsValid(CurLocatedPiece))
+		{
+			UE_LOG(LogTemp, Error, TEXT("Somethin here..."));
+			if ((CurLocatedPiece->IsAbleToPick()) && (CurLocatedPiece->GetPieceColor() == GetPlayerColor()))
+			{
+				// Change Cur Piece
+				CurPickedPiece->PutAt(CurPickedPiece->GetActorLocation());
+				SetMeshOpaque(true, CurPickedPiece->GetStaticMeshComponent());
+				PickPiece();
+			}
+		}
 		UE_LOG(LogTemp, Warning, TEXT("Cannot put here!"));
 		return false;
 	}

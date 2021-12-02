@@ -32,6 +32,8 @@ void APiece::ShowMoves()
 		MoveBoxLocation.Z = MoveBoxZ;
 		APaperSpriteActor* MoveBox = GetWorld()->SpawnActor<APaperSpriteActor>(
 			MoveBoxClass, MoveBoxLocation, FRotator::ZeroRotator);
+
+		// need to know about enemy
 		MoveBox->SetFolderPath("/MoveBoxes");
 		MoveBoxes.Add(MoveBox);
 	}
