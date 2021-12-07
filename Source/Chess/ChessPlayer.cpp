@@ -31,22 +31,22 @@ AChessPlayer::AChessPlayer()
 	SpringArm->SetRelativeRotation(FRotator(-75.0f, 0.0f, 0.0f));
 	Camera->SetRelativeLocation(FVector(0.0f, 0.0f, -100.0f));
 
-	static ConstructorHelpers::FObjectFinder<UMaterial> DM(TEXT("Material'/Game/Materials/M_Dark.M_Dark'"));
+	static ConstructorHelpers::FObjectFinder<UMaterial> DM(TEXT("Material'/Game/Materials/Piece/M_Dark.M_Dark'"));
 	if (DM.Succeeded())
 	{
 		DarkMaterial = DM.Object;
 	}
-	static ConstructorHelpers::FObjectFinder<UMaterial> LM(TEXT("Material'/Game/Materials/M_Light.M_Light'"));
+	static ConstructorHelpers::FObjectFinder<UMaterial> LM(TEXT("Material'/Game/Materials/Piece/M_Light.M_Light'"));
 	if (LM.Succeeded())
 	{
 		LightMaterial = LM.Object;
 	}
-	static ConstructorHelpers::FObjectFinder<UMaterialInstance> DMI(TEXT("MaterialInstanceConstant'/Game/Materials/MI_Dark_T.MI_Dark_T'"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInstance> DMI(TEXT("MaterialInstanceConstant'/Game/Materials/Piece/MI_Dark_T.MI_Dark_T'"));
 	if (DMI.Succeeded())
 	{
 		TranslucentDarkMaterial = DMI.Object;
 	}
-	static ConstructorHelpers::FObjectFinder<UMaterialInstance> LMI(TEXT("MaterialInstanceConstant'/Game/Materials/MI_Light_T.MI_Light_T'"));
+	static ConstructorHelpers::FObjectFinder<UMaterialInstance> LMI(TEXT("MaterialInstanceConstant'/Game/Materials/Piece/MI_Light_T.MI_Light_T'"));
 	if (LMI.Succeeded())
 	{
 		TranslucentLightMaterial = LMI.Object;
