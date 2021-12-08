@@ -54,9 +54,6 @@ class CHESS_API UThreatMap : public UActorComponent
 	GENERATED_BODY()
 	
 public:
-	UThreatMap();
-	
-public:
 	void SetPlayerColor(EPieceColor Color);
 
 	void UpdateMap();

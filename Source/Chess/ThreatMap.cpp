@@ -6,11 +6,6 @@
 #include "ThreatBox.h"
 #include "Kismet/GameplayStatics.h"
 
-
-UThreatMap::UThreatMap()
-{
-}
-
 void UThreatMap::SetPlayerColor(EPieceColor Color)
 {
 	PlayerColor = Color;
