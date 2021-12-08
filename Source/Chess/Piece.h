@@ -28,7 +28,6 @@ public:
 
 	virtual void UpdateBasicMoves();
 	virtual TSet<FVector> GetBasicMovesInCurBoard();
-	virtual void UpdateSpecialMoves(TSet<APiece*>& EnemyPieces);
 	void RemoveMoveKingCheckedByEnemies(APiece* MyKing, TSet<APiece*>& EnemyPieces);
 	bool CanMoveTo(FVector Location);
 

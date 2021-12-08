@@ -119,10 +119,6 @@ TSet<FVector> APiece::GetBasicMovesInCurBoard()
 	return TSet<FVector>();
 }
 
-void APiece::UpdateSpecialMoves(TSet<APiece*>& EnemyPieces)
-{
-
-}
 
 void APiece::RemoveMoveKingCheckedByEnemies(APiece* MyKing, TSet<APiece*>& EnemyPieces)
 {

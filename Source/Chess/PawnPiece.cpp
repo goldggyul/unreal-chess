@@ -96,8 +96,3 @@ TSet<FVector> APawnPiece::GetBasicMovesInCurBoard()
 	}	
 	return CurMoves;
 }
-
-void APawnPiece::UpdateSpecialMoves(TSet<APiece*>& EnemyPieces)
-{
-
-}

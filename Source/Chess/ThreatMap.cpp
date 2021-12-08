@@ -110,7 +110,6 @@ void UThreatMap::UpdatePiecesMove()
 	{
 		if (!IsValid(PlayerPiece)) continue;
 		PlayerPiece->UpdateBasicMoves(); // 기본 움직임
-		PlayerPiece->UpdateSpecialMoves(EnemyPieces); // 특별 행마법: 캐슬링, 앙파상
 		PlayerPiece->RemoveMoveKingCheckedByEnemies(PlayerKing, EnemyPieces); // 체크 되는 상황의 움직임 제거
 	}
 
@@ -118,7 +117,6 @@ void UThreatMap::UpdatePiecesMove()
 	{
 		if (!IsValid(EnemyPiece)) continue;
 		EnemyPiece->UpdateBasicMoves(); // 기본 움직임
-		EnemyPiece->UpdateSpecialMoves(PlayerPieces); // 특별 행마법: 캐슬링, 앙파상
 	}
 }
 

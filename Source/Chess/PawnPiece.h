@@ -20,7 +20,4 @@ public:
 protected:
 	virtual TSet<FVector> GetBasicMovesInCurBoard() override;
 
-	virtual void UpdateSpecialMoves(TSet<APiece*>& EnemyPieces) override;
-
-
 };

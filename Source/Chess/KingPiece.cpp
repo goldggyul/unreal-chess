@@ -63,39 +63,6 @@ TSet<FVector> AKingPiece::GetBasicMovesInCurBoard()
 	return CurMoves;
 }
 
-void AKingPiece::UpdateSpecialMoves(TSet<APiece*>& EnemyPieces)
-{
-	// Ä³½½¸µ
-	if (!IsFirstMove()) return;
-
-	FVector RightVector = UChessUtil::GetPlayerRightVector(GetPieceColor());
-
-	TSet<FVector> Differs;
-	Differs.Add(RightVector);
-	Differs.Add(-RightVector);
-	for (auto& Differ : Differs)
-	{
-		for (FVector Cur = GetActorLocation() + Differ; UChessUtil::IsInBoard(Cur); Cur += Differ)
-		{
-			if (IsDestInThreatByEnemy(Cur, EnemyPieces)) break;
-
-			AActor* HitActor = UChessUtil::GetCollidedPiece(GetWorld(), Cur);
-			APiece* HitPiece = Cast<APiece>(HitActor);
-			if (IsValid(HitPiece))
-			{
-				if (HitPiece->GetPieceColor() == GetPieceColor()
-					&& HitPiece->GetPieceType() == EPieceType::Rook
-					&& HitPiece->IsFirstMove()) // Only here, Add to moves
-				{
-					UE_LOG(LogTemp, Warning, TEXT("%s Able to castling!"), *UChessUtil::GetColorString(GetPieceColor()));
-					AddToMoves(Cur - Differ);
-				}
-				break;
-			}
-		}
-	}
-}
-
 bool AKingPiece::IsDestInThreatByEnemy(FVector Dest, TSet<APiece*>& EnemyPieces) const
 {
 	for (auto& EnemyPiece : EnemyPieces)
