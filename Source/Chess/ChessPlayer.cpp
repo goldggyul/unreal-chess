@@ -295,15 +295,11 @@ void AChessPlayer::UpdateThreatMap()
 
 APiece* AChessPlayer::GetPieceAtPickBox()
 {
-	// Test: 일단 자기꺼면 든다
 	FVector Start = PickBox->GetActorLocation();
 	AActor* HitActor = UChessUtil::GetCollidedPiece(GetWorld(), Start);
 	APiece* HitPiece = Cast<APiece>(HitActor);
 	if (IsValid(HitPiece))
 	{
-		// For debugging
-		FString PieceTypeName = UChessUtil::GetPieceTypeString(HitPiece->GetPieceType());
-		FString PieceColorName = UChessUtil::GetColorString(HitPiece->GetPieceColor());
 		return HitPiece;
 	}
 	else

@@ -96,13 +96,6 @@ void APiece::Tick(float DeltaTime)
 
 }
 
-UStaticMeshComponent* APiece::GetStaticMeshComponent()
-{
-	if (IsValid(PieceMesh))
-		return PieceMesh;
-	return nullptr;
-}
-
 void APiece::UpdateBasicMoves()
 {
 	Moves.Empty();
@@ -157,9 +150,6 @@ bool APiece::CanMoveTo(FVector Location)
 
 bool APiece::IsAbleToPick()
 {
-	// if Legal Moves Exists
-	//ShowMoves();
-
 	if (Moves.Num() > 0)
 		return true;
 	UE_LOG(LogTemp, Warning, TEXT("Can't move this piece!"));

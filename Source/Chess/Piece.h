@@ -19,21 +19,16 @@ public:
 	APiece();
 
 public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
 	const EPieceColor GetPieceColor() const { return PieceColor; }
 	const EPieceType GetPieceType() const { return PieceType; }
-	class UStaticMeshComponent* GetStaticMeshComponent();
 
 	virtual void UpdateBasicMoves();
-	virtual TSet<FVector> GetBasicMovesInCurBoard();
 	void RemoveMoveKingCheckedByEnemies(APiece* MyKing, TSet<APiece*>& EnemyPieces);
 	bool CanMoveTo(FVector Location);
 
 	bool IsAbleToPick();
 	bool IsAbleToPutAt(FVector Dest) const;
-	virtual void PutAt(FVector Dest);
+	void PutAt(FVector Dest);
 
 	bool IsFirstMove() const { return bIsFirstMove; }
 	
@@ -46,9 +41,16 @@ public:
 	void SetMeshOpaque(bool bIsOpaque);
 
 protected:
+	virtual void PostInitializeComponents() override;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	virtual void PostInitializeComponents() override;
+
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	virtual TSet<FVector> GetBasicMovesInCurBoard();
+
 
 	void SetType(EPieceType PT) { PieceType = PT; }
 	void AddToMoves(const FVector Location);
