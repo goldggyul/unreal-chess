@@ -20,7 +20,6 @@ AKingPiece::AKingPiece()
 	}
 	SetRootComponent(PieceMesh);
 	PieceMesh->SetRelativeScale3D(PieceMeshSize);
-
 }
 
 TSet<FVector> AKingPiece::GetBasicMovesInCurBoard()

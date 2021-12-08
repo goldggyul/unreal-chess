@@ -13,6 +13,9 @@ APiece::APiece()
 
 	bIsFirstMove = true;
 
+	PieceMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MESH"));
+	SetRootComponent(PieceMesh);
+
 	static ConstructorHelpers::FClassFinder<APaperSpriteActor> PS(TEXT("Blueprint'/Game/Blueprints/FocusBox/BS_BaseBox.BS_BaseBox_C'"));
 	if (PS.Succeeded())
 	{
@@ -189,4 +192,17 @@ void APiece::DestroyMoveBoxes()
 		MoveBox->Destroy();
 	}
 	MoveBoxes.Empty();
+}
+
+APiece* APiece::GetCopy()
+{
+	FVector SpawnLocation = GetActorLocation();
+	SpawnLocation.Z += PickedPieceZ;
+	FRotator SpawnRotation = GetActorRotation();
+
+	APiece* CopiedPiece = GetWorld()->SpawnActor<APiece>(SpawnLocation, SpawnRotation);
+	CopiedPiece->PieceMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	CopiedPiece->PieceMesh->SetStaticMesh(PieceMesh->GetStaticMesh());
+	CopiedPiece->PieceMesh->SetRelativeScale3D(PieceMeshSize);
+	return CopiedPiece;
 }

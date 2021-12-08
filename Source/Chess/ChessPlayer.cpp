@@ -184,8 +184,8 @@ void AChessPlayer::MovePickBox(FVector Dest)
 		PickBox->SetActorLocation(Dest);
 		if (IsPicking())
 		{
-			Dest.Z = PickedMesh->GetActorLocation().Z;
-			PickedMesh->SetActorLocation(Dest);
+			Dest.Z = PickedPiece->GetActorLocation().Z;
+			PickedPiece->SetActorLocation(Dest);
 			CurPickedPiece->ShowMoves();
 		}
 		else
@@ -233,31 +233,17 @@ void AChessPlayer::PickPiece()
 
 void AChessPlayer::SpawnPickedPiece()
 {
-	if (IsValid(PickedMesh))
-		PickedMesh->Destroy();
+	if (IsValid(PickedPiece))
+		PickedPiece->Destroy();
+
 	if (IsValid(CurPickedPiece))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Spawn Picked Piece"));
 
-		FVector SpawnLocation = CurPickedPiece->GetActorLocation();
-		SpawnLocation.Z += PickedPieceZ;
-		FRotator SpawnRotation = CurPickedPiece->GetActorRotation();
-		PickedMesh = GetWorld()->SpawnActor<AStaticMeshActor>(SpawnLocation, SpawnRotation);
-
-		PickedMesh->SetMobility(EComponentMobility::Movable);
-		PickedMesh->SetActorRelativeScale3D(PieceMeshSize);
-		PickedMesh->SetActorLabel(FString(TEXT("Picked Piece")));
-		PickedMesh->GetStaticMeshComponent()->SetCollisionProfileName(
-			CurPickedPiece->GetStaticMeshComponent()->GetCollisionProfileName()
-		);
-		PickedMesh->SetFolderPath("/Player");
-
-		UStaticMeshComponent* CurPieceMeshComp = CurPickedPiece->GetStaticMeshComponent();
-		UStaticMeshComponent* PickedPieceMeshComp = PickedMesh->GetStaticMeshComponent();
-		PickedPieceMeshComp->SetStaticMesh(CurPieceMeshComp->GetStaticMesh());
-		PickedPieceMeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		SetMeshOpaque(false, CurPieceMeshComp);
-		SetMeshOpaque(true, PickedPieceMeshComp);
+		PickedPiece = CurPickedPiece->GetCopy();
+		
+		SetMeshOpaque(false, CurPickedPiece);
+		SetMeshOpaque(true, PickedPiece);
 	}
 	else
 	{
@@ -268,17 +254,17 @@ void AChessPlayer::SpawnPickedPiece()
 bool AChessPlayer::PutCurPiece()
 {
 	// 현재 위치에 놓을 수 있으면 놓는다.
-	if (!IsValid(CurPickedPiece) || !IsValid(PickedMesh) || !IsValid(PickBox))
+	if (!IsValid(CurPickedPiece) || !IsValid(PickedPiece) || !IsValid(PickBox))
 		return false;
-	FVector CurPickLocation = PickedMesh->GetActorLocation();
+	FVector CurPickLocation = PickedPiece->GetActorLocation();
 	CurPickLocation.Z = 0;
 	if (CurPickedPiece->IsAbleToPutAt(CurPickLocation))
 	{
 		// 입력 막기
 		bool bIsOtherLocation = (CurPickedPiece->GetActorLocation() != CurPickLocation); // 제자리가 아닌 유효한 곳에 놨는지
-		PickedMesh->Destroy();
+		PickedPiece->Destroy();
 		CurPickedPiece->PutAt(CurPickLocation);
-		SetMeshOpaque(true, CurPickedPiece->GetStaticMeshComponent());
+		SetMeshOpaque(true, CurPickedPiece);
 		CurPickedPiece = nullptr;
 		SetPicking(false);
 		OnPutPiece.Broadcast(); // For UI
@@ -295,7 +281,7 @@ bool AChessPlayer::PutCurPiece()
 			{
 				// Change Cur Piece
 				CurPickedPiece->PutAt(CurPickedPiece->GetActorLocation());
-				SetMeshOpaque(true, CurPickedPiece->GetStaticMeshComponent());
+				SetMeshOpaque(true, CurPickedPiece);
 				PickPiece();
 			}
 		}
@@ -347,10 +333,13 @@ APiece* AChessPlayer::GetPieceAtPickBox()
 	}
 }
 
-void AChessPlayer::SetMeshOpaque(bool bIsOpaque, class UStaticMeshComponent* Mesh) const
+void AChessPlayer::SetMeshOpaque(bool bIsOpaque, class APiece* Piece) const
 {
-	if (!IsValid(Mesh))
+	if (!IsValid(Piece))
 		return;
+
+	UStaticMeshComponent* Mesh = Piece->GetStaticMeshComponent();
+
 
 	if (bIsOpaque) // 불투명
 	{

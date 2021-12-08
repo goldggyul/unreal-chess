@@ -43,6 +43,8 @@ public:
 	void ShowMoves();
 	void DestroyMoveBoxes();
 
+	class APiece* GetCopy();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

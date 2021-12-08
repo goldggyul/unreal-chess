@@ -18,7 +18,7 @@ AQueenPiece::AQueenPiece()
 		UE_LOG(LogTemp, Warning, TEXT("Can't load Queen mesh"));
 	}
 	SetRootComponent(PieceMesh);
-	PieceMesh->SetRelativeScale3D(FVector(2.f, 2.f, 2.f));
+	PieceMesh->SetRelativeScale3D(PieceMeshSize);
 }
 
 TSet<FVector> AQueenPiece::GetBasicMovesInCurBoard()

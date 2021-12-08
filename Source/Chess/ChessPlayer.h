@@ -55,13 +55,12 @@ public:
 	UFUNCTION()
 	void ThreatBtnPressed();
 
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 private:
-	void SetMeshOpaque(bool bIsOpaque, class UStaticMeshComponent* MeshComponent = nullptr) const;
+	void SetMeshOpaque(bool bIsOpaque, class APiece* Piece) const;
 
 	void SpawnPickedPiece();
 	class APiece* GetPieceAtPickBox();
@@ -106,7 +105,7 @@ private:
 	class APaperSpriteActor* PickBox;
 
 	UPROPERTY(VisibleAnywhere)
-	class AStaticMeshActor* PickedMesh;
+	class APiece* PickedPiece;
 
 	UPROPERTY(VisibleAnywhere)
 	class APiece* CurPickedPiece;
