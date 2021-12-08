@@ -44,6 +44,7 @@ public:
 	void DestroyMoveBoxes();
 
 	class APiece* GetCopy();
+	void SetMeshOpaque(bool bIsOpaque);
 
 protected:
 	// Called when the game starts or when spawned
@@ -76,4 +77,16 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = Moves)
 	TSubclassOf<class APaperSpriteActor> MoveBoxClass;
 
+	// 피스들 불투명 <-> 투명하게 바꾸기 위해 머티리얼 저장
+	UPROPERTY(VisibleAnywhere, Category = PieceMaterials)
+	class UMaterial* DarkMaterial;
+
+	UPROPERTY(VisibleAnywhere, Category = PieceMaterials)
+	class UMaterial* LightMaterial;
+
+	UPROPERTY(VisibleAnywhere, Category = PieceMaterials)
+	class UMaterialInstance* TranslucentDarkMaterial;
+
+	UPROPERTY(VisibleAnywhere, Category = PieceMaterials)
+	class UMaterialInstance* TranslucentLightMaterial;
 };

@@ -21,6 +21,28 @@ APiece::APiece()
 	{
 		MoveBoxClass = PS.Class;
 	}
+
+	// 머티리얼
+	static ConstructorHelpers::FObjectFinder<UMaterial> DM(TEXT("Material'/Game/Materials/Piece/M_Dark.M_Dark'"));
+	if (DM.Succeeded())
+	{
+		DarkMaterial = DM.Object;
+	}
+	static ConstructorHelpers::FObjectFinder<UMaterial> LM(TEXT("Material'/Game/Materials/Piece/M_Light.M_Light'"));
+	if (LM.Succeeded())
+	{
+		LightMaterial = LM.Object;
+	}
+	static ConstructorHelpers::FObjectFinder<UMaterialInstance> DMI(TEXT("MaterialInstanceConstant'/Game/Materials/Piece/MI_Dark_T.MI_Dark_T'"));
+	if (DMI.Succeeded())
+	{
+		TranslucentDarkMaterial = DMI.Object;
+	}
+	static ConstructorHelpers::FObjectFinder<UMaterialInstance> LMI(TEXT("MaterialInstanceConstant'/Game/Materials/Piece/MI_Light_T.MI_Light_T'"));
+	if (LMI.Succeeded())
+	{
+		TranslucentLightMaterial = LMI.Object;
+	}
 }
 
 void APiece::ShowMoves()
@@ -204,5 +226,41 @@ APiece* APiece::GetCopy()
 	CopiedPiece->PieceMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	CopiedPiece->PieceMesh->SetStaticMesh(PieceMesh->GetStaticMesh());
 	CopiedPiece->PieceMesh->SetRelativeScale3D(PieceMeshSize);
+	CopiedPiece->PieceColor = GetPieceColor();
+
 	return CopiedPiece;
+}
+
+void APiece::SetMeshOpaque(bool bIsOpaque)
+{
+	if (!IsValid(PieceMesh))
+		return;
+
+	if (bIsOpaque) // 불투명
+	{
+		if (GetPieceColor() == EPieceColor::Black && IsValid(DarkMaterial))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Set Material: opaque dark"));
+			PieceMesh->SetMaterial(0, DarkMaterial);
+		}
+		else if (GetPieceColor() == EPieceColor::White && IsValid(LightMaterial))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Set Material: opaque light"));
+			PieceMesh->SetMaterial(0, LightMaterial);
+		}
+	}
+	else // 투명
+	{
+		if (GetPieceColor() == EPieceColor::Black && IsValid(TranslucentDarkMaterial))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Set Material: translucent dark"));
+			PieceMesh->SetMaterial(0, TranslucentDarkMaterial);
+		}
+		else if (GetPieceColor() == EPieceColor::White && IsValid(TranslucentLightMaterial))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Set Material: translucent light"));
+
+			PieceMesh->SetMaterial(0, TranslucentLightMaterial);
+		}
+	}
 }

@@ -31,27 +31,6 @@ AChessPlayer::AChessPlayer()
 	SpringArm->SetRelativeRotation(FRotator(-75.0f, 0.0f, 0.0f));
 	Camera->SetRelativeLocation(FVector(0.0f, 0.0f, -100.0f));
 
-	static ConstructorHelpers::FObjectFinder<UMaterial> DM(TEXT("Material'/Game/Materials/Piece/M_Dark.M_Dark'"));
-	if (DM.Succeeded())
-	{
-		DarkMaterial = DM.Object;
-	}
-	static ConstructorHelpers::FObjectFinder<UMaterial> LM(TEXT("Material'/Game/Materials/Piece/M_Light.M_Light'"));
-	if (LM.Succeeded())
-	{
-		LightMaterial = LM.Object;
-	}
-	static ConstructorHelpers::FObjectFinder<UMaterialInstance> DMI(TEXT("MaterialInstanceConstant'/Game/Materials/Piece/MI_Dark_T.MI_Dark_T'"));
-	if (DMI.Succeeded())
-	{
-		TranslucentDarkMaterial = DMI.Object;
-	}
-	static ConstructorHelpers::FObjectFinder<UMaterialInstance> LMI(TEXT("MaterialInstanceConstant'/Game/Materials/Piece/MI_Light_T.MI_Light_T'"));
-	if (LMI.Succeeded())
-	{
-		TranslucentLightMaterial = LMI.Object;
-	}
-
 	static ConstructorHelpers::FClassFinder<APaperSpriteActor> PS(TEXT("Blueprint'/Game/Blueprints/FocusBox/BS_PickBox.BS_PickBox_C'"));
 	if (PS.Succeeded())
 	{
@@ -242,8 +221,8 @@ void AChessPlayer::SpawnPickedPiece()
 
 		PickedPiece = CurPickedPiece->GetCopy();
 		
-		SetMeshOpaque(false, CurPickedPiece);
-		SetMeshOpaque(true, PickedPiece);
+		CurPickedPiece->SetMeshOpaque(false);
+		PickedPiece->SetMeshOpaque(true);
 	}
 	else
 	{
@@ -264,7 +243,7 @@ bool AChessPlayer::PutCurPiece()
 		bool bIsOtherLocation = (CurPickedPiece->GetActorLocation() != CurPickLocation); // 제자리가 아닌 유효한 곳에 놨는지
 		PickedPiece->Destroy();
 		CurPickedPiece->PutAt(CurPickLocation);
-		SetMeshOpaque(true, CurPickedPiece);
+		CurPickedPiece->SetMeshOpaque(true);
 		CurPickedPiece = nullptr;
 		SetPicking(false);
 		OnPutPiece.Broadcast(); // For UI
@@ -281,7 +260,7 @@ bool AChessPlayer::PutCurPiece()
 			{
 				// Change Cur Piece
 				CurPickedPiece->PutAt(CurPickedPiece->GetActorLocation());
-				SetMeshOpaque(true, CurPickedPiece);
+				CurPickedPiece->SetMeshOpaque(true);
 				PickPiece();
 			}
 		}
@@ -330,43 +309,6 @@ APiece* AChessPlayer::GetPieceAtPickBox()
 	else
 	{
 		return nullptr;
-	}
-}
-
-void AChessPlayer::SetMeshOpaque(bool bIsOpaque, class APiece* Piece) const
-{
-	if (!IsValid(Piece))
-		return;
-
-	UStaticMeshComponent* Mesh = Piece->GetStaticMeshComponent();
-
-
-	if (bIsOpaque) // 불투명
-	{
-		if (PlayerColor == EPieceColor::Black && IsValid(DarkMaterial))
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Set Material: opaque dark"));
-			Mesh->SetMaterial(0, DarkMaterial);
-		}
-		else if (PlayerColor == EPieceColor::White && IsValid(LightMaterial))
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Set Material: opaque light"));
-			Mesh->SetMaterial(0, LightMaterial);
-		}
-	}
-	else // 투명
-	{
-		if (PlayerColor == EPieceColor::Black && IsValid(TranslucentDarkMaterial))
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Set Material: translucent dark"));
-			Mesh->SetMaterial(0, TranslucentDarkMaterial);
-		}
-		else if (PlayerColor == EPieceColor::White && IsValid(TranslucentLightMaterial))
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Set Material: translucent light"));
-
-			Mesh->SetMaterial(0, TranslucentLightMaterial);
-		}
 	}
 }
 
