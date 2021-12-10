@@ -59,7 +59,7 @@ void APiece::ShowMoves()
 			MoveBoxClass, MoveBoxLocation, FRotator::ZeroRotator);
 
 		// need to know about enemy
-		MoveBox->SetFolderPath("/MoveBoxes");
+		//MoveBox->SetFolderPath("/MoveBoxes");
 		MoveBoxes.Add(MoveBox);
 	}
 }

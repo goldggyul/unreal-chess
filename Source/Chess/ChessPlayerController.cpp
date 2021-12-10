@@ -32,15 +32,15 @@ void AChessPlayerController::StartGame()
 	CurPlayer = GetWorld()->SpawnActor<AChessPlayer>(FVector(1200.0f, 1200.0f, 30.0f), FRotator(0.0f, -90.0f, 0.0f));
 	PrevPlayer = GetWorld()->SpawnActor<AChessPlayer>(FVector(1200.0f, 1200.0f, 30.0f), FRotator(0.0f, 90.0f, 0.0f));
 
-	CurPlayer->SetActorLabel(FString(TEXT("WhitePlayer")));
-	PrevPlayer->SetActorLabel(FString(TEXT("BlackPlayer")));
+	/*CurPlayer->SetActorLabel(FString(TEXT("WhitePlayer")));
+	PrevPlayer->SetActorLabel(FString(TEXT("BlackPlayer")));*/
 
 	CurPlayer->SetPlayerColor(EPieceColor::White);
 	PrevPlayer->SetPlayerColor(EPieceColor::Black);
 
-	CurPlayer->SetFolderPath("/Player");
+	/*CurPlayer->SetFolderPath("/Player");
 	PrevPlayer->SetFolderPath("/Player");
-	SetFolderPath("/Player");
+	SetFolderPath("/Player");*/
 
 	CurPlayer->SetPickBoxStart(FVector(1350.0f, 1950.0f, PickBoxZ));
 	PrevPlayer->SetPickBoxStart(FVector(1050.0f, 450.0f, PickBoxZ));
@@ -119,7 +119,7 @@ void AChessPlayerController::OnUnPossess()
 
 	if (IsValid(CurrentPlayer))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("UNPOSSESS! [%s]"), *(CurrentPlayer->GetActorLabel()));
+		//UE_LOG(LogTemp, Warning, TEXT("UNPOSSESS! [%s]"), *(CurrentPlayer->GetActorLabel()));
 		CurrentPlayer->DestroyPickBox();
 		CurrentPlayer->DestroyThreatMap();
 	}
@@ -139,7 +139,7 @@ void AChessPlayerController::OnPossess(APawn* InPawn)
 
 	if (IsValid(CurrentPlayer))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("POSSESS! [%s]"), *(CurrentPlayer->GetActorLabel()));
+		//UE_LOG(LogTemp, Warning, TEXT("POSSESS! [%s]"), *(CurrentPlayer->GetActorLabel()));
 		CurrentPlayer->SpawnPickBox();
 		//CurrentPlayer->UpdateThreatMap();
 		CurrentPlayer->ShowThreatMap();
@@ -233,7 +233,7 @@ bool AChessPlayerController::MoveBoxToMouse()
 
 		if (UChessUtil::IsInBoard(HitPoint))
 		{
-			FString HitLabel = HitResult.Actor->GetActorLabel();
+			//FString HitLabel = HitResult.Actor->GetActorLabel();
 			FVector ClickedSquareCenter = UChessUtil::GetSquareCenter(HitPoint);
 			CurrentPlayer->MovePickBox(ClickedSquareCenter);
 			return true;

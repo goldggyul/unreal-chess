@@ -48,10 +48,10 @@ private:
 	class UTexture* QuarterSquare;
 
 	UPROPERTY(VisibleAnywhere, Category = ThreatBox)
-	int BoxPlayerCount;
+	int32 BoxPlayerCount;
 
 	UPROPERTY(VisibleAnywhere, Category = ThreatBox)
-	int BoxEnemyCount;
+	int32 BoxEnemyCount;
 	
 	
 };

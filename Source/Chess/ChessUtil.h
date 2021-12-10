@@ -77,8 +77,8 @@ public:
 	static FVector GetSquareCenter(const FVector Point)
 	{
 		// 보드에서의 인덱스를 실제 레벨에서의 위치 벡터로 변환
-		int X = Point.X / SquareSize + 1;
-		int Y = Point.Y / SquareSize + 1;
+		int32 X = Point.X / SquareSize + 1;
+		int32 Y = Point.Y / SquareSize + 1;
 		// Board의 왼쪽 상단 부분이 (0.0f, 0.0f, 0.0f)
 		float LocationX = (BoardCenter.X - SquareSize * 4) + ((SquareSize / 2) * (2 * X - 1));
 		float LocationY = (BoardCenter.Y - SquareSize * 4) + ((SquareSize / 2) * (2 * Y - 1));

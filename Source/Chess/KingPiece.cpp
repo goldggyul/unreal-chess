@@ -63,11 +63,11 @@ TSet<FVector> AKingPiece::GetBasicMovesInCurBoard()
 	return CurMoves;
 }
 
-bool AKingPiece::IsDestInThreatByEnemy(FVector Dest, TSet<APiece*>& EnemyPieces) const
+bool AKingPiece::IsLocationThreatenByEnemy(FVector CheckLocation, TSet<APiece*>& EnemyPieces) const
 {
 	for (auto& EnemyPiece : EnemyPieces)
 	{
-		if (IsValid(EnemyPiece) && EnemyPiece->CanMoveTo(Dest))
+		if (IsValid(EnemyPiece) && EnemyPiece->CanMoveTo(CheckLocation))
 		{
 			return true;
 		}

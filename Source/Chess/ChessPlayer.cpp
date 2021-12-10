@@ -130,8 +130,8 @@ void AChessPlayer::SpawnPickBox()
 		PickBox->Destroy();
 	}
 	PickBox = GetWorld()->SpawnActor<APaperSpriteActor>(PickBoxClass, CurMove, FRotator::ZeroRotator);
-	PickBox->SetActorLabel(TEXT("PickBox"));
-	PickBox->SetFolderPath("/Player");
+	//PickBox->SetActorLabel(TEXT("PickBox"));
+	//PickBox->SetFolderPath("/Player");
 }
 
 void AChessPlayer::DestroyPickBox()

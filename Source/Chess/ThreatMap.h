@@ -17,10 +17,10 @@ struct FPieceCount
 	GENERATED_BODY()
 
 	UPROPERTY(VisibleAnywhere)
-	int WhiteCount = 0;
+	int32 WhiteCount = 0;
 
 	UPROPERTY(VisibleAnywhere)
-	int BlackCount = 0;
+	int32 BlackCount = 0;
 
 	void AddCount(EPieceColor PieceColor)
 	{
@@ -34,7 +34,7 @@ struct FPieceCount
 		}
 	}
 
-	int GetEnemyCount(EPieceColor PlayerColor)
+	int32 GetEnemyCount(EPieceColor PlayerColor)
 	{
 		if (PlayerColor == EPieceColor::White)
 		{

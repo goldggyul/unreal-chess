@@ -48,7 +48,7 @@ void UThreatMap::ShowMap()
 		}
 
 		AThreatBox* ThreatBox = GetWorld()->SpawnActor<AThreatBox>(Location, BoxRotation);
-		ThreatBox->SetFolderPath(TEXT("/ThreatBox"));
+		//ThreatBox->SetFolderPath(TEXT("/ThreatBox"));
 		if (PlayerColor == EPieceColor::White)
 		{
 			ThreatBox->SetShapeAndColor(PieceCount.WhiteCount, PieceCount.BlackCount);

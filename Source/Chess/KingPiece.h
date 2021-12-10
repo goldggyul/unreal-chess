@@ -21,5 +21,5 @@ protected:
 	virtual TSet<FVector> GetBasicMovesInCurBoard() override;
 
 private:
-	bool IsDestInThreatByEnemy(FVector CheckLocation, TSet<APiece*>& EnemyPieces) const;
+	bool IsLocationThreatenByEnemy(FVector CheckLocation, TSet<APiece*>& EnemyPieces) const;
 };
