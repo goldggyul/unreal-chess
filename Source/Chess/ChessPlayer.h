@@ -81,9 +81,6 @@ private:
 	bool bIsPicking;
 
 	UPROPERTY(VisibleAnywhere)
-	FVector PrevMove; // 이전에 수를 놨던 위치.
-
-	UPROPERTY(VisibleAnywhere)
 	FVector CurMove;
 
 	UPROPERTY(VisibleAnywhere)
@@ -92,9 +89,6 @@ private:
 	// Assist On, ThreatMap On
 	UPROPERTY()
 	bool bIsThreatMapVisible;
-
-	UPROPERTY(VisibleAnywhere)
-	EChessState ChessState;
 
 	UPROPERTY(VisibleAnywhere)
 	TSubclassOf<class APaperSpriteActor> PickBoxClass;

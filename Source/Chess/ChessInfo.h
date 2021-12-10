@@ -31,11 +31,3 @@ enum class EPieceType : uint8
 	Knight,
 	Pawn
 };
-
-UENUM(BlueprintType)
-enum class EChessState : uint8
-{
-	Check,
-	Checkmate,
-	Stalemate
-};

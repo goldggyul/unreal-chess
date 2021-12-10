@@ -16,7 +16,6 @@ public:
 	AChessPlayerController();
 
 public:
-
 	UFUNCTION(BlueprintCallable)
 	void StartGame();
 
