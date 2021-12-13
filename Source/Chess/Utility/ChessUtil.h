@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "ChessInfo.h"
+#include "../Utility/ChessInfo.h"
 #include "DrawDebugHelpers.h"
 #include "ChessUtil.generated.h"
 

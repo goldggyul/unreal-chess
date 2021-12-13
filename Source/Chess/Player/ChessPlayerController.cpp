@@ -3,14 +3,14 @@
 
 #include "ChessPlayerController.h"
 #include "ChessPlayer.h"
-#include "ChessInfo.h"
-#include "ChessUtil.h"
+#include "../Utility/ChessInfo.h"
+#include "../Utility/ChessUtil.h"
 #include "DrawDebugHelpers.h"
 #include "Engine/EngineTypes.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/WidgetComponent.h"
-#include "PieceInfoWidget.h"
-#include "EndWidget.h"
+#include "../Widget/PieceInfoWidget.h"
+#include "../Widget/EndWidget.h"
 
 AChessPlayerController::AChessPlayerController()
 {

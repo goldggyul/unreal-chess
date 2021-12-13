@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "ChessInfo.h"
+#include "../Utility/ChessInfo.h"
 #include "ThreatBox.generated.h"
 
 #define MoreEnemy FLinearColor(5.0f, 0.0f, 0.1f)

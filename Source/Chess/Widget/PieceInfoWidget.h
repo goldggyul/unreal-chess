@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "ChessInfo.h"
+#include "../Utility/ChessInfo.h"
 #include "PieceInfoWidget.generated.h"
 
 /**

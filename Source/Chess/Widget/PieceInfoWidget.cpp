@@ -2,13 +2,13 @@
 
 
 #include "PieceInfoWidget.h"
-#include "ChessPlayer.h"
+#include "../Player/ChessPlayer.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
 #include "Components/Overlay.h"
 #include "Components/Button.h"
 #include "Components/CanvasPanel.h"
-#include "ChessUtil.h"
+#include "../Utility/ChessUtil.h"
 
 UPieceInfoWidget::UPieceInfoWidget(const FObjectInitializer& ObjectInitializer) : UUserWidget(ObjectInitializer)
 {

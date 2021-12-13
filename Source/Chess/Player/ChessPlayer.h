@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "ChessInfo.h"
+#include "../Utility/ChessInfo.h"
 #include "ChessPlayer.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnPickPiece, EPieceType);

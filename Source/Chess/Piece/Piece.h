@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "ChessInfo.h"
-#include "ChessUtil.h"
+#include "../Utility/ChessInfo.h"
+#include "../Utility/ChessUtil.h"
 #include "Piece.generated.h"
 
 

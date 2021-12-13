@@ -2,8 +2,8 @@
 
 
 #include "ThreatMap.h"
-#include "Piece.h"
-#include "ThreatBox.h"
+#include "../Piece/Piece.h"
+#include "../ThreatMap/ThreatBox.h"
 #include "Kismet/GameplayStatics.h"
 
 void UThreatMap::SetPlayerColor(EPieceColor Color)
