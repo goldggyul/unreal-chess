@@ -1,4 +1,4 @@
-# Unreal Chess Project
+# Unreal Chess
 
 chess project for study
 
