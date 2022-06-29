@@ -4,12 +4,16 @@
 
 
 ## Preview
-![Checkmate](https://user-images.githubusercontent.com/46084498/145543787-e7f5249f-518a-404c-a16e-4c8e7057ffc3.gif)
+<p align="center">
+<img src="https://user-images.githubusercontent.com/46084498/145543787-e7f5249f-518a-404c-a16e-4c8e7057ffc3.gif" />
+</p>
 
 ## Reference
 Clubhouse Games: 51 Worldwide Classics
 
-![176490438-d9e781c3-0215-40ab-aa46-e1fca1b90582](https://user-images.githubusercontent.com/101321313/176491675-2b6a57f3-add4-4196-9ddd-4d1e63ad825a.png)
+<p align="center">
+<img src="https://user-images.githubusercontent.com/101321313/176491675-2b6a57f3-add4-4196-9ddd-4d1e63ad825a.png" width="70%" height="70%"/>
+</p>
 
 위 게임을 참고하여 최대한 비슷하게 구현하기 위해 노력했다. [Threat Map](#threat-map)이나, 그 외에 현재 선택한 Piece의 위치와 가능한 움직임들을 네모박스로 보여주는 기능, 현재 Piece를 선택하면 해당 Piece를 들어올리고 원래 위치는 반투명하게 보이게 하는 기능, 왼쪽 위에 현재 선택한 기물을 보여주는 기능 등등 대부분의 방법들 모두 해당 게임을 참고했다. 
 
